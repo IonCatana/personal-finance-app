@@ -1,0 +1,180 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ROOT COLORS */
+:root {
+  /* Background */
+  --color-background: #f2f3f7;
+
+  /* Beige */
+  --color-beige-500: #98908b;
+  --color-beige-100: #f8f4f0;
+
+  /* Grey */
+  --color-grey-900: #201f24;
+  --color-grey-500: #696868;
+  --color-grey-300: #b3b3b3;
+  --color-grey-100: #f2f2f2;
+
+  /* Secondary Colors */
+  --color-green: #277c78;
+  --color-yellow: #f2cdac;
+  --color-cyan: #82c9d7;
+  --color-navy: #626070;
+  --color-red: #c94736;
+  --color-purple-secondary: #826cb0;
+
+  /* Other Colors */
+  --color-purple: #af81ba;
+  --color-turquoise: #597c7c;
+  --color-brown: #93674f;
+  --color-magenta: #934f6f;
+  --color-blue: #3f82b2;
+  --color-navy-grey: #97a0ac;
+  --color-army-green: #7f9161;
+  --color-gold: #cab361;
+  --color-orange: #be6c49;
+
+  /* White */
+  --color-white: #ffffff;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px white inset;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+html {
+  font-size: 100%;
+  line-height: 1.2;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: "PublicSans", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-background);
+  color: var(--color-grey-900);
+  display: flex;
+  justify-content: center;
+}
+
+#root {
+  max-width: 1440px;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Esempio per PublicSans-Bold */
+@font-face {
+  font-family: "PublicSans";
+  src: url("./assets/fonts/static/PublicSans-Bold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+/* PublicSans-Regular */
+@font-face {
+  font-family: "PublicSans";
+  src: url("./assets/fonts/static/PublicSans-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* PublicSans Italic */
+@font-face {
+  font-family: "PublicSans";
+  src: url("./assets/fonts/static/PublicSans-Italic-VariableFont_wght.ttf")
+    format("truetype");
+  font-weight: normal;
+  font-style: italic;
+}
+
+/* PublicSans Variable Font (Peso variabile) */
+@font-face {
+  font-family: "PublicSans";
+  src: url("./assets/fonts/static/PublicSans-VariableFont_wght.ttf")
+    format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+}
+
+.minimize-menu-container p {
+  transition: all 0.3s ease-in-out;
+  color: var(--color-grey-300);
+}
+
+.minimize-menu-container:hover p {
+  color: var(--color-grey-100);
+}
+
+.minimize-menu-container:hover .minimize-menu path {
+  fill: var(--color-grey-100);
+}
+
+.minimize-menu path {
+  transition: 0.3s ease-in-out;
+  fill: var(--color-grey-300);
+}
+
+.sidebar-menu .sidebar-menu-icon path {
+  transition: 0.3s ease-in-out;
+}
+
+/* Icona in stato hover */
+.sidebar-menu:hover .sidebar-menu-icon path {
+  fill: var(--color-grey-100);
+}
+
+/* Icona attiva */
+.sidebar-menu .sidebar-menu-icon.active path {
+  fill: var(--color-green);
+}
