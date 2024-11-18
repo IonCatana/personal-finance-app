@@ -34,7 +34,7 @@ const SideBarMenu = ({ label, icon, active, onClick, isSidebarMinimized }) => {
           xs: `${pxToRem(0)}`,
           md: isSidebarMinimized ? `${pxToRem(8)}` : `${pxToRem(24)}`,
         },
-        transition: "color 0.3s ease",
+        transition: "color 0.3s ease, margin-right 0.3s ease",
         cursor: "pointer",
         "&:hover": {
           color: active ? theme.palette.grey[900] : theme.palette.grey[100],

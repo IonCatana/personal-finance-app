@@ -56,6 +56,7 @@ const Dashboard = () => {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
+          // TODO da sistemare la width perche quando c'e contenuto nel main content si sposta il menu non mantiene la larghezza di 300px
           maxWidth: {
             xs: isSidebarMinimized ? "100%" : "100",
             md: isSidebarMinimized ? pxToRem(88) : pxToRem(300),
