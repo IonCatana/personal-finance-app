@@ -3,6 +3,7 @@ import { Box, Typography } from "@mui/material";
 import { pxToRem } from "@utils/pxToRem";
 import { useTheme } from "@mui/material/styles";
 import ButtonTertiary from "@components/buttons/ButtonTertiary";
+import InfoCard from "@components/card/InfoCard";
 import { ReactComponent as PotIcon } from "@assets/images/icon-pot.svg";
 import { useMenu } from "@context/MenuContext";
 
@@ -117,52 +118,12 @@ const PotsOverview = () => {
             gap: pxToRem(16),
           }}>
           {potsData.map((pot, index) => (
-            <Box
+            <InfoCard
               key={index}
-              sx={{
-                display: "flex",
-                padding: `${pxToRem(0)} ${pxToRem(0)} ${pxToRem(0)} ${pxToRem(
-                  16
-                )}`,
-                width: "100%",
-                maxHeight: pxToRem(43),
-                position: "relative",
-                "&:after": {
-                  content: '""',
-                  display: "block",
-                  position: "absolute",
-                  top: "0",
-                  left: "0",
-                  width: pxToRem(4),
-                  height: "100%",
-                  borderRadius: pxToRem(8),
-                  backgroundColor: pot.color,
-                },
-              }}>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  marginLeft: pxToRem(8),
-                }}>
-                <Typography
-                  sx={{
-                    typography: "textPreset5",
-                    color: theme.palette.grey[500],
-                    marginBottom: pxToRem(4),
-                  }}>
-                  {pot.label}
-                </Typography>
-                <Typography
-                  sx={{
-                    typography: "textPreset4Bold",
-                    color: theme.palette.grey[900],
-                  }}>
-                  {pot.value}
-                </Typography>
-              </Box>
-            </Box>
+              label={pot.label}
+              value={pot.value}
+              color={pot.color}
+            />
           ))}
         </Box>
       </Box>
