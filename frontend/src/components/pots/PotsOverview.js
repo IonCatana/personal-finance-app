@@ -2,8 +2,8 @@ import React from "react";
 import { Box, Typography } from "@mui/material";
 import { pxToRem } from "@utils/pxToRem";
 import { useTheme } from "@mui/material/styles";
-import ButtonTertiary from "@components/buttons/ButtonTertiary";
 import InfoCard from "@components/card/InfoCard";
+import SectionHeaderCard from "@components/card/SectionHeaderCard";
 import { ReactComponent as PotIcon } from "@assets/images/icon-pot.svg";
 import { useMenu } from "@context/MenuContext";
 
@@ -35,28 +35,15 @@ const PotsOverview = () => {
   return (
     <Box
       sx={{
-        backgroundColor: theme.palette.background.paper,
+        backgroundColor: theme.palette.otherColors.white,
         borderRadius: pxToRem(12),
         padding: pxToRem(24),
       }}>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: pxToRem(20),
-        }}>
-        <Typography
-          sx={{
-            typography: "textPreset2",
-            color: theme.palette.grey[900],
-          }}>
-          Pots
-        </Typography>
-        <ButtonTertiary withIcon onClick={() => setActiveMenu(4)}>
-          See Details
-        </ButtonTertiary>
-      </Box>
+      <SectionHeaderCard
+        title="Pots"
+        buttonLabel="See Details"
+        onButtonClick={() => setActiveMenu(4)}
+      />
       <Box
         sx={{
           display: "flex",
@@ -109,7 +96,6 @@ const PotsOverview = () => {
             </Typography>
           </Box>
         </Box>
-        {/* 4 cards */}
         <Box
           sx={{
             display: "grid",
