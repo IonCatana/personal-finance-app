@@ -10,10 +10,11 @@ import TransactionsContent from "@pages/Transactions";
 import BudgetsContent from "@pages/Budgets";
 import PotsContent from "@pages/Pots";
 import RecurringBillsContent from "@pages/RecurringBills";
+import { useMenu } from "@context/MenuContext";
 
 const Dashboard = () => {
   const theme = useTheme();
-  const [activeMenu, setActiveMenu] = useState(1);
+  const { activeMenu, setActiveMenu } = useMenu();
   const isLargeScreen = useMediaQuery(theme.breakpoints.up("md"));
   const [isSidebarMinimized, setIsSidebarMinimized] = useState(false);
 

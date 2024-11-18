@@ -9,5 +9,6 @@ module.exports = override(
     "@hooks": path.resolve(__dirname, "src/hooks"),
     "@routes": path.resolve(__dirname, "src/routes"),
     "@assets": path.resolve(__dirname, "src/assets"),
+    "@context": path.resolve(__dirname, "src/context"),
   })
 );

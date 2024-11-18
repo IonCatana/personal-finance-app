@@ -3,6 +3,7 @@ import { Box } from "@mui/material";
 import { pxToRem } from "@utils/pxToRem";
 import { useTheme } from "@mui/material/styles";
 import StatCard from "@components/card/StatCard";
+import PotsOverview from "@components/pots/PotsOverview";
 
 const OverviewContent = () => {
   const theme = useTheme();
@@ -41,6 +42,10 @@ const OverviewContent = () => {
         />
         <StatCard title="Income" value="$3,814.25" />
         <StatCard title="Expenses" value="$1,700.50" />
+      </Box>
+      {/* PotsOverview */}
+      <Box>
+        <PotsOverview />
       </Box>
     </>
   );

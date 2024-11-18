@@ -42,8 +42,11 @@ const ButtonTertiary = ({ children, withIcon, to, sx = {}, ...props }) => {
           component="span"
           sx={{
             marginLeft: pxToRem(12),
-            display: "inline-flex",
+            display: "flex",
             alignItems: "center",
+            justifyContent: "center",
+            width: pxToRem(12),
+            height: pxToRem(12),
           }}>
           <svg
             fill={theme.palette.grey[500]}
