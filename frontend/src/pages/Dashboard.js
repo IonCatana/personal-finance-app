@@ -122,10 +122,11 @@ const Dashboard = () => {
       <Box
         className="main-content"
         sx={{
-          overflow: "auto",
+          // overflow: "auto",
           // TODO da capire come mai ci sono 2 overflow
           width: "100%",
           height: { xs: "calc(100% - 74px)", md: "100%" },
+          marginBottom: { xs: pxToRem(74), sm: pxToRem(74), md: pxToRem(0) },
           padding: {
             xs: `${pxToRem(24)} ${pxToRem(16)}`,
             sm: `${pxToRem(32)} ${pxToRem(40)}`,
