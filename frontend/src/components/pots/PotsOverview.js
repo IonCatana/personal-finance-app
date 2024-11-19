@@ -7,6 +7,33 @@ import SectionHeaderCard from "@components/card/SectionHeaderCard";
 import { ReactComponent as PotIcon } from "@assets/images/icon-pot.svg";
 import { useMenu } from "@context/MenuContext";
 
+/**
+ * PotsOverview
+ * -------------------------------
+ * Questo componente rappresenta una panoramica dei "pots" (fondi o categorie di risparmio),
+ * con informazioni visive come il totale risparmiato e dettagli sui singoli pots.
+ *
+ * Funzionalità:
+ * - Mostra il totale risparmiato in un componente card separato.
+ * - Visualizza un elenco di pots con nome, valore e colore.
+ * - Include un'intestazione con un pulsante per navigare a una sezione dettagliata.
+ *
+ * Props:
+ * - Nessuna props diretta, i dati sono definiti localmente per ora.
+ *
+ * Stato:
+ * - Non utilizza stato locale, ma fa uso del `MenuContext` per la navigazione.
+ *
+ * Funzionalità Futuro:
+ * - `potsData` è attualmente un array statico. Può essere collegato a un backend
+ *   per caricare dati dinamici.
+ *
+ * Uso:
+ * - Ideale per dashboard o sezioni che richiedono una panoramica rapida sui risparmi.
+ *
+ * Esempio:
+ * <PotsOverview />
+ */
 const PotsOverview = () => {
   const theme = useTheme();
   const { setActiveMenu } = useMenu();
@@ -39,18 +66,20 @@ const PotsOverview = () => {
         borderRadius: pxToRem(12),
         padding: pxToRem(24),
       }}>
+      {/* Intestazione della sezione */}
       <SectionHeaderCard
         title="Pots"
         buttonLabel="See Details"
         onButtonClick={() => setActiveMenu(4)}
       />
+
       <Box
         sx={{
           display: "flex",
           flexDirection: { xs: "column", sm: "row", md: "row" },
           gap: pxToRem(20),
         }}>
-        {/* Total Saved */}
+        {/* Totale Risparmiato */}
         <Box
           sx={{
             display: "flex",
@@ -96,6 +125,8 @@ const PotsOverview = () => {
             </Typography>
           </Box>
         </Box>
+
+        {/* Lista dei pots */}
         <Box
           sx={{
             display: "grid",

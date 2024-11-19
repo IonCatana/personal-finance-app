@@ -4,6 +4,38 @@ import PropTypes from "prop-types";
 import { pxToRem } from "@utils/pxToRem";
 import { useTheme } from "@mui/material/styles";
 
+/**
+ * SideBarMenu
+ * -------------------------------
+ * Questo componente rappresenta un singolo elemento del menu laterale (sidebar).
+ * È progettato per adattarsi a diverse modalità, come una sidebar minimizzata
+ * o espansa, e supporta stati attivi per evidenziare l'elemento selezionato.
+ *
+ * Funzionalità:
+ * - Supporta un'icona e un'etichetta (testo) per l'elemento del menu.
+ * - Cambia lo stile in base allo stato attivo (`active`).
+ * - Adatta il layout alla modalità minimizzata o espansa della sidebar.
+ * - Include una transizione fluida per colore e margini.
+ *
+ * Props:
+ * - label (string, obbligatoria): Testo visualizzato accanto all'icona.
+ * - icon (node, obbligatoria): Icona visualizzata accanto al testo.
+ * - active (bool, opzionale): Stato attivo dell'elemento del menu.
+ * - onClick (function, opzionale): Funzione chiamata al clic sull'elemento.
+ * - isSidebarMinimized (bool, obbligatoria): Indica se la sidebar è minimizzata.
+ *
+ * Uso:
+ * - Importare e utilizzare per costruire menu laterali.
+ *
+ * Esempio:
+ * <SideBarMenu
+ *   label="Dashboard"
+ *   icon={<DashboardIcon />}
+ *   active={true}
+ *   onClick={() => console.log("Naviga al dashboard")}
+ *   isSidebarMinimized={false}
+ * />
+ */
 const SideBarMenu = ({ label, icon, active, onClick, isSidebarMinimized }) => {
   const theme = useTheme();
 
@@ -83,6 +115,7 @@ const SideBarMenu = ({ label, icon, active, onClick, isSidebarMinimized }) => {
           flexDirection: { xs: "column", md: "row" },
           gap: { xs: pxToRem(4), md: pxToRem(16) },
         }}>
+        {/* Icona dell'elemento */}
         <Box
           className="sidebar-menu-icon"
           sx={{
@@ -94,6 +127,8 @@ const SideBarMenu = ({ label, icon, active, onClick, isSidebarMinimized }) => {
           }}>
           {icon}
         </Box>
+
+        {/* Etichetta visibile solo se la sidebar non è minimizzata */}
         {!isSidebarMinimized && (
           <Typography
             sx={{
@@ -110,11 +145,11 @@ const SideBarMenu = ({ label, icon, active, onClick, isSidebarMinimized }) => {
 };
 
 SideBarMenu.propTypes = {
-  label: PropTypes.string.isRequired,
-  icon: PropTypes.node.isRequired,
-  active: PropTypes.bool,
-  onClick: PropTypes.func,
-  isSidebarMinimized: PropTypes.bool.isRequired,
+  label: PropTypes.string.isRequired, // Testo dell'elemento del menu
+  icon: PropTypes.node.isRequired, // Icona associata all'elemento
+  active: PropTypes.bool, // Stato attivo del menu
+  onClick: PropTypes.func, // Funzione chiamata al clic
+  isSidebarMinimized: PropTypes.bool.isRequired, // Stato minimizzato della sidebar
 };
 
 export default SideBarMenu;

@@ -12,6 +12,46 @@ import { useTheme } from "@mui/material/styles";
 import dropdownIcon from "@assets/images/icon-caret-down.svg";
 import { pxToRem } from "@utils/pxToRem";
 
+/**
+ * BasicInput
+ * -------------------------------
+ * Questo componente rappresenta un campo di input altamente configurabile.
+ * Può essere utilizzato sia come input base che come select con opzioni.
+ *
+ * Funzionalità:
+ * - Supporta etichetta, messaggi di errore e informazioni aggiuntive.
+ * - Può includere un prefisso, un'icona iniziale o finale.
+ * - Permette di passare opzioni per trasformarlo in un menu a tendina (select).
+ * - Personalizzabile tramite `sx` per integrazione visiva.
+ *
+ * Props:
+ * - label (string, opzionale): Testo visualizzato sopra l'input.
+ * - error (bool, opzionale): Indica se l'input è in stato di errore.
+ * - errorText (string, opzionale): Messaggio di errore mostrato sotto l'input.
+ * - infoText (string, opzionale): Messaggio informativo mostrato sotto l'input.
+ * - startIcon (node, opzionale): Icona opzionale visualizzata all'inizio.
+ * - endIcon (node, opzionale): Icona opzionale visualizzata alla fine.
+ * - prefix (string, opzionale): Prefisso visualizzato prima dell'input.
+ * - options (array, opzionale): Lista di opzioni per trasformare l'input in un menu a tendina.
+ * - value (string, opzionale): Valore corrente dell'input o del menu a tendina.
+ * - onChange (function, opzionale): Funzione chiamata quando il valore cambia.
+ * - sx (object, opzionale): Stili personalizzati.
+ *
+ * Stato:
+ * - currentSelection: Gestisce la selezione attuale per il menu a tendina.
+ *
+ * Uso:
+ * - Ideale per moduli che richiedono input configurabili o selezioni.
+ *
+ * Esempio:
+ * <BasicInput
+ *   label="Email"
+ *   value={email}
+ *   onChange={(e) => setEmail(e.target.value)}
+ *   error={isError}
+ *   errorText="Inserisci un'email valida"
+ * />
+ */
 const BasicInput = ({
   label = "",
   error = false,
@@ -33,7 +73,10 @@ const BasicInput = ({
     color: "",
   });
 
-  // Gestisco l'aggiornamento della selezione
+  /**
+   * Gestisce il cambio di valore per il menu a tendina.
+   * Trova l'opzione selezionata e aggiorna lo stato.
+   */
   const handleChange = (selectedValue) => {
     const selectedOption = options?.find(
       (option) => option.value === selectedValue
@@ -44,11 +87,13 @@ const BasicInput = ({
       color: selectedOption?.color || "",
     };
     setCurrentSelection(newSelection);
-    onChange(newSelection); // Passo il nuovo oggetto al parent
+    onChange(newSelection); // Passa il nuovo oggetto al parent
   };
 
+  /**
+   * Sincronizza il valore iniziale con lo stato della selezione.
+   */
   useEffect(() => {
-    // Sincronizzo il valore iniziale
     if (options && value) {
       const selectedOption = options.find((option) => option.value === value);
       if (selectedOption) {
@@ -68,7 +113,7 @@ const BasicInput = ({
         marginBottom: pxToRem(16),
         ...sx,
       }}>
-      {/* Etichetta personalizzata sopra l'input */}
+      {/* Etichetta sopra l'input */}
       {label && (
         <Typography
           sx={{
@@ -114,13 +159,12 @@ const BasicInput = ({
           </Typography>
         )}
 
-        {/* Select Condizionale */}
+        {/* Input o Select Condizionale */}
         {options ? (
           <Select
             fullWidth
             value={currentSelection.value}
             onChange={(e) => handleChange(e.target.value)}
-            // displayEmpty
             MenuProps={{
               PaperProps: {
                 style: {
@@ -161,23 +205,7 @@ const BasicInput = ({
             )}
             {...props}>
             {options.map((option, index) => (
-              <MenuItem
-                key={index}
-                value={option.value}
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  typography: "textPreset4",
-                  color: theme.palette.grey[900],
-                  padding: `${pxToRem(12)} ${pxToRem(0)}`,
-                  borderBottom:
-                    index !== options.length - 1
-                      ? `1px solid ${theme.palette.grey[100]}`
-                      : "none",
-                  "&:hover": {
-                    backgroundColor: theme.palette.grey[100],
-                  },
-                }}>
+              <MenuItem key={index} value={option.value}>
                 {option.color && (
                   <Box
                     sx={{
@@ -246,23 +274,22 @@ const BasicInput = ({
 };
 
 BasicInput.propTypes = {
-  label: PropTypes.string,
-  error: PropTypes.bool,
-  errorText: PropTypes.string,
-  startIcon: PropTypes.node,
-  endIcon: PropTypes.node,
-  colorTag: PropTypes.string,
-  prefix: PropTypes.string,
+  label: PropTypes.string, // Testo sopra l'input
+  error: PropTypes.bool, // Stato di errore
+  errorText: PropTypes.string, // Messaggio di errore
+  startIcon: PropTypes.node, // Icona opzionale all'inizio
+  endIcon: PropTypes.node, // Icona opzionale alla fine
+  prefix: PropTypes.string, // Prefisso dell'input
   options: PropTypes.arrayOf(
     PropTypes.shape({
       label: PropTypes.string.isRequired,
       value: PropTypes.string.isRequired,
       color: PropTypes.string,
     })
-  ),
-  value: PropTypes.string,
-  onChange: PropTypes.func,
-  sx: PropTypes.object,
+  ), // Opzioni per trasformare l'input in un select
+  value: PropTypes.string, // Valore corrente
+  onChange: PropTypes.func, // Funzione chiamata al cambio di valore
+  sx: PropTypes.object, // Stili personalizzati
 };
 
 export default BasicInput;
