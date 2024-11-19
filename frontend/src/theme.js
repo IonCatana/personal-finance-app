@@ -1,8 +1,27 @@
 import { createTheme } from "@mui/material/styles";
 import { pxToRem } from "@utils/pxToRem";
 
+/**
+ * Configurazione Tema Material-UI
+ * --------------------------------
+ * Questo file definisce il tema personalizzato per l'applicazione utilizzando Material-UI.
+ * Comprende palette di colori, tipografia e altre impostazioni di stile condivise.
+ *
+ * Funzionalità:
+ * - Definisce una palette personalizzata di colori, divisa in categorie (beige, grey, secondaryColors, otherColors).
+ * - Specifica le impostazioni di tipografia, utilizzando diverse "preset" per fontSize, fontWeight e lineHeight.
+ * - Utilizza `pxToRem` per garantire un layout scalabile e responsive.
+ *
+ * Uso:
+ * - Importare il tema e avvolgere l'applicazione con `<ThemeProvider theme={theme}>`.
+ * - Accedere al tema nei componenti tramite `useTheme`.
+ *
+ * Esempi:
+ * 1. Avvolgere l'app con il tema.
+ * 2. Utilizzare `useTheme` per accedere ai colori o alla tipografia nei componenti.
+ */
 const theme = createTheme({
-  // COLORS
+  // PALETTE: Definizione dei colori
   palette: {
     beige: {
       500: "#98908B",
@@ -35,7 +54,8 @@ const theme = createTheme({
       white: "#FFFFFF",
     },
   },
-  // TYPOGRAPHY
+
+  // TYPOGRAPHY: Preset per il testo
   typography: {
     fontFamily: '"Public Sans", sans-serif',
     textPreset1: {
