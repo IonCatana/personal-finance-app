@@ -51,7 +51,7 @@ const Logo = ({ type = "large", sx = {} }) => {
       case "large":
         return { width: pxToRem(121.45), height: pxToRem(21.76) }; // Logo grande
       case "small":
-        return { width: pxToRem(12.48), height: pxToRem(21.44) }; // Logo piccolo
+        return { width: pxToRem(12.48), height: pxToRem(21.76) }; // Logo piccolo
       default:
         return { width: pxToRem(121.45), height: pxToRem(21.76) };
     }

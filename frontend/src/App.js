@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import { BrowserRouter } from "react-router-dom";
 import {
   ThemeProvider,
@@ -16,10 +16,10 @@ function App() {
       <MenuProvider>
         <BrowserRouter
           future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-          <nav>
+          {/* <nav>
             <Link to="/">Dashboard</Link> |<Link to="/signin">Sign In</Link> |
             <Link to="/signup">Sign Up</Link>
-          </nav>
+          </nav> */}
           <AppRoutes />
         </BrowserRouter>
       </MenuProvider>

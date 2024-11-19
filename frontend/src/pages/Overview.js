@@ -17,7 +17,7 @@ const OverviewContent = () => {
         sx={{
           display: "flex",
           gap: { xs: pxToRem(12), sm: pxToRem(24), md: pxToRem(24) },
-          flexDirection: { xs: "column", sm: "row", md: "row" },
+          flexWrap: { xs: "wrap", sm: "nowrap", md: "nowrap" },
           marginBottom: pxToRem(32),
         }}>
         <StatCard

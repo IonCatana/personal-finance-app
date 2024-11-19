@@ -124,7 +124,9 @@ const Dashboard = () => {
         sx={{
           // overflow: "auto",
           // TODO da capire come mai ci sono 2 overflow
-          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          flex: 1,
           height: { xs: "calc(100% - 74px)", md: "100%" },
           marginBottom: { xs: pxToRem(74), sm: pxToRem(74), md: pxToRem(0) },
           padding: {
