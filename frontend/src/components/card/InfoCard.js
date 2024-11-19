@@ -4,8 +4,35 @@ import PropTypes from "prop-types";
 import { pxToRem } from "@utils/pxToRem";
 import { useTheme } from "@mui/material/styles";
 
+/**
+ * InfoCard
+ * -------------------------------
+ * Questo componente rappresenta una card semplice e compatta, progettata per
+ * visualizzare informazioni sintetiche, con un'etichetta (label) e un valore.
+ * Include anche un indicatore di colore opzionale a sinistra.
+ *
+ * Props:
+ * - label (string, opzionale): Etichetta descrittiva del contenuto (es. "Savings").
+ * - value (string, opzionale): Valore principale da visualizzare (es. "$500").
+ * - color (string, opzionale): Colore del bordo laterale sinistro, usato come indicatore.
+ * - sx (object, opzionale): Stili personalizzati aggiuntivi.
+ * - ...props (object): Altri attributi opzionali che possono essere passati al componente.
+ *
+ * Uso:
+ * - Ideale per visualizzare informazioni sintetiche in layout compatti.
+ * - Può essere utilizzato in dashboard, riepiloghi o elenchi di dati.
+ *
+ * Esempio:
+ * <InfoCard
+ *   label="Savings"
+ *   value="$500"
+ *   color="#4CAF50"
+ *   sx={{ marginBottom: "16px" }}
+ * />
+ */
 const InfoCard = ({ label, value, color, sx = {}, ...props }) => {
   const theme = useTheme();
+
   return (
     <Box
       sx={{
@@ -41,6 +68,7 @@ const InfoCard = ({ label, value, color, sx = {}, ...props }) => {
           flexDirection: "column",
           justifyContent: "center",
         }}>
+        {/* Etichetta descrittiva */}
         {label && (
           <Typography
             sx={{
@@ -51,6 +79,8 @@ const InfoCard = ({ label, value, color, sx = {}, ...props }) => {
             {label}
           </Typography>
         )}
+
+        {/* Valore principale */}
         {value && (
           <Typography
             sx={{
@@ -66,10 +96,10 @@ const InfoCard = ({ label, value, color, sx = {}, ...props }) => {
 };
 
 InfoCard.propTypes = {
-  label: PropTypes.string,
-  value: PropTypes.string,
-  color: PropTypes.string,
-  sx: PropTypes.object,
+  label: PropTypes.string, // Etichetta descrittiva
+  value: PropTypes.string, // Valore principale
+  color: PropTypes.string, // Colore dell'indicatore laterale
+  sx: PropTypes.object, // Stili personalizzati opzionali
 };
 
 export default InfoCard;

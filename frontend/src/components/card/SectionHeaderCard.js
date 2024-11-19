@@ -5,8 +5,31 @@ import ButtonTertiary from "@components/buttons/ButtonTertiary";
 import { pxToRem } from "@utils/pxToRem";
 import { useTheme } from "@mui/material/styles";
 
+/**
+ * SectionHeaderCard
+ * -------------------------------
+ * Questo componente rappresenta un'intestazione di sezione riutilizzabile,
+ * completa di un titolo e, opzionalmente, un pulsante con un'azione.
+ *
+ * Props:
+ * - title (string, obbligatoria): Testo visualizzato come titolo della sezione.
+ * - buttonLabel (string, opzionale): Testo visualizzato nel pulsante, se presente.
+ * - onButtonClick (function, opzionale): Funzione chiamata al clic del pulsante.
+ *
+ * Uso:
+ * - Ideale per creare intestazioni di sezioni con un layout uniforme.
+ * - Può essere utilizzato in qualsiasi sezione che richiede un titolo e un'azione.
+ *
+ * Esempio:
+ * <SectionHeaderCard
+ *   title="Pots"
+ *   buttonLabel="See Details"
+ *   onButtonClick={() => console.log("Pulsante cliccato")}
+ * />
+ */
 const SectionHeaderCard = ({ title, buttonLabel, onButtonClick }) => {
-  const theme = useTheme();
+  const theme = useTheme(); // Permette di accedere ai colori e agli stili definiti nel tema
+
   return (
     <Box
       sx={{
@@ -15,6 +38,7 @@ const SectionHeaderCard = ({ title, buttonLabel, onButtonClick }) => {
         alignItems: "center",
         marginBottom: pxToRem(20),
       }}>
+      {/* Titolo della sezione */}
       <Typography
         sx={{
           typography: "textPreset2",
@@ -22,6 +46,8 @@ const SectionHeaderCard = ({ title, buttonLabel, onButtonClick }) => {
         }}>
         {title}
       </Typography>
+
+      {/* Pulsante opzionale con azione */}
       {buttonLabel && onButtonClick && (
         <ButtonTertiary withIcon onClick={onButtonClick}>
           {buttonLabel}
@@ -32,9 +58,9 @@ const SectionHeaderCard = ({ title, buttonLabel, onButtonClick }) => {
 };
 
 SectionHeaderCard.propTypes = {
-  title: PropTypes.string.isRequired,
-  buttonLabel: PropTypes.string,
-  onButtonClick: PropTypes.func,
+  title: PropTypes.string.isRequired, // Titolo della sezione
+  buttonLabel: PropTypes.string, // Testo del pulsante (opzionale)
+  onButtonClick: PropTypes.func, // Funzione chiamata al clic del pulsante (opzionale)
 };
 
 export default SectionHeaderCard;

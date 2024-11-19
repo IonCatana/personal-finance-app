@@ -5,10 +5,38 @@ import { pxToRem } from "@utils/pxToRem";
 import { useTheme } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 
+/**
+ * ButtonTertiary
+ * -------------------------------
+ * Questo componente rappresenta un pulsante terziario, usato per azioni secondarie o di supporto.
+ * Include la possibilità di navigare verso un'altra pagina tramite `react-router-dom` o
+ * eseguire una funzione personalizzata tramite `onClick`.
+ *
+ * Props:
+ * - children (node, obbligatoria): Contenuto del pulsante (es. testo o icona+testo).
+ * - withIcon (bool, opzionale): Aggiunge un'icona freccia accanto al testo se impostato a `true`.
+ * - to (string, opzionale): Percorso per la navigazione utilizzando `react-router-dom`.
+ * - sx (object, opzionale): Stili personalizzati per il pulsante.
+ * - ...props (object): Altre proprietà che vengono passate al componente Button di Material-UI.
+ *
+ * Uso:
+ * - Ideale per link o pulsanti secondari che richiedono navigazione o azioni leggere.
+ * - Può essere utilizzato con o senza icona aggiuntiva.
+ *
+ * Esempio:
+ * <ButtonTertiary to="/details" withIcon>
+ *   See Details
+ * </ButtonTertiary>
+ */
 const ButtonTertiary = ({ children, withIcon, to, sx = {}, ...props }) => {
   const theme = useTheme();
   const navigate = useNavigate();
 
+  /**
+   * Gestisce il clic sul pulsante:
+   * - Se è definito `to`, naviga verso il percorso specificato.
+   * - Altrimenti, esegue la funzione passata tramite `onClick`.
+   */
   const handleClick = () => {
     if (to) {
       navigate(to);
@@ -31,15 +59,15 @@ const ButtonTertiary = ({ children, withIcon, to, sx = {}, ...props }) => {
           boxShadow: "none",
           color: theme.palette.grey[900],
         },
-
-        ...sx, // Permette di aggiungere stile personalizzato
+        ...sx, // Consente la personalizzazione degli stili
       }}
-      {...props} // Passa qualsiasi altra prop
+      {...props} // Passa ulteriori props al componente Button
     >
       {children}
+
+      {/* Icona opzionale aggiunta accanto al contenuto */}
       {withIcon && (
         <Box
-          component="span"
           sx={{
             marginLeft: pxToRem(12),
             display: "flex",
@@ -69,10 +97,10 @@ const ButtonTertiary = ({ children, withIcon, to, sx = {}, ...props }) => {
 };
 
 ButtonTertiary.propTypes = {
-  children: PropTypes.node.isRequired,
-  withIcon: PropTypes.bool,
-  to: PropTypes.string,
-  sx: PropTypes.object,
+  children: PropTypes.node.isRequired, // Contenuto del pulsante (testo o icona+testo)
+  withIcon: PropTypes.bool, // Aggiunge un'icona freccia accanto al testo (opzionale)
+  to: PropTypes.string, // Percorso per la navigazione (opzionale)
+  sx: PropTypes.object, // Stili personalizzati opzionali
 };
 
 export default ButtonTertiary;

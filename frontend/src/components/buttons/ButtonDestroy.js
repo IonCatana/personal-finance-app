@@ -4,8 +4,29 @@ import PropTypes from "prop-types";
 import { pxToRem } from "@utils/pxToRem";
 import { useTheme } from "@mui/material/styles";
 
+/**
+ * ButtonDestroy
+ * -------------------------------
+ * Questo componente rappresenta un pulsante "distruttivo", usato per azioni
+ * che potrebbero comportare modifiche irreversibili, come l'eliminazione.
+ *
+ * Props:
+ * - children (node, obbligatoria): Contenuto del pulsante (es. "Delete").
+ * - sx (object, opzionale): Stili personalizzati per il pulsante.
+ * - ...props (object): Altre proprietà che vengono passate al componente Button di Material-UI.
+ *
+ * Uso:
+ * - Ideale per azioni distruttive, come eliminare un elemento o resettare dati.
+ * - Può essere utilizzato con icone o solo testo.
+ *
+ * Esempio:
+ * <ButtonDestroy onClick={() => console.log("Elemento eliminato")}>
+ *   Delete
+ * </ButtonDestroy>
+ */
 const ButtonDestroy = ({ children, sx = {}, ...props }) => {
   const theme = useTheme();
+
   return (
     <Button
       variant="contained"
@@ -23,10 +44,9 @@ const ButtonDestroy = ({ children, sx = {}, ...props }) => {
           backgroundColor: theme.palette.secondaryColors.red,
           opacity: 0.8,
         },
-
-        ...sx, // Permette di aggiungere stile personalizzato
+        ...sx, // Consente la personalizzazione degli stili
       }}
-      {...props} // Passa qualsiasi altra prop
+      {...props} // Passa ulteriori props al componente Button
     >
       {children}
     </Button>
@@ -34,8 +54,8 @@ const ButtonDestroy = ({ children, sx = {}, ...props }) => {
 };
 
 ButtonDestroy.propTypes = {
-  children: PropTypes.node.isRequired,
-  sx: PropTypes.object,
+  children: PropTypes.node.isRequired, // Contenuto del pulsante (es. testo o icona)
+  sx: PropTypes.object, // Stili personalizzati opzionali
 };
 
 export default ButtonDestroy;
