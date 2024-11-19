@@ -8,6 +8,30 @@ import { useTheme } from "@mui/material/styles";
 import showPasswordIcon from "@assets/images/icon-show-password.svg";
 import hidePasswordIcon from "@assets/images/icon-hide-password.svg";
 
+/**
+ * SignUpForm
+ * -------------------------------
+ * Questo componente rappresenta il modulo di registrazione per l'applicazione.
+ * Permette agli utenti di creare un account inserendo nome, email e password.
+ *
+ * Funzionalità:
+ * - Gestione dinamica dell'input (nome, email e password).
+ * - Possibilità di mostrare/nascondere la password tramite un'icona.
+ * - Invio del modulo con validazione base e gestione della logica di registrazione.
+ * - Link per il login per gli utenti già registrati.
+ *
+ * Stato:
+ * - name: Stato per memorizzare il nome.
+ * - email: Stato per memorizzare l'input dell'email.
+ * - password: Stato per memorizzare l'input della password.
+ * - showPassword: Stato per determinare se mostrare o nascondere la password.
+ *
+ * Uso:
+ * - Importare e utilizzare nella pagina di registrazione (`/signup`).
+ *
+ * Esempio:
+ * <SignUpForm />
+ */
 const SignUpForm = () => {
   const theme = useTheme();
   const [name, setName] = useState("");
@@ -15,13 +39,19 @@ const SignUpForm = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
+  // Mostra o nasconde la password al clic sull'icona.
   const handleClickShowPassword = () => setShowPassword((prev) => !prev);
 
+  // Evita il comportamento predefinito quando si clicca sull'icona.
   const handleMouseDownPassword = (event) => event.preventDefault();
 
+  /**
+   * Gestisce l'invio del modulo.
+   * Per ora, stampa il nome, l'email e la password nella console.
+   * Questa logica può essere estesa per inviare i dati al backend.
+   */
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Logica per la gestione del form di iscrizione
     console.log("Name:", name);
     console.log("Email:", email);
     console.log("Password:", password);
@@ -38,6 +68,7 @@ const SignUpForm = () => {
         flexDirection: "column",
         alignItems: "center",
       }}>
+      {/* Campo di input per il nome */}
       <BasicInput
         label="Name"
         value={name}
@@ -46,6 +77,8 @@ const SignUpForm = () => {
         errorText="Inserisci un nome valido"
         sx={{ marginBottom: pxToRem(16) }}
       />
+
+      {/* Campo di input per l'email */}
       <BasicInput
         label="Email"
         value={email}
@@ -54,6 +87,8 @@ const SignUpForm = () => {
         errorText="Inserisci un'email valida"
         sx={{ marginBottom: pxToRem(16) }}
       />
+
+      {/* Campo di input per la password */}
       <BasicInput
         label="Create Password"
         value={password}
@@ -77,11 +112,15 @@ const SignUpForm = () => {
         }
         sx={{ marginBottom: pxToRem(32) }}
       />
+
+      {/* Pulsante per inviare il modulo */}
       <ButtonPrimary
         type="submit"
         sx={{ width: "100%", marginBottom: pxToRem(32) }}>
         Create Account
       </ButtonPrimary>
+
+      {/* Link per accedere se si possiede già un account */}
       <Typography
         sx={{
           typography: "textPreset4",
