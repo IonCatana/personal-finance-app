@@ -39,7 +39,8 @@ const Dashboard = () => {
         width: "100%",
         height: "100%",
         display: "flex",
-        flexDirection: { xs: "column-reverse", md: "row" },
+        flexDirection: { xs: "column", md: "row" },
+        position: "relative",
       }}>
       <Box
         className="sidebar-container"
@@ -59,12 +60,16 @@ const Dashboard = () => {
           // TODO da sistemare la width perche quando c'e contenuto nel main content si sposta il menu non mantiene la larghezza di 300px
           // TODO da sistemare anche sidebar-container perche  il contentuo dle main-content va soprapposto al menu
           maxWidth: {
-            xs: isSidebarMinimized ? "100%" : "100",
+            xs: isSidebarMinimized ? "100%" : "100%",
             md: isSidebarMinimized ? pxToRem(88) : pxToRem(300),
           },
           width: "100%",
           height: { xs: pxToRem(74), md: "100%" },
           backgroundColor: theme.palette.grey[900],
+          position: { xs: "fixed", md: "relative" },
+          bottom: { xs: 0, md: "auto" },
+          left: { xs: 0, md: "auto" },
+          zIndex: 99,
           transition: "max-width 0.3s",
         }}>
         <Logo
@@ -117,8 +122,10 @@ const Dashboard = () => {
       <Box
         className="main-content"
         sx={{
+          overflow: "auto",
+          // TODO da capire come mai ci sono 2 overflow
           width: "100%",
-          height: "100%",
+          height: { xs: "calc(100% - 74px)", md: "100%" },
           padding: {
             xs: `${pxToRem(24)} ${pxToRem(16)}`,
             sm: `${pxToRem(32)} ${pxToRem(40)}`,

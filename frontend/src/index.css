@@ -132,8 +132,7 @@ body {
 /* PublicSans Italic */
 @font-face {
   font-family: "PublicSans";
-  src: url("./assets/fonts/static/PublicSans-Italic-VariableFont_wght.ttf")
-    format("truetype");
+  src: url("./assets/fonts/static/PublicSans-Italic-VariableFont_wght.ttf") format("truetype");
   font-weight: normal;
   font-style: italic;
 }
@@ -141,8 +140,7 @@ body {
 /* PublicSans Variable Font (Peso variabile) */
 @font-face {
   font-family: "PublicSans";
-  src: url("./assets/fonts/static/PublicSans-VariableFont_wght.ttf")
-    format("truetype");
+  src: url("./assets/fonts/static/PublicSans-VariableFont_wght.ttf") format("truetype");
   font-weight: 100 900;
   font-style: normal;
 }
