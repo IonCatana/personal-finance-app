@@ -5,7 +5,6 @@ import { pxToRem } from "@utils/pxToRem";
 import { useTheme } from "@mui/material/styles";
 import ButtonSecondary from "@components/buttons/ButtonSecondary";
 import { ReactComponent as EllipsisIcon } from "@assets/images/icon-ellipsis.svg";
-import { potsData } from "@components/pots/apiPots";
 
 const PotsCard = ({
   name,
