@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Typography } from "@mui/material";
 import PropTypes from "prop-types";
 import { pxToRem } from "@utils/pxToRem";
 import { useTheme } from "@mui/material/styles";
+import ModalCrud from "@components/modals/ModalCrud";
 
 /**
  * SectionHeaderContent
@@ -40,33 +41,59 @@ const SectionHeaderContent = ({
 }) => {
   const theme = useTheme();
 
-  return (
-    <Box
-      sx={{
-        minHeight: pxToRem(56),
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        marginBottom: pxToRem(32),
-      }}>
-      {/* Titolo della sezione */}
-      <Typography
-        sx={{
-          typography: "textPreset1",
-          color: theme.palette.grey[900],
-        }}>
-        {title}
-      </Typography>
+  // Stato per gestire la visibilità della modale
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-      {/* Pulsante opzionale */}
-      {buttonLabel && ButtonComponent && (
-        <Box>
-          <ButtonComponent onClick={onButtonClick}>
-            {buttonLabel}
-          </ButtonComponent>
-        </Box>
-      )}
-    </Box>
+  // Funzioni per aprire e chiudere la modale
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
+
+  return (
+    <>
+      <Box
+        sx={{
+          minHeight: pxToRem(56),
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: pxToRem(32),
+        }}>
+        {/* Titolo della sezione */}
+        <Typography
+          sx={{
+            typography: "textPreset1",
+            color: theme.palette.grey[900],
+          }}>
+          {title}
+        </Typography>
+
+        {/* Pulsante opzionale */}
+        {buttonLabel && ButtonComponent && (
+          <Box>
+            <ButtonComponent
+              onClick={() => {
+                handleOpenModal(); // Apre la modale al clic
+                if (onButtonClick) {
+                  onButtonClick(); // Esegue l'eventuale funzione passata
+                }
+              }}>
+              {buttonLabel}
+            </ButtonComponent>
+          </Box>
+        )}
+      </Box>
+      {/* Modale CRUD per "Add" */}
+      <ModalCrud
+        open={isModalOpen}
+        onClose={handleCloseModal}
+        type="add" // Specifica il tipo "add"
+        data={null} // Non ci sono dati iniziali per la modalità "add"
+        onSubmit={(newData) => {
+          console.log("New Pot added:", newData); // Logga i dati ricevuti
+          handleCloseModal(); // Chiude la modale
+        }}
+      />
+    </>
   );
 };
 

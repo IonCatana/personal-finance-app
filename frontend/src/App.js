@@ -17,8 +17,7 @@ function App() {
         <BrowserRouter
           future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           {/* <nav>
-            <Link to="/">Dashboard</Link> |<Link to="/signin">Sign In</Link> |
-            <Link to="/signup">Sign Up</Link>
+            <Link to="/signin">Sign In</Link> |<Link to="/signup">Sign Up</Link>
           </nav> */}
           <AppRoutes />
         </BrowserRouter>

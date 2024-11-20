@@ -4,16 +4,19 @@ import { Modal, Box, Typography, TextField, MenuItem } from "@mui/material";
 import { pxToRem } from "@utils/pxToRem";
 import { useTheme } from "@mui/material/styles";
 import ButtonDestroy from "@components/buttons/ButtonDestroy";
+import ButtonPrimary from "@components/buttons/ButtonPrimary";
 import ButtonTertiary from "@components/buttons/ButtonTertiary";
-import { ReactComponent as CloseModal } from "@assets/images/icon-close-modal.svg";
+import { ReactComponent as CloseIcon } from "@assets/images/icon-close-modal.svg";
 import BasicInput from "@components/inputFields/BasicInput";
 
-const ModalCrud = ({ open, onClose, type, data, onSubmit }) => {
+const ModalCrud = ({ open, onClose, type = "add", data, onSubmit }) => {
   const theme = useTheme();
 
   const isDelete = type === "delete";
   const isEdit = type === "edit";
   const isAdd = type === "add";
+  const isAddMoney = type === "addMoney";
+  const isWithdraw = type === "withdraw";
 
   // Funzione per gestire il submit
   const handleSubmit = () => {
@@ -27,6 +30,8 @@ const ModalCrud = ({ open, onClose, type, data, onSubmit }) => {
     if (isAdd) return "Add New Pot";
     if (isEdit) return `Edit ${data?.name} Pot`;
     if (isDelete) return `Delete ${data?.name}?`;
+    if (isAddMoney) return `Add to ${data?.name}`;
+    if (isWithdraw) return `Withdraw from ${data?.name}`;
   };
 
   const renderContent = () => {
@@ -95,20 +100,31 @@ const ModalCrud = ({ open, onClose, type, data, onSubmit }) => {
     }
 
     return (
-      <ButtonDestroy onClick={handleSubmit} sx={{ flex: 1 }}>
-        {isAdd ? "Add Pot" : "Save Changes"}
-      </ButtonDestroy>
+      <ButtonPrimary onClick={handleSubmit} sx={{ flex: 1 }}>
+        {isAdd && "Add Pot"}
+        {isEdit && "Save Changes"}
+        {isAddMoney && "Confirm Addition"}
+        {isWithdraw && "Confirm Withdrawal"}
+      </ButtonPrimary>
     );
   };
 
   return (
-    <Modal open={open} onClose={onClose}>
+    <Modal
+      sx={{
+        margin: pxToRem(16),
+      }}
+      open={open}
+      onClose={onClose}>
       <Box
         sx={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
           backgroundColor: theme.palette.otherColors.white,
           maxWidth: pxToRem(560),
           width: "100%",
-          margin: "auto",
           borderRadius: pxToRem(12),
           padding: {
             xs: `${pxToRem(24)} ${pxToRem(20)}`,
@@ -127,8 +143,16 @@ const ModalCrud = ({ open, onClose, type, data, onSubmit }) => {
           }}>
           <Typography
             sx={{
-              typography: theme.typography.textPreset1,
-              color: theme.palette.grey[900],
+              fontSize: pxToRem(20),
+              [theme.breakpoints.up("sm")]: {
+                fontSize: theme.typography.textPreset1.fontSize,
+              },
+              [theme.breakpoints.up("md")]: {
+                fontSize: theme.typography.textPreset1.fontSize,
+              },
+              fontWeight: theme.typography.textPreset1.fontWeight,
+              lineHeight: theme.typography.textPreset1.lineHeight,
+              color: theme.palette.grey[900], // Colore dinamico
             }}>
             {renderTitle()}
           </Typography>
@@ -140,7 +164,7 @@ const ModalCrud = ({ open, onClose, type, data, onSubmit }) => {
               width: pxToRem(32),
               height: pxToRem(32),
             }}>
-            <CloseModal style={{ cursor: "pointer" }} onClick={onClose} />
+            <CloseIcon style={{ cursor: "pointer" }} onClick={onClose} />
           </Box>
         </Box>
 
@@ -164,7 +188,8 @@ const ModalCrud = ({ open, onClose, type, data, onSubmit }) => {
 ModalCrud.propTypes = {
   open: PropTypes.bool.isRequired, // Stato di apertura della modale
   onClose: PropTypes.func.isRequired, // Funzione per chiudere la modale
-  type: PropTypes.oneOf(["add", "edit", "delete"]).isRequired, // Tipo di modale
+  type: PropTypes.oneOf(["add", "edit", "delete", "addMoney", "withdraw"])
+    .isRequired, // Tipo di modale
   data: PropTypes.object, // Dati da mostrare nella modale
   onSubmit: PropTypes.func, // Funzione per gestire il salvataggio o la conferma
 };

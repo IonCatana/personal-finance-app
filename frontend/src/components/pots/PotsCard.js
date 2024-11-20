@@ -67,6 +67,7 @@ const PotsCard = ({
   };
 
   const handleOpenModal = (type) => {
+    console.log("Modal type:", type); // Log per il debug
     setModalType(type);
     setModalData({ name, total, target, color }); // Passa i dati correnti del pot
     setModalOpen(true);
@@ -211,11 +212,15 @@ const PotsCard = ({
         {/* Sezione pulsanti */}
         <Box sx={{ display: "flex", gap: pxToRem(16) }}>
           {/* Pulsante per aggiungere denaro */}
-          <ButtonSecondary sx={{ flex: 1 }} onClick={onAddMoney}>
+          <ButtonSecondary
+            sx={{ flex: 1 }}
+            onClick={() => handleOpenModal("addMoney")}>
             + Add Money
           </ButtonSecondary>
           {/* Pulsante per prelevare denaro */}
-          <ButtonSecondary sx={{ flex: 1 }} onClick={onWithdraw}>
+          <ButtonSecondary
+            sx={{ flex: 1 }}
+            onClick={() => handleOpenModal("withdraw")}>
             Withdraw
           </ButtonSecondary>
         </Box>
@@ -223,7 +228,7 @@ const PotsCard = ({
       <ModalCrud
         open={modalOpen}
         onClose={handleCloseModal}
-        type={modalType} // "edit" o "delete"
+        type={modalType || "add"} // Se `modalType` è vuoto, usa "add"
         data={modalData} // Passa i dati del pot
         onSubmit={(updatedData) => {
           console.log("Data submitted:", updatedData); // Gestisci il salvataggio o eliminazione
