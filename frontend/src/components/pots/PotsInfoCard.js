@@ -3,36 +3,42 @@ import { Box, Typography } from "@mui/material";
 import PropTypes from "prop-types";
 import { pxToRem } from "@utils/pxToRem";
 import { useTheme } from "@mui/material/styles";
-// import { potsData } from "@components/pots/apiPots";
 
 /**
- * InfoCard
+ * PotsInfoCard
  * -------------------------------
- * Questo componente rappresenta una card semplice e compatta, progettata per
- * visualizzare informazioni sintetiche, con un'etichetta (label) e un valore.
- * Include anche un indicatore di colore opzionale a sinistra.
+ * Questo componente rappresenta una card compatta progettata per visualizzare
+ * informazioni sintetiche, come un'etichetta (name) e un valore principale (total).
+ * Include un indicatore colorato opzionale sul lato sinistro.
  *
  * Props:
- * - label (string, opzionale): Etichetta descrittiva del contenuto (es. "Savings").
- * - value (string, opzionale): Valore principale da visualizzare (es. "$500").
- * - color (string, opzionale): Colore del bordo laterale sinistro, usato come indicatore.
- * - sx (object, opzionale): Stili personalizzati aggiuntivi.
- * - ...props (object): Altri attributi opzionali che possono essere passati al componente.
+ * - `name` (string, opzionale): Nome o etichetta del contenuto (es. "Savings").
+ * - `total` (string, opzionale): Valore principale da visualizzare (es. "$500").
+ * - `color` (string, opzionale): Colore del bordo laterale sinistro, usato come indicatore visivo.
+ * - `sx` (object, opzionale): Stili personalizzati aggiuntivi.
+ * - `...props` (object): Altri attributi che possono essere passati al componente.
+ *
+ * Funzionalità:
+ * - Mostra un'etichetta sopra il valore principale.
+ * - Aggiunge un bordo colorato a sinistra, se il prop `color` è definito.
+ * - Supporta stili personalizzati tramite il prop `sx`.
+ *
+ * Esempio di utilizzo:
+ * ```jsx
+ * <PotsInfoCard
+ *   name="Savings"
+ *   total="$500"
+ *   color="#F2CDAC"
+ *   sx={{ backgroundColor: "#F7F7F7" }}
+ * />
+ * ```
  *
  * Uso:
- * - Ideale per visualizzare informazioni sintetiche in layout compatti.
- * - Può essere utilizzato in dashboard, riepiloghi o elenchi di dati.
- *
- * Esempio:
- * <InfoCard
- *   label="Savings"
- *   value="$500"
- *   color="#4CAF50"
- *   sx={{ marginBottom: "16px" }}
- * />
+ * - Ideale per layout compatti, come dashboard o riepiloghi di dati.
+ * - Può essere utilizzato come componente riutilizzabile in elenchi di informazioni sintetiche.
  */
 const PotsInfoCard = ({ name, total, color, sx = {}, ...props }) => {
-  const theme = useTheme();
+  const theme = useTheme(); // Accesso al tema per colori e stile globale
 
   return (
     <Box
@@ -69,7 +75,7 @@ const PotsInfoCard = ({ name, total, color, sx = {}, ...props }) => {
           flexDirection: "column",
           justifyContent: "center",
         }}>
-        {/* Etichetta descrittiva */}
+        {/* Nome o etichetta descrittiva */}
         {name && (
           <Typography
             sx={{
@@ -97,10 +103,10 @@ const PotsInfoCard = ({ name, total, color, sx = {}, ...props }) => {
 };
 
 PotsInfoCard.propTypes = {
-  name: PropTypes.string, // Etichetta descrittiva
-  total: PropTypes.string, // Valore principale
-  color: PropTypes.string, // Colore dell'indicatore laterale
-  sx: PropTypes.object, // Stili personalizzati opzionali
+  name: PropTypes.string, // Nome o etichetta del contenuto (es. "Savings")
+  total: PropTypes.string, // Valore principale (es. "$500")
+  color: PropTypes.string, // Colore del bordo laterale sinistro (es. "#F2CDAC")
+  sx: PropTypes.object, // Oggetto per stili personalizzati opzionali
 };
 
 export default PotsInfoCard;
