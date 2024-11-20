@@ -23,6 +23,84 @@ const ModalCrud = ({ open, onClose, type, data, onSubmit }) => {
     onClose();
   };
 
+  const renderTitle = () => {
+    if (isAdd) return "Add New Pot";
+    if (isEdit) return `Edit ${data?.name} Pot`;
+    if (isDelete) return `Delete ${data?.name}?`;
+  };
+
+  const renderContent = () => {
+    if (isDelete) {
+      return (
+        <Typography
+          sx={{
+            typography: theme.typography.textPreset4,
+            color: theme.palette.grey[500],
+            marginBottom: pxToRem(20),
+          }}>
+          Are you sure you want to delete this pot? This action cannot be
+          reversed, and all the data inside it will be removed forever.
+        </Typography>
+      );
+    }
+
+    return (
+      <>
+        <BasicInput
+          fullWidth
+          label="Pot Name"
+          infoText="X characters left"
+          placeholder="e.g. Rainy Days"
+          defaultValue={data?.name || ""}
+          sx={{ marginBottom: pxToRem(16) }}
+        />
+        <BasicInput
+          fullWidth
+          label="Target"
+          prefix="$"
+          placeholder="e.g. 2000"
+          defaultValue={data?.target || ""}
+          sx={{ marginBottom: pxToRem(16) }}
+        />
+        <TextField
+          fullWidth
+          label="Theme"
+          select
+          defaultValue={data?.theme || "Green"}
+          sx={{ marginBottom: pxToRem(16) }}>
+          <MenuItem value="Green">Green</MenuItem>
+          <MenuItem value="Blue">Blue</MenuItem>
+          <MenuItem value="Red">Red</MenuItem>
+        </TextField>
+      </>
+    );
+  };
+
+  const renderActions = () => {
+    if (isDelete) {
+      return (
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: pxToRem(20),
+            width: "100%",
+          }}>
+          <ButtonDestroy onClick={handleSubmit}>
+            Yes, Confirm Deletion
+          </ButtonDestroy>
+          <ButtonTertiary onClick={onClose}>No, Go Back</ButtonTertiary>
+        </Box>
+      );
+    }
+
+    return (
+      <ButtonDestroy onClick={handleSubmit} sx={{ flex: 1 }}>
+        {isAdd ? "Add Pot" : "Save Changes"}
+      </ButtonDestroy>
+    );
+  };
+
   return (
     <Modal open={open} onClose={onClose}>
       <Box
@@ -31,7 +109,6 @@ const ModalCrud = ({ open, onClose, type, data, onSubmit }) => {
           maxWidth: pxToRem(560),
           width: "100%",
           margin: "auto",
-          // marginTop: "10%",
           borderRadius: pxToRem(12),
           padding: {
             xs: `${pxToRem(24)} ${pxToRem(20)}`,
@@ -53,9 +130,7 @@ const ModalCrud = ({ open, onClose, type, data, onSubmit }) => {
               typography: theme.typography.textPreset1,
               color: theme.palette.grey[900],
             }}>
-            {isAdd && "Add New Pot"}
-            {isEdit && `Edit ${data?.name} Pot`}
-            {isDelete && `Delete ${data?.name}?`}
+            {renderTitle()}
           </Typography>
           <Box
             sx={{
@@ -65,87 +140,21 @@ const ModalCrud = ({ open, onClose, type, data, onSubmit }) => {
               width: pxToRem(32),
               height: pxToRem(32),
             }}>
-            <CloseModal
-              style={{
-                cursor: "pointer",
-              }}
-              onClick={onClose}
-            />
+            <CloseModal style={{ cursor: "pointer" }} onClick={onClose} />
           </Box>
         </Box>
 
         {/* Contenuto dinamico */}
-        {!isDelete ? (
-          <>
-            <BasicInput
-              fullWidth
-              label="Pot Name"
-              infoText="X characters left"
-              placeholder="e.g. Rainy Days"
-              defaultValue={data?.name || ""}
-              sx={{ marginBottom: pxToRem(16) }}
-              disabled={isDelete}
-            />
-            <BasicInput
-              fullWidth
-              label="Target"
-              prefix="$"
-              placeholder="e.g. 2000"
-              defaultValue={data?.target || ""}
-              sx={{ marginBottom: pxToRem(16) }}
-              disabled={isDelete}
-            />
-            <TextField
-              fullWidth
-              label="Theme"
-              select
-              defaultValue={data?.theme || "Green"}
-              sx={{ marginBottom: pxToRem(16) }}
-              disabled={isDelete}>
-              <MenuItem value="Green">Green</MenuItem>
-              <MenuItem value="Blue">Blue</MenuItem>
-              <MenuItem value="Red">Red</MenuItem>
-            </TextField>
-          </>
-        ) : (
-          <Typography
-            sx={{
-              typography: theme.typography.textPreset4,
-              color: theme.palette.grey[500],
-              marginBottom: pxToRem(20),
-            }}>
-            Are you sure you want to delete this pot? This action cannot be
-            reversed, and all the data inside it will be removed forever.
-          </Typography>
-        )}
+        {renderContent()}
 
-        {/* Pulsanti */}
+        {/* Azioni */}
         <Box
           sx={{
             display: "flex",
             justifyContent: "space-between",
             marginTop: pxToRem(24),
           }}>
-          {isDelete ? (
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                gap: pxToRem(20),
-                width: "100%",
-              }}>
-              <ButtonDestroy onClick={handleSubmit}>
-                Yes, Confirm Deletion
-              </ButtonDestroy>
-              <ButtonTertiary onClick={onClose}>No, Go Back</ButtonTertiary>
-            </Box>
-          ) : (
-            <>
-              <ButtonDestroy onClick={handleSubmit} sx={{ flex: 1 }}>
-                {isAdd ? "Add Pot" : "Save Changes"}
-              </ButtonDestroy>
-            </>
-          )}
+          {renderActions()}
         </Box>
       </Box>
     </Modal>
