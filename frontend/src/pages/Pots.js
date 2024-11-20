@@ -6,15 +6,43 @@ import SectionHeaderContent from "@components/headers/SectionHeaderContent";
 import PotsCard from "@components/pots/PotsCard";
 import { potsData } from "@components/pots/apiPots";
 
+/**
+ * PotsContent Component
+ * -------------------------------
+ * Questo componente rappresenta il contenuto principale della sezione "Pots".
+ * È responsabile di:
+ * - Mostrare l'intestazione della sezione con un pulsante per aggiungere un nuovo pot.
+ * - Visualizzare una griglia di card (`PotsCard`), ognuna delle quali rappresenta un pot.
+ *
+ * Props:
+ * - `handleAddMoney`: Funzione chiamata quando si clicca su "+ Add Money" in una card.
+ * - `handleWithdraw`: Funzione chiamata quando si clicca su "Withdraw" in una card.
+ *
+ * Funzionalità principali:
+ * - Mappa i dati dei pots da `potsData` e li passa a ogni card.
+ * - Calcola dinamicamente la percentuale di completamento di ogni pot.
+ * - Fornisce un layout responsivo utilizzando il sistema di griglie di Material-UI.
+ *
+ * Esempio di utilizzo:
+ * ```jsx
+ * <PotsContent
+ *   handleAddMoney={(name) => console.log(`Add money to ${name}`)}
+ *   handleWithdraw={(name) => console.log(`Withdraw money from ${name}`)}
+ * />
+ * ```
+ */
 const PotsContent = ({ handleAddMoney, handleWithdraw }) => {
   return (
     <>
+      {/* Intestazione della sezione */}
       <SectionHeaderContent
         title="Pots"
         buttonLabel="+ Add New Pot"
         onButtonClick={() => console.log("Add New Pot clicked!")}
         buttonComponent={ButtonPrimary}
       />
+
+      {/* Contenuto principale: griglia delle card */}
       <Box
         className="pots-content"
         sx={{
@@ -34,8 +62,8 @@ const PotsContent = ({ handleAddMoney, handleWithdraw }) => {
               target={pot.target}
               percentage={parseFloat(percentage)}
               color={pot.theme}
-              onAddMoney={() => handleAddMoney(pot.name)}
-              onWithdraw={() => handleWithdraw(pot.name)}
+              onAddMoney={() => handleAddMoney(pot.name)} // Gestione aggiunta denaro
+              onWithdraw={() => handleWithdraw(pot.name)} // Gestione prelievo denaro
             />
           );
         })}
