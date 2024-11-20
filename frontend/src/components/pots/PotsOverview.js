@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Typography } from "@mui/material";
 import { pxToRem } from "@utils/pxToRem";
 import { useTheme } from "@mui/material/styles";
-import InfoCard from "@components/card/InfoCard";
+import PotsInfoCard from "@components/pots/PotsInfoCard";
 import SectionHeaderCard from "@components/card/SectionHeaderCard";
 import { ReactComponent as PotIcon } from "@assets/images/icon-pot.svg";
 import { useMenu } from "@context/MenuContext";
@@ -135,7 +135,7 @@ const PotsOverview = () => {
             gap: pxToRem(16),
           }}>
           {potsData.map((pot, index) => (
-            <InfoCard
+            <PotsInfoCard
               key={index}
               label={pot.label}
               value={pot.value}
