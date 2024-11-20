@@ -3,6 +3,7 @@ import { Box, Typography } from "@mui/material";
 import PropTypes from "prop-types";
 import { pxToRem } from "@utils/pxToRem";
 import { useTheme } from "@mui/material/styles";
+// import { potsData } from "@components/pots/apiPots";
 
 /**
  * InfoCard
@@ -30,7 +31,7 @@ import { useTheme } from "@mui/material/styles";
  *   sx={{ marginBottom: "16px" }}
  * />
  */
-const InfoCard = ({ label, value, color, sx = {}, ...props }) => {
+const PotsInfoCard = ({ name, total, color, sx = {}, ...props }) => {
   const theme = useTheme();
 
   return (
@@ -69,25 +70,25 @@ const InfoCard = ({ label, value, color, sx = {}, ...props }) => {
           justifyContent: "center",
         }}>
         {/* Etichetta descrittiva */}
-        {label && (
+        {name && (
           <Typography
             sx={{
               typography: "textPreset5",
               color: theme.palette.grey[500],
-              marginBottom: label ? pxToRem(4) : 0,
+              marginBottom: name ? pxToRem(4) : 0,
             }}>
-            {label}
+            {name}
           </Typography>
         )}
 
         {/* Valore principale */}
-        {value && (
+        {total && (
           <Typography
             sx={{
               typography: "textPreset4Bold",
               color: theme.palette.grey[900],
             }}>
-            {value}
+            {total}
           </Typography>
         )}
       </Box>
@@ -95,11 +96,11 @@ const InfoCard = ({ label, value, color, sx = {}, ...props }) => {
   );
 };
 
-InfoCard.propTypes = {
-  label: PropTypes.string, // Etichetta descrittiva
-  value: PropTypes.string, // Valore principale
+PotsInfoCard.propTypes = {
+  name: PropTypes.string, // Etichetta descrittiva
+  total: PropTypes.string, // Valore principale
   color: PropTypes.string, // Colore dell'indicatore laterale
   sx: PropTypes.object, // Stili personalizzati opzionali
 };
 
-export default InfoCard;
+export default PotsInfoCard;

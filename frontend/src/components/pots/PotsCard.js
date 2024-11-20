@@ -5,10 +5,11 @@ import { pxToRem } from "@utils/pxToRem";
 import { useTheme } from "@mui/material/styles";
 import ButtonSecondary from "@components/buttons/ButtonSecondary";
 import { ReactComponent as EllipsisIcon } from "@assets/images/icon-ellipsis.svg";
+import { potsData } from "@components/pots/apiPots";
 
 const PotsCard = ({
-  title,
-  totalSaved,
+  name,
+  total,
   target,
   percentage,
   color,
@@ -55,7 +56,7 @@ const PotsCard = ({
               typography: "textPreset2",
               color: theme.palette.grey[900],
             }}>
-            {title}
+            {name}
           </Typography>
         </Box>
         <EllipsisIcon
@@ -94,7 +95,7 @@ const PotsCard = ({
               typography: "textPreset1",
               color: theme.palette.grey[900],
             }}>
-            {`$${totalSaved.toFixed(2)}`}
+            {`$${total}`}
           </Typography>
         </Box>
         {/* Progress Bar */}
@@ -123,7 +124,7 @@ const PotsCard = ({
                 typography: "textPreset5Bold",
                 color: theme.palette.grey[500],
               }}>
-              {`${percentage.toFixed(1)}%`}
+              {`${percentage.toFixed(2)}%`}
             </Typography>
             <Typography
               sx={{
@@ -163,8 +164,8 @@ const PotsCard = ({
 };
 
 PotsCard.propTypes = {
-  title: PropTypes.string.isRequired, // Titolo della card (es. "Savings")
-  totalSaved: PropTypes.number.isRequired, // Totale risparmiato (es. 159)
+  name: PropTypes.string.isRequired, // Titolo della card (es. "Savings")
+  total: PropTypes.number.isRequired, // Totale risparmiato (es. 159)
   target: PropTypes.number.isRequired, // Target da raggiungere (es. 2000)
   percentage: PropTypes.number.isRequired, // Percentuale raggiunta (es. 7.95)
   color: PropTypes.string.isRequired, // Colore della barra e del pallino

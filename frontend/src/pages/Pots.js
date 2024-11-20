@@ -4,52 +4,9 @@ import { pxToRem } from "@utils/pxToRem";
 import ButtonPrimary from "@components/buttons/ButtonPrimary";
 import SectionHeaderContent from "@components/headers/SectionHeaderContent";
 import PotsCard from "@components/pots/PotsCard";
+import { potsData } from "@components/pots/apiPots";
 
-// TODO da ottimizare il codice ancora di piu
-const PotsContent = () => {
-  // Dati delle card
-  const potsData = [
-    {
-      title: "Savings",
-      totalSaved: 159.0,
-      target: 2000,
-      color: "#277C78",
-    },
-    {
-      title: "Concert Ticket",
-      totalSaved: 110,
-      target: 150,
-      color: "#626070",
-    },
-    {
-      title: "Gift",
-      totalSaved: 40,
-      target: 60,
-      color: "#82C9D7",
-    },
-    {
-      title: "New Laptop",
-      totalSaved: 10,
-      target: 1000,
-      color: "#F2CDAC",
-    },
-    {
-      title: "Holiday",
-      totalSaved: 531,
-      target: 1440,
-      color: "#826CB0",
-    },
-  ];
-
-  // Handlers per le azioni dei pulsanti
-  const handleAddMoney = (title) => {
-    console.log(`Aggiungi denaro a ${title}`);
-  };
-
-  const handleWithdraw = (title) => {
-    console.log(`Prelievo da ${title}`);
-  };
-
+const PotsContent = ({ handleAddMoney, handleWithdraw }) => {
   return (
     <>
       <SectionHeaderContent
@@ -67,18 +24,18 @@ const PotsContent = () => {
         }}>
         {potsData.map((pot, index) => {
           // Calcolo dinamico della percentuale
-          const percentage = (pot.totalSaved / pot.target) * 100;
+          const percentage = (pot.total / pot.target) * 100;
 
           return (
             <PotsCard
               key={index}
-              title={pot.title}
-              totalSaved={pot.totalSaved}
+              name={pot.name}
+              total={pot.total}
               target={pot.target}
               percentage={parseFloat(percentage)}
-              color={pot.color}
-              onAddMoney={() => handleAddMoney(pot.title)}
-              onWithdraw={() => handleWithdraw(pot.title)}
+              color={pot.theme}
+              onAddMoney={() => handleAddMoney(pot.name)}
+              onWithdraw={() => handleWithdraw(pot.name)}
             />
           );
         })}

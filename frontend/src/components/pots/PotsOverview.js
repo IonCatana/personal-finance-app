@@ -6,6 +6,7 @@ import PotsInfoCard from "@components/pots/PotsInfoCard";
 import SectionHeaderCard from "@components/card/SectionHeaderCard";
 import { ReactComponent as PotIcon } from "@assets/images/icon-pot.svg";
 import { useMenu } from "@context/MenuContext";
+import { potsData } from "@components/pots/apiPots";
 
 /**
  * PotsOverview
@@ -38,26 +39,8 @@ const PotsOverview = () => {
   const theme = useTheme();
   const { setActiveMenu } = useMenu();
 
-  const potsData = [
-    {
-      label: "Savings",
-      value: "$159",
-      color: theme.palette.secondaryColors.green,
-    },
-    { label: "Gift", value: "$40", color: theme.palette.secondaryColors.cyan },
-    {
-      label: "Concert Ticket",
-      value: "$110",
-      color: theme.palette.secondaryColors.navy,
-    },
-    {
-      label: "New Laptop",
-      value: "$10",
-      color: theme.palette.secondaryColors.yellow,
-    },
-  ];
-
-  const totalSaved = "$850";
+  // Calcolo dinamico del totale risparmiato
+  const totalSaved = potsData.reduce((acc, pot) => acc + pot.total, 0);
 
   return (
     <Box
@@ -121,7 +104,7 @@ const PotsOverview = () => {
                 typography: "textPreset1",
                 color: theme.palette.grey[900],
               }}>
-              {totalSaved}
+              ${totalSaved}
             </Typography>
           </Box>
         </Box>
@@ -134,12 +117,12 @@ const PotsOverview = () => {
             gridTemplateColumns: { xs: "1fr 1fr", sm: "1fr 1fr" },
             gap: pxToRem(16),
           }}>
-          {potsData.map((pot, index) => (
+          {potsData.slice(0, 4).map((pot, index) => (
             <PotsInfoCard
               key={index}
-              label={pot.label}
-              value={pot.value}
-              color={pot.color}
+              name={pot.name}
+              total={`$${pot.total}`}
+              color={pot.theme}
             />
           ))}
         </Box>
