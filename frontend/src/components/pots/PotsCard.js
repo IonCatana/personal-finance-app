@@ -6,6 +6,39 @@ import { useTheme } from "@mui/material/styles";
 import ButtonSecondary from "@components/buttons/ButtonSecondary";
 import { ReactComponent as EllipsisIcon } from "@assets/images/icon-ellipsis.svg";
 
+/**
+ * PotsCard Component
+ * -------------------------------
+ * Questo componente rappresenta una card visuale per mostrare dettagli relativi a un "pot" (fondo o obiettivo di risparmio).
+ *
+ * Funzionalità principali:
+ * - Mostra il nome del pot, il totale risparmiato, il target e la percentuale raggiunta.
+ * - Include una barra di progresso che riflette visivamente la percentuale di completamento.
+ * - Fornisce pulsanti per aggiungere denaro o prelevarlo.
+ * - Supporta un'azione cliccabile sul menu "ellipsis".
+ *
+ * Props:
+ * - `name`: Nome del pot (stringa obbligatoria).
+ * - `total`: Totale risparmiato (numero obbligatorio).
+ * - `target`: Obiettivo di risparmio (numero obbligatorio).
+ * - `percentage`: Percentuale di completamento calcolata (numero obbligatorio).
+ * - `color`: Colore per identificare visivamente il pot (stringa obbligatoria).
+ * - `onAddMoney`: Funzione eseguita quando si clicca su "+ Add Money".
+ * - `onWithdraw`: Funzione eseguita quando si clicca su "Withdraw".
+ *
+ * Esempio di utilizzo:
+ * ```jsx
+ * <PotsCard
+ *   name="New Laptop"
+ *   total={100}
+ *   target={1000}
+ *   percentage={10}
+ *   color="#F2CDAC"
+ *   onAddMoney={() => console.log("Add Money")}
+ *   onWithdraw={() => console.log("Withdraw Money")}
+ * />
+ * ```
+ */
 const PotsCard = ({
   name,
   total,
@@ -17,7 +50,6 @@ const PotsCard = ({
 }) => {
   const theme = useTheme();
 
-  // TODO da ottimizare il codice ancora di piu
   return (
     <Box
       sx={{
@@ -28,20 +60,15 @@ const PotsCard = ({
         flexDirection: "column",
         gap: pxToRem(32),
       }}>
-      {/* Header */}
+      {/* Header della card */}
       <Box
-        className="pots-card-header"
         sx={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
         }}>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: pxToRem(16),
-          }}>
+        {/* Mostro il nome del pot con un cerchio colorato */}
+        <Box sx={{ display: "flex", alignItems: "center", gap: pxToRem(16) }}>
           <Box
             sx={{
               width: pxToRem(16),
@@ -58,30 +85,22 @@ const PotsCard = ({
             {name}
           </Typography>
         </Box>
+        {/* Icona del menu ellipsis (cliccabile) */}
         <EllipsisIcon
           onClick={() => console.log("Menu ellipsis clicked!")}
-          style={{
-            minHeight: pxToRem(24),
-            cursor: "pointer",
-          }}
+          style={{ minHeight: pxToRem(24), cursor: "pointer" }}
         />
       </Box>
 
-      {/* Total Saved */}
-      <Box
-        className="pots-card-total-saved"
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          margin: `${pxToRem(10.5)} ${pxToRem(0)}`,
-          gap: pxToRem(16),
-        }}>
+      {/* Sezione Total Saved */}
+      <Box sx={{ display: "flex", flexDirection: "column", gap: pxToRem(16) }}>
         <Box
           sx={{
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
           }}>
+          {/* Mostro il totale risparmiato */}
           <Typography
             sx={{
               typography: "textPreset4",
@@ -97,7 +116,7 @@ const PotsCard = ({
             {`$${total}`}
           </Typography>
         </Box>
-        {/* Progress Bar */}
+        {/* Barra di progresso */}
         <Box>
           <LinearProgress
             variant="determinate"
@@ -118,6 +137,7 @@ const PotsCard = ({
               justifyContent: "space-between",
               marginTop: pxToRem(13),
             }}>
+            {/* Mostro la percentuale di completamento */}
             <Typography
               sx={{
                 typography: "textPreset5Bold",
@@ -125,6 +145,7 @@ const PotsCard = ({
               }}>
               {`${percentage.toFixed(2)}%`}
             </Typography>
+            {/* Mostro il target del pot */}
             <Typography
               sx={{
                 typography: "textPreset5",
@@ -136,25 +157,14 @@ const PotsCard = ({
         </Box>
       </Box>
 
-      {/* Buttons */}
-      <Box
-        sx={{
-          width: "100%",
-          display: "flex",
-          gap: pxToRem(16),
-        }}>
-        <ButtonSecondary
-          sx={{
-            flex: 1,
-          }}
-          onClick={() => console.log("Azione Add Money eseguita")}>
+      {/* Sezione pulsanti */}
+      <Box sx={{ display: "flex", gap: pxToRem(16) }}>
+        {/* Pulsante per aggiungere denaro */}
+        <ButtonSecondary sx={{ flex: 1 }} onClick={onAddMoney}>
           + Add Money
         </ButtonSecondary>
-        <ButtonSecondary
-          sx={{
-            flex: 1,
-          }}
-          onClick={() => console.log("Azione Withdraw eseguita")}>
+        {/* Pulsante per prelevare denaro */}
+        <ButtonSecondary sx={{ flex: 1 }} onClick={onWithdraw}>
           Withdraw
         </ButtonSecondary>
       </Box>
@@ -163,13 +173,13 @@ const PotsCard = ({
 };
 
 PotsCard.propTypes = {
-  name: PropTypes.string.isRequired, // Titolo della card (es. "Savings")
-  total: PropTypes.number.isRequired, // Totale risparmiato (es. 159)
-  target: PropTypes.number.isRequired, // Target da raggiungere (es. 2000)
-  percentage: PropTypes.number.isRequired, // Percentuale raggiunta (es. 7.95)
-  color: PropTypes.string.isRequired, // Colore della barra e del pallino
-  onAddMoney: PropTypes.func.isRequired, // Funzione chiamata al click su "+ Add Money"
-  onWithdraw: PropTypes.func.isRequired, // Funzione chiamata al click su "Withdraw"
+  name: PropTypes.string.isRequired, // Nome del pot
+  total: PropTypes.number.isRequired, // Totale risparmiato
+  target: PropTypes.number.isRequired, // Obiettivo di risparmio
+  percentage: PropTypes.number.isRequired, // Percentuale di completamento
+  color: PropTypes.string.isRequired, // Colore del pot
+  onAddMoney: PropTypes.func.isRequired, // Funzione per aggiungere denaro
+  onWithdraw: PropTypes.func.isRequired, // Funzione per prelevare denaro
 };
 
 export default PotsCard;
