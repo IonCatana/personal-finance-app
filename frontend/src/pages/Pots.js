@@ -31,7 +31,7 @@ import { potsData } from "@components/pots/apiPots";
  * />
  * ```
  */
-const PotsContent = ({ handleAddMoney, handleWithdraw }) => {
+const PotsContent = () => {
   return (
     <>
       {/* Intestazione della sezione */}
@@ -62,8 +62,8 @@ const PotsContent = ({ handleAddMoney, handleWithdraw }) => {
               target={pot.target}
               percentage={parseFloat(percentage)}
               color={pot.theme}
-              onAddMoney={() => handleAddMoney(pot.name)} // Gestione aggiunta denaro
-              onWithdraw={() => handleWithdraw(pot.name)} // Gestione prelievo denaro
+              onAddMoney={() => console.log(`Add money to ${pot.name}`)}
+              onWithdraw={() => console.log(`Withdraw money from ${pot.name}`)}
             />
           );
         })}
