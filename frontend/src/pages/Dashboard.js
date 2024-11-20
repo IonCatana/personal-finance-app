@@ -12,6 +12,38 @@ import PotsContent from "@pages/Pots";
 import RecurringBillsContent from "@pages/RecurringBills";
 import { useMenu } from "@context/MenuContext";
 
+/**
+ * Dashboard Component
+ * -------------------------------
+ * Questo componente rappresenta la dashboard principale dell'applicazione, composta da:
+ * - Una barra laterale (sidebar) che include un logo, un menu, e un'icona per minimizzare la barra.
+ * - Una sezione principale che mostra il contenuto basato sul menu attualmente selezionato.
+ *
+ * Funzionalità principali:
+ * - Supporta la minimizzazione della barra laterale per migliorare l'usabilità su schermi grandi.
+ * - Gestisce dinamicamente i contenuti mostrati nella sezione principale in base al menu attivo.
+ * - Adatta il layout per dispositivi mobili utilizzando Media Queries di Material-UI.
+ *
+ * Stato:
+ * - `isSidebarMinimized` (boolean): Determina se la barra laterale è minimizzata.
+ * - Utilizza il contesto `MenuContext` per gestire il menu attivo e cambiare i contenuti principali.
+ *
+ * Hooks:
+ * - `useMediaQuery`: Per rilevare se lo schermo è grande (breakpoint "md").
+ * - `useTheme`: Per accedere al tema Material-UI e ai colori globali.
+ * - `useEffect`: Per resettare lo stato `isSidebarMinimized` quando lo schermo diventa piccolo.
+ *
+ * Componenti utilizzati:
+ * - `Logo`: Mostra il logo dell'applicazione in versione grande o piccola.
+ * - `SideBarMenuList`: Un menu interattivo con più opzioni per navigare tra le sezioni.
+ * - Contenuti dinamici (es. `OverviewContent`, `TransactionsContent`, ecc.) per ciascun menu.
+ *
+ * Esempio di utilizzo:
+ * ```jsx
+ * <Dashboard />
+ * ```
+ */
+
 const Dashboard = () => {
   const theme = useTheme();
   const { activeMenu, setActiveMenu } = useMenu();
@@ -57,8 +89,6 @@ const Dashboard = () => {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          // TODO da sistemare la width perche quando c'e contenuto nel main content si sposta il menu non mantiene la larghezza di 300px
-          // TODO da sistemare anche sidebar-container perche  il contentuo dle main-content va soprapposto al menu
           maxWidth: {
             xs: isSidebarMinimized ? "100%" : "100%",
             md: isSidebarMinimized ? pxToRem(88) : pxToRem(300),
@@ -122,8 +152,6 @@ const Dashboard = () => {
       <Box
         className="main-content"
         sx={{
-          // overflow: "auto",
-          // TODO da capire come mai ci sono 2 overflow
           display: "flex",
           flexDirection: "column",
           flex: 1,
