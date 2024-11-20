@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { Box, Typography, LinearProgress } from "@mui/material";
 import { pxToRem } from "@utils/pxToRem";
 import { useTheme } from "@mui/material/styles";
 import ButtonSecondary from "@components/buttons/ButtonSecondary";
 import { ReactComponent as EllipsisIcon } from "@assets/images/icon-ellipsis.svg";
+import ActionPopover from "@components/actions/ActionPopover";
 
 /**
  * PotsCard Component
@@ -49,6 +50,17 @@ const PotsCard = ({
   onWithdraw,
 }) => {
   const theme = useTheme();
+  const [anchorEl, setAnchorEl] = useState(null); // Stato per gestire il popover
+
+  // Funzione per aprire il popover
+  const handleOpenPopover = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  // Funzione per chiudere il popover
+  const handleClosePopover = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <Box
@@ -87,8 +99,27 @@ const PotsCard = ({
         </Box>
         {/* Icona del menu ellipsis (cliccabile) */}
         <EllipsisIcon
-          onClick={() => console.log("Menu ellipsis clicked!")}
+          onClick={handleOpenPopover}
           style={{ minHeight: pxToRem(24), cursor: "pointer" }}
+        />
+        {/* Popover con azioni */}
+        <ActionPopover
+          actions={[
+            {
+              label: "Edit Pot",
+              onClick: () => console.log(`Edit ${name}`),
+              style: {
+                padding: `${pxToRem(0)}`,
+              },
+            },
+            {
+              label: "Delete Pot",
+              onClick: () => console.log(`Delete ${name}`),
+              color: theme.palette.secondaryColors.red,
+            },
+          ]}
+          anchorEl={anchorEl}
+          onClose={handleClosePopover}
         />
       </Box>
 
