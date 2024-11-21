@@ -30,7 +30,7 @@ export const potsData = [
     name: "Holiday",
     total: 531,
     target: 1440,
-    theme: "#826CB0",
+    theme: "#AF81BA",
   },
 ];
 

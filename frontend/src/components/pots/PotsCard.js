@@ -67,7 +67,7 @@ const PotsCard = ({
   };
 
   const handleOpenModal = (type) => {
-    console.log("Modal type:", type); // Log per il debug
+    console.log("Modal type:", type, name); // Log per il debug
     setModalType(type);
     setModalData({ name, total, target, color }); // Passa i dati correnti del pot
     setModalOpen(true);

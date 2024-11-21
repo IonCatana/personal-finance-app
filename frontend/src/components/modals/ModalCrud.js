@@ -1,22 +1,37 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 import PropTypes from "prop-types";
-import { Modal, Box, Typography, TextField, MenuItem } from "@mui/material";
+import { Modal, Box, Typography } from "@mui/material";
 import { pxToRem } from "@utils/pxToRem";
 import { useTheme } from "@mui/material/styles";
 import ButtonDestroy from "@components/buttons/ButtonDestroy";
 import ButtonPrimary from "@components/buttons/ButtonPrimary";
 import ButtonTertiary from "@components/buttons/ButtonTertiary";
 import { ReactComponent as CloseIcon } from "@assets/images/icon-close-modal.svg";
-import BasicInput from "@components/inputFields/BasicInput";
+import ModalAdd from "@components/modals/ModalAdd";
+import ModalEdit from "@components/modals/ModalEdit";
 
-const ModalCrud = ({ open, onClose, type = "add", data, onSubmit }) => {
+const ModalCrud = ({
+  open,
+  onClose,
+  options,
+  type = "add",
+  data,
+  onSubmit,
+}) => {
   const theme = useTheme();
 
-  const isDelete = type === "delete";
-  const isEdit = type === "edit";
-  const isAdd = type === "add";
-  const isAddMoney = type === "addMoney";
-  const isWithdraw = type === "withdraw";
+  const isDelete = useMemo(() => type === "delete", [type]);
+  const isEdit = useMemo(() => type === "edit", [type]);
+  const isAdd = useMemo(() => type === "add", [type]);
+  const isAddMoney = useMemo(() => type === "addMoney", [type]);
+  const isWithdraw = useMemo(() => type === "withdraw", [type]);
+
+  const [selectedTheme, setSelectedTheme] = useState("green");
+
+  // Funzione chiamata quando cambia il valore
+  const handleThemeChange = (newSelection) => {
+    setSelectedTheme(newSelection.value); // Aggiorna lo stato con il valore selezionato
+  };
 
   // Funzione per gestire il submit
   const handleSubmit = () => {
@@ -26,15 +41,15 @@ const ModalCrud = ({ open, onClose, type = "add", data, onSubmit }) => {
     onClose();
   };
 
-  const renderTitle = () => {
+  const renderTitle = useMemo(() => {
     if (isAdd) return "Add New Pot";
     if (isEdit) return `Edit ${data?.name} Pot`;
     if (isDelete) return `Delete ${data?.name}?`;
     if (isAddMoney) return `Add to ${data?.name}`;
     if (isWithdraw) return `Withdraw from ${data?.name}`;
-  };
+  }, [isAdd, isEdit, isDelete, isAddMoney, isWithdraw, data]);
 
-  const renderContent = () => {
+  const renderContent = useMemo(() => {
     if (isDelete) {
       return (
         <Typography
@@ -49,37 +64,56 @@ const ModalCrud = ({ open, onClose, type = "add", data, onSubmit }) => {
       );
     }
 
-    return (
-      <>
-        <BasicInput
-          fullWidth
-          label="Pot Name"
-          infoText="X characters left"
-          placeholder="e.g. Rainy Days"
-          defaultValue={data?.name || ""}
-          sx={{ marginBottom: pxToRem(16) }}
+    if (isAdd) {
+      return (
+        <ModalAdd
+          data={data}
+          options={options}
+          selectedTheme={selectedTheme}
+          onThemeChange={handleThemeChange}
         />
-        <BasicInput
-          fullWidth
-          label="Target"
-          prefix="$"
-          placeholder="e.g. 2000"
-          defaultValue={data?.target || ""}
-          sx={{ marginBottom: pxToRem(16) }}
+      );
+    }
+
+    if (isEdit) {
+      return (
+        <ModalEdit
+          data={data}
+          options={options}
+          selectedTheme={selectedTheme}
+          onThemeChange={handleThemeChange}
         />
-        <TextField
-          fullWidth
-          label="Theme"
-          select
-          defaultValue={data?.theme || "Green"}
-          sx={{ marginBottom: pxToRem(16) }}>
-          <MenuItem value="Green">Green</MenuItem>
-          <MenuItem value="Blue">Blue</MenuItem>
-          <MenuItem value="Red">Red</MenuItem>
-        </TextField>
-      </>
-    );
-  };
+      );
+    }
+
+    // return (
+    //   <>
+    //     <BasicInput
+    //       fullWidth
+    //       label="Pot Name"
+    //       infoText="X characters left"
+    //       placeholder="e.g. Rainy Days"
+    //       defaultValue={data?.name || ""}
+    //       sx={{ marginBottom: pxToRem(16) }}
+    //     />
+    //     <BasicInput
+    //       fullWidth
+    //       label="Target"
+    //       prefix="$"
+    //       placeholder="e.g. 2000"
+    //       defaultValue={data?.target || ""}
+    //       sx={{ marginBottom: pxToRem(16) }}
+    //     />
+    //     <BasicInput
+    //       label="Theme" // Etichetta sopra il select
+    //       options={options} // Passa le opzioni per il menu a tendina
+    //       value={selectedTheme} // Valore attuale
+    //       onChange={handleThemeChange} // Funzione di callback
+    //     />
+    //   </>
+    // );
+    // eslint-disable-next-line
+  }, [data, type, selectedTheme, theme]);
 
   const renderActions = () => {
     if (isDelete) {
@@ -154,7 +188,7 @@ const ModalCrud = ({ open, onClose, type = "add", data, onSubmit }) => {
               lineHeight: theme.typography.textPreset1.lineHeight,
               color: theme.palette.grey[900], // Colore dinamico
             }}>
-            {renderTitle()}
+            {renderTitle}
           </Typography>
           <Box
             sx={{
@@ -169,7 +203,7 @@ const ModalCrud = ({ open, onClose, type = "add", data, onSubmit }) => {
         </Box>
 
         {/* Contenuto dinamico */}
-        {renderContent()}
+        {renderContent}
 
         {/* Azioni */}
         <Box
@@ -188,8 +222,7 @@ const ModalCrud = ({ open, onClose, type = "add", data, onSubmit }) => {
 ModalCrud.propTypes = {
   open: PropTypes.bool.isRequired, // Stato di apertura della modale
   onClose: PropTypes.func.isRequired, // Funzione per chiudere la modale
-  type: PropTypes.oneOf(["add", "edit", "delete", "addMoney", "withdraw"])
-    .isRequired, // Tipo di modale
+  type: PropTypes.oneOf(["add", "edit", "delete", "addMoney", "withdraw"]), // Tipo di modale
   data: PropTypes.object, // Dati da mostrare nella modale
   onSubmit: PropTypes.func, // Funzione per gestire il salvataggio o la conferma
 };

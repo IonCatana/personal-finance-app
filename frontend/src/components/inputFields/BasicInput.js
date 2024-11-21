@@ -177,6 +177,29 @@ const BasicInput = ({
                 },
               },
             }}
+            renderValue={(selectedValue) => {
+              const selectedOption = options.find(
+                (option) => option.value === selectedValue
+              );
+              if (!selectedOption) return null;
+              return (
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  {selectedOption.color && (
+                    <Box
+                      sx={{
+                        display: "inline-flex",
+                        width: pxToRem(16),
+                        height: pxToRem(16),
+                        borderRadius: "50%",
+                        backgroundColor: selectedOption.color,
+                        marginRight: pxToRem(12),
+                      }}
+                    />
+                  )}
+                  {selectedOption.label}
+                </Box>
+              );
+            }}
             sx={{
               typography: "textPreset4",
               color: theme.palette.grey[900],
@@ -205,7 +228,12 @@ const BasicInput = ({
             )}
             {...props}>
             {options.map((option, index) => (
-              <MenuItem key={index} value={option.value}>
+              <MenuItem
+                sx={{
+                  borderBottom: `1px solid ${theme.palette.grey[100]}`,
+                }}
+                key={index}
+                value={option.value}>
                 {option.color && (
                   <Box
                     sx={{
