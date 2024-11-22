@@ -8,7 +8,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Button,
 } from "@mui/material";
 
 import { Link, useNavigate } from "react-router-dom";
@@ -60,6 +59,20 @@ const SignUpForm = () => {
     }
   };
 
+  const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  const handleEmailChange = (e) => {
+    const value = e.target.value;
+    setEmail(value);
+
+    // Aggiungi una validazione istantanea
+    if (!validateEmail(value)) {
+      setError("Inserisci un'email valida.");
+    } else {
+      setError("");
+    }
+  };
+
   return (
     <Box
       id="signup-form"
@@ -85,7 +98,8 @@ const SignUpForm = () => {
       <BasicInput
         label="Email"
         value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        type="email"
+        onChange={handleEmailChange}
         autoComplete="email"
         errorText="Inserisci un'email valida"
         sx={{ marginBottom: pxToRem(16) }}
@@ -119,7 +133,11 @@ const SignUpForm = () => {
       {/* Error Message */}
       {error && (
         <Typography
-          sx={{ color: theme.palette.error.main, marginBottom: pxToRem(16) }}>
+          sx={{
+            color: theme.palette.secondaryColors.red,
+            typography: "textPreset4",
+            marginBottom: pxToRem(16),
+          }}>
           {error}
         </Typography>
       )}
@@ -143,12 +161,12 @@ const SignUpForm = () => {
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button
+          <ButtonPrimary
             onClick={() => navigate("/signin")}
             color="primary"
             variant="contained">
             OK
-          </Button>
+          </ButtonPrimary>
         </DialogActions>
       </Dialog>
 
