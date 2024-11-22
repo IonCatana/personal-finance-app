@@ -1,3 +1,4 @@
+// backend/routes/authSignUp.js
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const User = require("@models/User");
@@ -10,6 +11,7 @@ router.post("/", async (req, res) => {
 
     // Validazione dei campi
     if (!username || !email || !password) {
+      console.log("Campi richiesti:", req.body);
       return res.status(400).json({ error: "Tutti i campi sono obbligatori" });
     }
 

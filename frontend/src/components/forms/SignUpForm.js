@@ -1,5 +1,16 @@
 import React, { useState } from "react";
-import { Box, Typography, InputAdornment, IconButton } from "@mui/material";
+import {
+  Box,
+  Typography,
+  InputAdornment,
+  IconButton,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Button,
+} from "@mui/material";
+
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { pxToRem } from "@utils/pxToRem";
@@ -9,30 +20,6 @@ import { useTheme } from "@mui/material/styles";
 import showPasswordIcon from "@assets/images/icon-show-password.svg";
 import hidePasswordIcon from "@assets/images/icon-hide-password.svg";
 
-/**
- * SignUpForm
- * -------------------------------
- * Questo componente rappresenta il modulo di registrazione per l'applicazione.
- * Permette agli utenti di creare un account inserendo nome, email e password.
- *
- * Funzionalità:
- * - Gestione dinamica dell'input (nome, email e password).
- * - Possibilità di mostrare/nascondere la password tramite un'icona.
- * - Invio del modulo con validazione base e gestione della logica di registrazione.
- * - Link per il login per gli utenti già registrati.
- *
- * Stato:
- * - name: Stato per memorizzare il nome.
- * - email: Stato per memorizzare l'input dell'email.
- * - password: Stato per memorizzare l'input della password.
- * - showPassword: Stato per determinare se mostrare o nascondere la password.
- *
- * Uso:
- * - Importare e utilizzare nella pagina di registrazione (`/signup`).
- *
- * Esempio:
- * <SignUpForm />
- */
 const SignUpForm = () => {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -41,6 +28,7 @@ const SignUpForm = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Mostra o nasconde la password al clic sull'icona.
   const handleClickShowPassword = () => setShowPassword((prev) => !prev);
@@ -48,11 +36,6 @@ const SignUpForm = () => {
   // Evita il comportamento predefinito quando si clicca sull'icona.
   const handleMouseDownPassword = (event) => event.preventDefault();
 
-  /**
-   * Gestisce l'invio del modulo.
-   * Per ora, stampa il nome, l'email e la password nella console.
-   * Questa logica può essere estesa per inviare i dati al backend.
-   */
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -68,11 +51,8 @@ const SignUpForm = () => {
 
       console.log("SignUp successful:", response.data.message);
 
-      // No need to store the token or set authentication state
-      // localStorage.setItem("token", response.data.token);
-
-      // Navigate to the sign-in page
-      navigate("/signin");
+      // Mostra la modale
+      setIsModalOpen(true);
     } catch (error) {
       setError(
         error.response?.data?.error || "Errore durante la registrazione."
@@ -150,6 +130,27 @@ const SignUpForm = () => {
         sx={{ width: "100%", marginBottom: pxToRem(32) }}>
         Create Account
       </ButtonPrimary>
+
+      <Dialog
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        aria-labelledby="modal-title"
+        aria-describedby="modal-description">
+        <DialogTitle id="modal-title">Registrazione completata</DialogTitle>
+        <DialogContent>
+          <Typography id="modal-description">
+            Account creato con successo!
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => navigate("/signin")}
+            color="primary"
+            variant="contained">
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       {/* Link per accedere se si possiede già un account */}
       <Typography

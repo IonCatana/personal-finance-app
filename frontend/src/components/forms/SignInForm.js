@@ -26,10 +26,6 @@ const SignInForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Add these console logs
-    console.log("Email state:", email);
-    console.log("Password state:", password);
-
     try {
       const response = await axios.post(
         "http://localhost:5000/api/auth/signin",
@@ -38,10 +34,13 @@ const SignInForm = () => {
           password,
         }
       );
+
       console.log("Login successful, token received:", response.data.token);
+
+      // Salva il token nel localStorage
       localStorage.setItem("token", response.data.token);
 
-      console.log("Navigating to '/'");
+      // Naviga alla pagina principale
       navigate("/");
     } catch (error) {
       setError(

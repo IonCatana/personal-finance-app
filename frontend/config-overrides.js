@@ -40,5 +40,6 @@ module.exports = override(
     "@routes": path.resolve(__dirname, "src/routes"),
     "@assets": path.resolve(__dirname, "src/assets"),
     "@context": path.resolve(__dirname, "src/context"),
+    "@services": path.resolve(__dirname, "src/services"),
   })
 );

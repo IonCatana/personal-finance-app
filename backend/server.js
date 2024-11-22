@@ -1,3 +1,4 @@
+// backend/server.js
 require("module-alias/register");
 require("dotenv").config();
 const express = require("express");
