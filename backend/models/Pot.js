@@ -2,10 +2,10 @@ const mongoose = require("mongoose");
 
 const potSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  name: { type: String, required: true }, // nome del pot (es. "Savings")
-  target: { type: Number, required: true }, // obiettivo di risparmio
-  total: { type: Number, default: 0 }, // somma attuale nel pot
-  theme: { type: String }, // colore tematico
+  name: { type: String, required: true },
+  target: { type: Number, required: true },
+  total: { type: Number, default: 0 },
+  theme: { type: String, required: true },
 });
 
 module.exports = mongoose.model("Pot", potSchema);

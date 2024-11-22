@@ -1,4 +1,3 @@
-// backend/routes/authSignIn.js
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -6,29 +5,32 @@ const User = require("@models/User");
 
 const router = express.Router();
 
-// Rotta di accesso
 router.post("/", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Trova l'utente tramite email
+    console.log("Richiesta ricevuta:", req.body); // Log per il debug
+
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ error: "Email e password sono obbligatori" });
+    }
+
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(400).json({ error: "Credenziali non valide" });
     }
 
-    // Confronta la password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ error: "Credenziali non valide" });
     }
 
-    // Genera il token JWT
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1d", // Il token scade in 1 giorno
+      expiresIn: "1d",
     });
 
-    // Rispondi con i dati dell'utente e il token
     res.status(200).json({
       message: "Accesso effettuato con successo",
       user: {
@@ -40,6 +42,7 @@ router.post("/", async (req, res) => {
       token,
     });
   } catch (err) {
+    console.error("Errore durante il login:", err);
     res.status(500).json({ error: "Errore nell’autenticazione" });
   }
 });

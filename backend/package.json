@@ -24,7 +24,7 @@
     "@controllers": "./controllers",
     "@routes": "./routes",
     "@config": "./config",
-    "@middlewares": "./middlewares"
+    "@middleware": "./middleware"
   },
   "devDependencies": {
     "nodemon": "^3.1.7"

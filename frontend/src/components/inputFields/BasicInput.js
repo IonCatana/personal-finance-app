@@ -253,6 +253,8 @@ const BasicInput = ({
         ) : (
           <InputBase
             fullWidth
+            value={value}
+            onChange={onChange}
             sx={{
               typography: "textPreset4",
               color: theme.palette.grey[900],

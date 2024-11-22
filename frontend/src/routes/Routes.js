@@ -1,41 +1,40 @@
-import React from "react";
-import { Routes, Route } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Dashboard from "@pages/Dashboard";
 import SignIn from "@pages/SignIn";
 import SignUp from "@pages/SignUp";
 
-/**
- * AppRoutes
- * -------------------------------
- * Questo componente definisce tutte le rotte principali dell'applicazione
- * utilizzando il pacchetto `react-router-dom`.
- *
- * Funzionalità:
- * - Organizza le pagine dell'applicazione in base ai percorsi (path).
- * - Rende le pagine accessibili attraverso i percorsi specificati.
- *
- * Rotte Definite:
- * - `/`: Mostra la Dashboard principale.
- * - `/signin`: Mostra la pagina di accesso.
- * - `/signup`: Mostra la pagina di registrazione.
- *
- * Uso:
- * - Importare il componente e includerlo all'interno del provider `BrowserRouter`.
- *
- * Esempio:
- * import { BrowserRouter } from "react-router-dom";
- * import AppRoutes from "@routes/Routes";
- *
- * <BrowserRouter>
- *   <AppRoutes />
- * </BrowserRouter>
- */
 const AppRoutes = () => {
+  const [isAuth, setIsAuth] = useState(!!localStorage.getItem("token"));
+  const location = useLocation();
+
+  useEffect(() => {
+    // Update authentication status whenever the location changes
+    setIsAuth(!!localStorage.getItem("token"));
+  }, [location]);
+
   return (
     <Routes>
-      <Route path="/" element={<Dashboard />} />
-      <Route path="/signin" element={<SignIn />} />
-      <Route path="/signup" element={<SignUp />} />
+      {/* Route for the dashboard */}
+      <Route
+        path="/"
+        element={isAuth ? <Dashboard /> : <Navigate to="/signin" replace />}
+      />
+
+      {/* Route for the sign-in page */}
+      <Route
+        path="/signin"
+        element={isAuth ? <Navigate to="/" replace /> : <SignIn />}
+      />
+
+      {/* Route for the sign-up page */}
+      <Route
+        path="/signup"
+        element={isAuth ? <Navigate to="/" replace /> : <SignUp />}
+      />
+
+      {/* Fallback route */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 };

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Box, Typography, InputAdornment, IconButton } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import { pxToRem } from "@utils/pxToRem";
 import ButtonPrimary from "@components/buttons/ButtonPrimary";
 import BasicInput from "@components/inputFields/BasicInput";
@@ -34,10 +35,12 @@ import hidePasswordIcon from "@assets/images/icon-hide-password.svg";
  */
 const SignUpForm = () => {
   const theme = useTheme();
-  const [name, setName] = useState("");
+  const navigate = useNavigate();
+  const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
 
   // Mostra o nasconde la password al clic sull'icona.
   const handleClickShowPassword = () => setShowPassword((prev) => !prev);
@@ -50,11 +53,31 @@ const SignUpForm = () => {
    * Per ora, stampa il nome, l'email e la password nella console.
    * Questa logica può essere estesa per inviare i dati al backend.
    */
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("Name:", name);
-    console.log("Email:", email);
-    console.log("Password:", password);
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/signup",
+        {
+          username,
+          email,
+          password,
+        }
+      );
+
+      console.log("SignUp successful:", response.data.message);
+
+      // No need to store the token or set authentication state
+      // localStorage.setItem("token", response.data.token);
+
+      // Navigate to the sign-in page
+      navigate("/signin");
+    } catch (error) {
+      setError(
+        error.response?.data?.error || "Errore durante la registrazione."
+      );
+    }
   };
 
   return (
@@ -71,8 +94,8 @@ const SignUpForm = () => {
       {/* Campo di input per il nome */}
       <BasicInput
         label="Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
+        value={username}
+        onChange={(e) => setUserName(e.target.value)}
         autoComplete="name"
         errorText="Inserisci un nome valido"
         sx={{ marginBottom: pxToRem(16) }}
@@ -112,6 +135,14 @@ const SignUpForm = () => {
         }
         sx={{ marginBottom: pxToRem(32) }}
       />
+
+      {/* Error Message */}
+      {error && (
+        <Typography
+          sx={{ color: theme.palette.error.main, marginBottom: pxToRem(16) }}>
+          {error}
+        </Typography>
+      )}
 
       {/* Pulsante per inviare il modulo */}
       <ButtonPrimary

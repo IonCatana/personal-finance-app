@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Box, InputAdornment, IconButton, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import BasicInput from "@components/inputFields/BasicInput";
 import ButtonPrimary from "@components/buttons/ButtonPrimary";
 import showPasswordIcon from "@assets/images/icon-show-password.svg";
@@ -8,34 +9,13 @@ import hidePasswordIcon from "@assets/images/icon-hide-password.svg";
 import { pxToRem } from "@utils/pxToRem";
 import { useTheme } from "@mui/material/styles";
 
-/**
- * SignInForm
- * -------------------------------
- * Questo componente rappresenta il modulo di login per l'applicazione.
- * Permette agli utenti di inserire la propria email e password per accedere.
- *
- * Funzionalità:
- * - Gestione dinamica dell'input email e password.
- * - Possibilità di mostrare/nascondere la password tramite un'icona.
- * - Invio del modulo con validazione base e gestione della logica di login.
- * - Link per la registrazione, utile per nuovi utenti.
- *
- * Stato:
- * - email: Stato per memorizzare l'input dell'email.
- * - password: Stato per memorizzare l'input della password.
- * - showPassword: Stato per determinare se mostrare o nascondere la password.
- *
- * Uso:
- * - Importare e utilizzare nella pagina di accesso (`/signin`) o in qualsiasi pagina che richieda un login.
- *
- * Esempio:
- * <SignInForm />
- */
 const SignInForm = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
 
   //  Mostra o nasconde la password al clic sull'icona.
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -43,15 +23,31 @@ const SignInForm = () => {
   //  Evita il comportamento predefinito quando si clicca sull'icona.
   const handleMouseDownPassword = (event) => event.preventDefault();
 
-  /**
-   * Gestisce l'invio del modulo.
-   * Per ora, stampa l'email e la password nella console.
-   * Questa logica può essere estesa per inviare i dati al backend.
-   */
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("Email:", email);
-    console.log("Password:", password);
+
+    // Add these console logs
+    console.log("Email state:", email);
+    console.log("Password state:", password);
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/signin",
+        {
+          email,
+          password,
+        }
+      );
+      console.log("Login successful, token received:", response.data.token);
+      localStorage.setItem("token", response.data.token);
+
+      console.log("Navigating to '/'");
+      navigate("/");
+    } catch (error) {
+      setError(
+        error.response?.data?.error || "Errore durante l'autenticazione."
+      );
+    }
   };
 
   return (
@@ -98,6 +94,14 @@ const SignInForm = () => {
         }
         sx={{ marginBottom: pxToRem(32) }}
       />
+
+      {/* Messaggio di errore */}
+      {error && (
+        <Typography
+          sx={{ color: theme.palette.error.main, marginBottom: pxToRem(16) }}>
+          {error}
+        </Typography>
+      )}
 
       {/* Pulsante di invio */}
       <Box sx={{ width: "100%" }}>
