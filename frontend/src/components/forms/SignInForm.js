@@ -8,6 +8,7 @@ import showPasswordIcon from "@assets/images/icon-show-password.svg";
 import hidePasswordIcon from "@assets/images/icon-hide-password.svg";
 import { pxToRem } from "@utils/pxToRem";
 import { useTheme } from "@mui/material/styles";
+import { useToken } from "@context/TokenContext";
 
 const SignInForm = () => {
   const theme = useTheme();
@@ -16,6 +17,7 @@ const SignInForm = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const { saveToken } = useToken();
 
   //  Mostra o nasconde la password al clic sull'icona.
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -36,9 +38,8 @@ const SignInForm = () => {
       );
 
       console.log("Login successful, token received:", response.data.token);
-
-      // Salva il token nel localStorage
-      localStorage.setItem("token", response.data.token);
+      // Salva il token nel contesto
+      saveToken(response.data.token);
 
       // Naviga alla pagina principale
       navigate("/");

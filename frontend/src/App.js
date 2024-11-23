@@ -5,6 +5,7 @@ import {
   // CssBaseline
 } from "@mui/material";
 import { MenuProvider } from "@context/MenuContext";
+import { TokenProvider } from "@context/TokenContext";
 import theme from "./theme";
 import AppRoutes from "./routes/Routes";
 
@@ -12,12 +13,14 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       {/* <CssBaseline /> */}
-      <MenuProvider>
-        <BrowserRouter
-          future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-          <AppRoutes />
-        </BrowserRouter>
-      </MenuProvider>
+      <TokenProvider>
+        <MenuProvider>
+          <BrowserRouter
+            future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+            <AppRoutes />
+          </BrowserRouter>
+        </MenuProvider>
+      </TokenProvider>
     </ThemeProvider>
   );
 }

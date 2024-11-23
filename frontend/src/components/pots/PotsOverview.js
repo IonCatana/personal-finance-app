@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Typography } from "@mui/material";
 import { pxToRem } from "@utils/pxToRem";
 import { useTheme } from "@mui/material/styles";
@@ -6,7 +6,8 @@ import PotsInfoCard from "@components/pots/PotsInfoCard";
 import SectionHeaderCard from "@components/card/SectionHeaderCard";
 import { ReactComponent as PotIcon } from "@assets/images/icon-pot.svg";
 import { useMenu } from "@context/MenuContext";
-import { potsData } from "@components/pots/apiPots";
+import { getPots } from "@components/pots/apiPots";
+import { useToken } from "@context/TokenContext";
 
 /**
  * PotsOverview
@@ -38,9 +39,31 @@ import { potsData } from "@components/pots/apiPots";
 const PotsOverview = () => {
   const theme = useTheme();
   const { setActiveMenu } = useMenu();
+  const [pots, setPots] = useState([]);
+  const { token } = useToken();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPots = async () => {
+      try {
+        const data = await getPots(token);
+        setPots(data);
+      } catch (error) {
+        console.error("Errore nel caricamento dei pots:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPots();
+  }, [token]);
+
+  if (loading) {
+    return <Typography>Loading...</Typography>;
+  }
 
   // Calcolo dinamico del totale risparmiato
-  const totalSaved = potsData.reduce((acc, pot) => acc + pot.total, 0);
+  const totalSaved = pots.reduce((acc, pot) => acc + pot.total, 0);
 
   return (
     <Box
@@ -117,7 +140,7 @@ const PotsOverview = () => {
             gridTemplateColumns: { xs: "1fr 1fr", sm: "1fr 1fr" },
             gap: pxToRem(16),
           }}>
-          {potsData.slice(0, 4).map((pot, index) => (
+          {pots.slice(0, 4).map((pot, index) => (
             <PotsInfoCard
               key={index}
               name={pot.name}

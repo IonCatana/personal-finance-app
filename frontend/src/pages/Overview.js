@@ -9,6 +9,7 @@ import SectionHeaderContent from "@components/headers/SectionHeaderContent";
 const OverviewContent = () => {
   const theme = useTheme();
 
+  const userToken = localStorage.getItem("token");
   return (
     <>
       <SectionHeaderContent title="Overview" />
@@ -31,7 +32,7 @@ const OverviewContent = () => {
       </Box>
       {/* PotsOverview */}
       <Box>
-        <PotsOverview />
+        <PotsOverview token={userToken} />
       </Box>
     </>
   );

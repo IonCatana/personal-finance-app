@@ -1,37 +1,33 @@
-// components/pots/apiPots.js
+import apiClient from "@utils/apiClient";
 
-// Dati delle card
-export const potsData = [
-  {
-    name: "Savings",
-    total: 159.0,
-    target: 2000,
-    theme: "#277C78",
-  },
-  {
-    name: "Concert Ticket",
-    total: 110,
-    target: 150,
-    theme: "#626070",
-  },
-  {
-    name: "Gift",
-    total: 40,
-    target: 60,
-    theme: "#82C9D7",
-  },
-  {
-    name: "New Laptop",
-    total: 10,
-    target: 1000,
-    theme: "#F2CDAC",
-  },
-  {
-    name: "Holiday",
-    total: 531,
-    target: 1440,
-    theme: "#AF81BA",
-  },
-];
+// Recupera tutti i pots
+export const getPots = async () => {
+  // console.log("Fetching all pots...");
+  const response = await apiClient.get("/pots");
+  // console.log("Response received:", response.data);
+  return response.data;
+};
 
-// Esporta altre funzioni in futuro, come fetch o logica dinamica
+// Aggiungi un nuovo pot
+export const createPot = async (potData) => {
+  // console.log("Creating a new pot with data:", potData);
+  const response = await apiClient.post("/pots", potData);
+  // console.log("Response received:", response.data);
+  return response.data;
+};
+
+// Aggiorna un pot esistente
+export const updatePot = async (id, potData) => {
+  // console.log(`Updating pot with id ${id} and data:`, potData);
+  const response = await apiClient.put(`/pots/${id}`, potData);
+  // console.log("Response received:", response.data);
+  return response.data;
+};
+
+// Elimina un pot
+export const deletePot = async (id) => {
+  // console.log(`Deleting pot with id ${id}`);
+  const response = await apiClient.delete(`/pots/${id}`);
+  // console.log("Response received:", response.data);
+  return response.data;
+};

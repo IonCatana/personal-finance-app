@@ -50,6 +50,7 @@ const Dashboard = () => {
   const isLargeScreen = useMediaQuery(theme.breakpoints.up("md"));
   const [isSidebarMinimized, setIsSidebarMinimized] = useState(false);
 
+  const userToken = localStorage.getItem("token");
   // Effetto per resettare isSidebarMinimized quando isLargeScreen diventa false
   useEffect(() => {
     if (!isLargeScreen) {
@@ -163,10 +164,10 @@ const Dashboard = () => {
             md: `${pxToRem(32)} ${pxToRem(40)} `,
           },
         }}>
-        {activeMenu === 1 && <OverviewContent />}
+        {activeMenu === 1 && <OverviewContent token={userToken} />}
         {activeMenu === 2 && <TransactionsContent />}
         {activeMenu === 3 && <BudgetsContent />}
-        {activeMenu === 4 && <PotsContent />}
+        {activeMenu === 4 && <PotsContent token={userToken} />}
         {activeMenu === 5 && <RecurringBillsContent />}
       </Box>
     </Box>

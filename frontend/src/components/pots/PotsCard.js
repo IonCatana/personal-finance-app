@@ -7,6 +7,7 @@ import ButtonSecondary from "@components/buttons/ButtonSecondary";
 import { ReactComponent as EllipsisIcon } from "@assets/images/icon-ellipsis.svg";
 import ActionPopover from "@components/actions/ActionPopover";
 import ModalCrud from "@components/modals/ModalCrud";
+import { updatePot, deletePot } from "@components/pots/apiPots";
 
 /**
  * PotsCard Component
@@ -47,6 +48,7 @@ const PotsCard = ({
   target,
   percentage,
   color,
+  token,
   onAddMoney,
   onWithdraw,
 }) => {
@@ -230,9 +232,20 @@ const PotsCard = ({
         onClose={handleCloseModal}
         type={modalType || "add"} // Se `modalType` è vuoto, usa "add"
         data={modalData} // Passa i dati del pot
-        onSubmit={(updatedData) => {
-          console.log("Data submitted:", updatedData); // Gestisci il salvataggio o eliminazione
-          handleCloseModal();
+        onSubmit={async (updatedData) => {
+          try {
+            if (modalType === "edit") {
+              await updatePot(modalData._id, updatedData, token);
+              console.log("Pot aggiornato con successo");
+            } else if (modalType === "delete") {
+              await deletePot(modalData._id, token);
+              console.log("Pot eliminato con successo");
+            }
+          } catch (error) {
+            console.error("Errore nella gestione del pot:", error);
+          } finally {
+            handleCloseModal();
+          }
         }}
       />
     </>
@@ -245,6 +258,7 @@ PotsCard.propTypes = {
   target: PropTypes.number.isRequired, // Obiettivo di risparmio
   percentage: PropTypes.number.isRequired, // Percentuale di completamento
   color: PropTypes.string.isRequired, // Colore del pot
+  token: PropTypes.string.isRequired, // Token di autenticazione
   onAddMoney: PropTypes.func.isRequired, // Funzione per aggiungere denaro
   onWithdraw: PropTypes.func.isRequired, // Funzione per prelevare denaro
 };

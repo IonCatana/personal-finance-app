@@ -1,40 +1,37 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Box } from "@mui/material";
 import { pxToRem } from "@utils/pxToRem";
 import ButtonPrimary from "@components/buttons/ButtonPrimary";
 import SectionHeaderContent from "@components/headers/SectionHeaderContent";
 import PotsCard from "@components/pots/PotsCard";
-import { potsData } from "@components/pots/apiPots";
+import { getPots } from "@components/pots/apiPots";
 
-/**
- * PotsContent Component
- * -------------------------------
- * Questo componente rappresenta il contenuto principale della sezione "Pots".
- * È responsabile di:
- * - Mostrare l'intestazione della sezione con un pulsante per aggiungere un nuovo pot.
- * - Visualizzare una griglia di card (`PotsCard`), ognuna delle quali rappresenta un pot.
- *
- * Props:
- * - `handleAddMoney`: Funzione chiamata quando si clicca su "+ Add Money" in una card.
- * - `handleWithdraw`: Funzione chiamata quando si clicca su "Withdraw" in una card.
- *
- * Funzionalità principali:
- * - Mappa i dati dei pots da `potsData` e li passa a ogni card.
- * - Calcola dinamicamente la percentuale di completamento di ogni pot.
- * - Fornisce un layout responsivo utilizzando il sistema di griglie di Material-UI.
- *
- * Esempio di utilizzo:
- * ```jsx
- * <PotsContent
- *   handleAddMoney={(name) => console.log(`Add money to ${name}`)}
- *   handleWithdraw={(name) => console.log(`Withdraw money from ${name}`)}
- * />
- * ```
- */
-const PotsContent = () => {
+const PotsContent = ({ token }) => {
+  const [pots, setPots] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+
+  useEffect(() => {
+    const fetchPots = async () => {
+      try {
+        const data = await getPots(token);
+        setPots(data);
+      } catch (error) {
+        console.error("Errore nel caricamento dei pots:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPots();
+  }, [token]);
+
+  if (loading) {
+    return <div>Caricamento in corso...</div>; // Placeholder mentre i dati vengono caricati
+  }
+
   return (
     <>
-      {/* Intestazione della sezione */}
       <SectionHeaderContent
         title="Pots"
         buttonLabel="+ Add New Pot"
@@ -42,7 +39,6 @@ const PotsContent = () => {
         buttonComponent={ButtonPrimary}
       />
 
-      {/* Contenuto principale: griglia delle card */}
       <Box
         className="pots-content"
         sx={{
@@ -50,18 +46,18 @@ const PotsContent = () => {
           gridTemplateColumns: { xs: "1fr", sm: "1fr", md: "1fr 1fr" },
           gap: pxToRem(24),
         }}>
-        {potsData.map((pot, index) => {
-          // Calcolo dinamico della percentuale
+        {pots.map((pot, index) => {
           const percentage = (pot.total / pot.target) * 100;
 
           return (
             <PotsCard
-              key={index}
+              key={pot._id}
               name={pot.name}
               total={pot.total}
               target={pot.target}
               percentage={parseFloat(percentage)}
               color={pot.theme}
+              token={token}
               onAddMoney={() => console.log(`Add money to ${pot.name}`)}
               onWithdraw={() => console.log(`Withdraw money from ${pot.name}`)}
             />
