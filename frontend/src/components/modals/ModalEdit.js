@@ -8,7 +8,7 @@ import { Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { colorOptions } from "@components/colors/colorOptions";
 
-const ModalEdit = ({ data = {}, onColorChange, onSubmit }) => {
+const ModalEdit = ({ data = {}, onColorChange, onSubmit, buttonLabel }) => {
   const theme = useTheme();
   const [name, setName] = useState(data?.name || "");
   const [target, setTarget] = useState(data?.target?.toString() || "");
@@ -83,7 +83,7 @@ const ModalEdit = ({ data = {}, onColorChange, onSubmit }) => {
         fullWidth
         onClick={handleSubmit}
         sx={{ marginTop: pxToRem(4) }}>
-        Save Changes
+        {buttonLabel}
       </ButtonPrimary>
     </>
   );
@@ -92,6 +92,7 @@ const ModalEdit = ({ data = {}, onColorChange, onSubmit }) => {
 ModalEdit.propTypes = {
   data: PropTypes.object,
   onColorChange: PropTypes.func.isRequired,
+  buttonLabel: PropTypes.string,
   onSubmit: PropTypes.func.isRequired,
 };
 

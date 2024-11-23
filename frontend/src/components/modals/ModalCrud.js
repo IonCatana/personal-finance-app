@@ -3,12 +3,10 @@ import PropTypes from "prop-types";
 import { Modal, Box, Typography } from "@mui/material";
 import { pxToRem } from "@utils/pxToRem";
 import { useTheme } from "@mui/material/styles";
-// import ButtonDestroy from "@components/buttons/ButtonDestroy";
-// import ButtonPrimary from "@components/buttons/ButtonPrimary";
-// import ButtonTertiary from "@components/buttons/ButtonTertiary";
 import { ReactComponent as CloseIcon } from "@assets/images/icon-close-modal.svg";
 import ModalAdd from "@components/modals/ModalAdd";
 import ModalEdit from "@components/modals/ModalEdit";
+import ModalDelete from "@components/modals/ModalDelete";
 
 const ModalCrud = ({
   open,
@@ -58,6 +56,7 @@ const ModalCrud = ({
           selectedColor={selectedColor} // Colore scelto
           onColorChange={handleColorChange} // Callback per aggiornare il colore
           onSubmit={onSubmit} // Passa i dati raccolti al genitore
+          buttonLabel="Add Pot"
         />
       );
     }
@@ -71,11 +70,33 @@ const ModalCrud = ({
           onSubmit={(updatedData) => {
             onSubmit({ ...updatedData, _id: data._id });
           }}
+          buttonLabel="Save Changes"
         />
       );
     }
+
+    if (isDelete && data) {
+      return (
+        <ModalDelete
+          data={data} // Passa i dati del pot
+          onSubmit={onSubmit} // Funzione di eliminazione
+          onCancel={onClose} // Funzione per chiudere la modale senza eliminare
+        />
+      );
+    }
+
     return <Typography>Invalid modal type provided</Typography>;
-  }, [type, data, options, selectedColor, isAdd, isEdit, onSubmit]);
+  }, [
+    type,
+    data,
+    options,
+    onClose,
+    selectedColor,
+    isAdd,
+    isEdit,
+    isDelete,
+    onSubmit,
+  ]);
 
   return (
     <Modal

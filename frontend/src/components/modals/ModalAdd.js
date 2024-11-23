@@ -7,13 +7,13 @@ import { Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { colorOptions } from "@components/colors/colorOptions";
 
-const ModalAdd = ({ data, onColorChange, onSubmit }) => {
+const ModalAdd = ({ data, onColorChange, onSubmit, buttonLabel }) => {
   const theme = useTheme();
   const [name, setName] = useState(data?.name || "");
   const [target, setTarget] = useState(data?.target || "");
   const [colorValue, setColorValue] = useState(
     data?.color || colorOptions[0]?.value
-  ); 
+  );
 
   const handleColorChange = (selectedOption) => {
     setColorValue(selectedOption.value); // Imposta il valore del colore selezionato
@@ -67,7 +67,7 @@ const ModalAdd = ({ data, onColorChange, onSubmit }) => {
         fullWidth
         onClick={handleSubmit}
         sx={{ marginTop: pxToRem(4) }}>
-        Add Pot
+        {buttonLabel}
       </ButtonPrimary>
     </>
   );
@@ -76,6 +76,7 @@ const ModalAdd = ({ data, onColorChange, onSubmit }) => {
 ModalAdd.propTypes = {
   data: PropTypes.object,
   onColorChange: PropTypes.func.isRequired,
+  buttonLabel: PropTypes.string,
   onSubmit: PropTypes.func.isRequired,
 };
 
