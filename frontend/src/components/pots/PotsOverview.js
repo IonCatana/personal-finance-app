@@ -9,33 +9,6 @@ import { useMenu } from "@context/MenuContext";
 import { getPots } from "@components/pots/apiPots";
 import { useToken } from "@context/TokenContext";
 
-/**
- * PotsOverview
- * -------------------------------
- * Questo componente rappresenta una panoramica dei "pots" (fondi o categorie di risparmio),
- * con informazioni visive come il totale risparmiato e dettagli sui singoli pots.
- *
- * Funzionalità:
- * - Mostra il totale risparmiato in un componente card separato.
- * - Visualizza un elenco di pots con nome, valore e colore.
- * - Include un'intestazione con un pulsante per navigare a una sezione dettagliata.
- *
- * Props:
- * - Nessuna props diretta, i dati sono definiti localmente per ora.
- *
- * Stato:
- * - Non utilizza stato locale, ma fa uso del `MenuContext` per la navigazione.
- *
- * Funzionalità Futuro:
- * - `potsData` è attualmente un array statico. Può essere collegato a un backend
- *   per caricare dati dinamici.
- *
- * Uso:
- * - Ideale per dashboard o sezioni che richiedono una panoramica rapida sui risparmi.
- *
- * Esempio:
- * <PotsOverview />
- */
 const PotsOverview = () => {
   const theme = useTheme();
   const { setActiveMenu } = useMenu();
@@ -145,7 +118,7 @@ const PotsOverview = () => {
               key={index}
               name={pot.name}
               total={`$${pot.total}`}
-              color={pot.theme}
+              color={pot.color}
             />
           ))}
         </Box>

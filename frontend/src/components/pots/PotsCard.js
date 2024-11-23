@@ -9,40 +9,8 @@ import ActionPopover from "@components/actions/ActionPopover";
 import ModalCrud from "@components/modals/ModalCrud";
 import { updatePot, deletePot } from "@components/pots/apiPots";
 
-/**
- * PotsCard Component
- * -------------------------------
- * Questo componente rappresenta una card visuale per mostrare dettagli relativi a un "pot" (fondo o obiettivo di risparmio).
- *
- * Funzionalità principali:
- * - Mostra il nome del pot, il totale risparmiato, il target e la percentuale raggiunta.
- * - Include una barra di progresso che riflette visivamente la percentuale di completamento.
- * - Fornisce pulsanti per aggiungere denaro o prelevarlo.
- * - Supporta un'azione cliccabile sul menu "ellipsis".
- *
- * Props:
- * - `name`: Nome del pot (stringa obbligatoria).
- * - `total`: Totale risparmiato (numero obbligatorio).
- * - `target`: Obiettivo di risparmio (numero obbligatorio).
- * - `percentage`: Percentuale di completamento calcolata (numero obbligatorio).
- * - `color`: Colore per identificare visivamente il pot (stringa obbligatoria).
- * - `onAddMoney`: Funzione eseguita quando si clicca su "+ Add Money".
- * - `onWithdraw`: Funzione eseguita quando si clicca su "Withdraw".
- *
- * Esempio di utilizzo:
- * ```jsx
- * <PotsCard
- *   name="New Laptop"
- *   total={100}
- *   target={1000}
- *   percentage={10}
- *   color="#F2CDAC"
- *   onAddMoney={() => console.log("Add Money")}
- *   onWithdraw={() => console.log("Withdraw Money")}
- * />
- * ```
- */
 const PotsCard = ({
+  _id,
   name,
   total,
   target,
@@ -51,12 +19,14 @@ const PotsCard = ({
   token,
   onAddMoney,
   onWithdraw,
+  onUpdatePot,
+  onDeletePot,
 }) => {
   const theme = useTheme();
-  const [anchorEl, setAnchorEl] = useState(null); // Stato per gestire il popover
-  const [modalOpen, setModalOpen] = useState(false); // Stato per gestire la visibilità della modale
-  const [modalType, setModalType] = useState(""); // Tipo di modale: "edit" o "delete"
-  const [modalData, setModalData] = useState(null); // Dati da passare alla modale
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalType, setModalType] = useState("");
+  const [modalData, setModalData] = useState(null);
 
   // Funzione per aprire il popover
   const handleOpenPopover = (event) => {
@@ -69,10 +39,11 @@ const PotsCard = ({
   };
 
   const handleOpenModal = (type) => {
-    console.log("Modal type:", type, name); // Log per il debug
-    setModalType(type);
-    setModalData({ name, total, target, color }); // Passa i dati correnti del pot
-    setModalOpen(true);
+    if (type === "edit" || type === "delete") {
+      setModalType(type);
+      setModalData({ _id, name, total, target, color });
+    }
+    setModalOpen(true); // Mostra la modale
   };
 
   const handleCloseModal = () => {
@@ -211,15 +182,12 @@ const PotsCard = ({
           </Box>
         </Box>
 
-        {/* Sezione pulsanti */}
         <Box sx={{ display: "flex", gap: pxToRem(16) }}>
-          {/* Pulsante per aggiungere denaro */}
           <ButtonSecondary
             sx={{ flex: 1 }}
             onClick={() => handleOpenModal("addMoney")}>
             + Add Money
           </ButtonSecondary>
-          {/* Pulsante per prelevare denaro */}
           <ButtonSecondary
             sx={{ flex: 1 }}
             onClick={() => handleOpenModal("withdraw")}>
@@ -230,19 +198,23 @@ const PotsCard = ({
       <ModalCrud
         open={modalOpen}
         onClose={handleCloseModal}
-        type={modalType || "add"} // Se `modalType` è vuoto, usa "add"
+        type={modalType || undefined}
         data={modalData} // Passa i dati del pot
         onSubmit={async (updatedData) => {
           try {
             if (modalType === "edit") {
-              await updatePot(modalData._id, updatedData, token);
-              console.log("Pot aggiornato con successo");
+              const updatedPot = await updatePot(
+                modalData._id,
+                updatedData,
+                token
+              );
+              onUpdatePot(updatedPot); // Notifica il genitore
             } else if (modalType === "delete") {
               await deletePot(modalData._id, token);
-              console.log("Pot eliminato con successo");
+              onDeletePot(modalData._id); // Notifica il genitore
             }
           } catch (error) {
-            console.error("Errore nella gestione del pot:", error);
+            console.error("Error in CRUD operation:", error);
           } finally {
             handleCloseModal();
           }
@@ -253,14 +225,16 @@ const PotsCard = ({
 };
 
 PotsCard.propTypes = {
-  name: PropTypes.string.isRequired, // Nome del pot
-  total: PropTypes.number.isRequired, // Totale risparmiato
-  target: PropTypes.number.isRequired, // Obiettivo di risparmio
-  percentage: PropTypes.number.isRequired, // Percentuale di completamento
-  color: PropTypes.string.isRequired, // Colore del pot
-  token: PropTypes.string.isRequired, // Token di autenticazione
-  onAddMoney: PropTypes.func.isRequired, // Funzione per aggiungere denaro
-  onWithdraw: PropTypes.func.isRequired, // Funzione per prelevare denaro
+  name: PropTypes.string.isRequired,
+  total: PropTypes.number.isRequired,
+  target: PropTypes.number.isRequired,
+  percentage: PropTypes.number.isRequired,
+  color: PropTypes.string.isRequired,
+  token: PropTypes.string.isRequired,
+  onUpdatePot: PropTypes.func.isRequired,
+  onDeletePot: PropTypes.func.isRequired,
+  onAddMoney: PropTypes.func.isRequired,
+  onWithdraw: PropTypes.func.isRequired,
 };
 
 export default PotsCard;

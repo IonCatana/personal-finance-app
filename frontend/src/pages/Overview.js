@@ -11,7 +11,7 @@ const OverviewContent = () => {
 
   const userToken = localStorage.getItem("token");
   return (
-    <>
+    <Box>
       <SectionHeaderContent title="Overview" />
       {/* StatCards */}
       <Box
@@ -34,7 +34,7 @@ const OverviewContent = () => {
       <Box>
         <PotsOverview token={userToken} />
       </Box>
-    </>
+    </Box>
   );
 };
 

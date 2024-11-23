@@ -5,7 +5,7 @@ const potSchema = new mongoose.Schema({
   name: { type: String, required: true },
   target: { type: Number, required: true },
   total: { type: Number, default: 0 },
-  theme: { type: String, required: true },
+  color: { type: String, required: true },
 });
 
 module.exports = mongoose.model("Pot", potSchema);

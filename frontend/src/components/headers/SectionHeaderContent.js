@@ -5,39 +5,12 @@ import { pxToRem } from "@utils/pxToRem";
 import { useTheme } from "@mui/material/styles";
 import ModalCrud from "@components/modals/ModalCrud";
 
-/**
- * SectionHeaderContent
- * -------------------------------
- * Questo componente rappresenta un'intestazione di sezione riutilizzabile
- * che include un titolo e un pulsante opzionale.
- *
- * Funzionalità:
- * - Mostra un titolo principale (obbligatorio).
- * - Visualizza un pulsante opzionale con un'azione personalizzabile.
- * - Consente di passare un componente personalizzato per il pulsante.
- *
- * Props:
- * - title (string, obbligatoria): Testo del titolo visualizzato nella sezione.
- * - buttonLabel (string, opzionale): Testo visualizzato nel pulsante.
- * - onButtonClick (function, opzionale): Funzione eseguita al clic sul pulsante.
- * - buttonComponent (elementType, opzionale): Componente personalizzato per il pulsante.
- *
- * Uso:
- * - Ideale per sezioni con un'intestazione che richiedono un titolo e, opzionalmente, un'azione.
- *
- * Esempio:
- * <SectionHeaderContent
- *   title="Dashboard"
- *   buttonLabel="Add New"
- *   onButtonClick={() => console.log("Azione eseguita")}
- *   buttonComponent={ButtonPrimary}
- * />
- */
 const SectionHeaderContent = ({
   title,
   buttonLabel,
   onButtonClick,
   buttonComponent: ButtonComponent,
+  onAddPot,
 }) => {
   const theme = useTheme();
 
@@ -72,9 +45,9 @@ const SectionHeaderContent = ({
           <Box>
             <ButtonComponent
               onClick={() => {
-                handleOpenModal(); // Apre la modale al clic
+                handleOpenModal();
                 if (onButtonClick) {
-                  onButtonClick(); // Esegue l'eventuale funzione passata
+                  onButtonClick();
                 }
               }}>
               {buttonLabel}
@@ -86,11 +59,11 @@ const SectionHeaderContent = ({
       <ModalCrud
         open={isModalOpen}
         onClose={handleCloseModal}
-        type="add" // Specifica il tipo "add"
-        data={null} // Non ci sono dati iniziali per la modalità "add"
-        onSubmit={(newData) => {
-          console.log("New Pot added:", newData); // Logga i dati ricevuti
-          handleCloseModal(); // Chiude la modale
+        type="add"
+        data={null}
+        onSubmit={(newPotData) => {
+          onAddPot(newPotData);
+          handleCloseModal();
         }}
       />
     </>
@@ -98,10 +71,11 @@ const SectionHeaderContent = ({
 };
 
 SectionHeaderContent.propTypes = {
-  title: PropTypes.string.isRequired, // Titolo della sezione
-  buttonLabel: PropTypes.string, // Testo del pulsante opzionale
-  onButtonClick: PropTypes.func, // Funzione chiamata al clic del pulsante
-  buttonComponent: PropTypes.elementType, // Componente personalizzato per il pulsante
+  title: PropTypes.string.isRequired,
+  buttonLabel: PropTypes.string,
+  onButtonClick: PropTypes.func,
+  buttonComponent: PropTypes.elementType,
+  onAddPot: PropTypes.func,
 };
 
 export default SectionHeaderContent;

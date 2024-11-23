@@ -29,14 +29,14 @@ router.get("/:id", async (req, res) => {
 // Aggiungi un nuovo pot
 router.post("/", async (req, res) => {
   try {
-    const { name, target, total, theme } = req.body;
+    const { name, target, total, color } = req.body;
 
     const newPot = await Pot.create({
       userId: req.user.id,
       name,
       target,
       total,
-      theme,
+      color,
     });
 
     res.status(201).json(newPot);
@@ -48,11 +48,11 @@ router.post("/", async (req, res) => {
 // Modifica un pot esistente
 router.put("/:id", async (req, res) => {
   try {
-    const { name, target, total, theme } = req.body;
+    const { name, target, total, color } = req.body;
 
     const updatedPot = await Pot.findOneAndUpdate(
       { _id: req.params.id, userId: req.user.id },
-      { name, target, total, theme },
+      { name, target, total, color },
       { new: true, runValidators: true }
     );
 
