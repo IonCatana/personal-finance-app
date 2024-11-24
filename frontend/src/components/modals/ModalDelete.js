@@ -10,7 +10,7 @@ const ModalDelete = ({ data, onSubmit, onCancel }) => {
   const theme = useTheme();
 
   const handleDelete = () => {
-    onSubmit(data); // Passa i dati del pot da eliminare
+    onSubmit(data);
   };
 
   return (
@@ -43,9 +43,9 @@ const ModalDelete = ({ data, onSubmit, onCancel }) => {
 };
 
 ModalDelete.propTypes = {
-  data: PropTypes.object.isRequired, // Dati relativi al pot
-  onSubmit: PropTypes.func.isRequired, // Funzione di conferma eliminazione
-  onCancel: PropTypes.func.isRequired, // Funzione per annullare l'operazione
+  data: PropTypes.object.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
 };
 
 export default ModalDelete;

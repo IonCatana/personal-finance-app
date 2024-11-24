@@ -185,7 +185,11 @@ const PotsCard = ({
         <Box sx={{ display: "flex", gap: pxToRem(16) }}>
           <ButtonSecondary
             sx={{ flex: 1 }}
-            onClick={() => handleOpenModal("addMoney")}>
+            onClick={() => {
+              setModalType("addMoney");
+              setModalData({ _id, name, total, target, color });
+              setModalOpen(true); // Mostra la modale
+            }}>
             + Add Money
           </ButtonSecondary>
           <ButtonSecondary
@@ -212,6 +216,13 @@ const PotsCard = ({
             } else if (modalType === "delete") {
               await deletePot(modalData._id, token);
               onDeletePot(modalData._id); // Notifica il genitore
+            } else if (modalType === "addMoney") {
+              const updatedPot = await updatePot(
+                modalData._id,
+                updatedData,
+                token
+              );
+              onUpdatePot(updatedPot); // Aggiorna il totale
             }
           } catch (error) {
             console.error("Error in CRUD operation:", error);

@@ -52,10 +52,21 @@ const ModalAdd = ({ data, onColorChange, onSubmit, buttonLabel }) => {
         fullWidth
         label="Target"
         prefix="$"
+        type="number"
         placeholder="e.g. 2000"
         value={target}
         onChange={(e) => setTarget(e.target.value)}
-        sx={{ marginBottom: pxToRem(16) }}
+        sx={{
+          marginBottom: pxToRem(16),
+          "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":
+            {
+              WebkitAppearance: "none",
+              margin: 0,
+            },
+          "& input[type=number]": {
+            MozAppearance: "textfield", // Per Firefox
+          },
+        }}
       />
       <BasicInput
         label="Theme"

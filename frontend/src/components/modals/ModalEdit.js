@@ -63,11 +63,22 @@ const ModalEdit = ({ data = {}, onColorChange, onSubmit, buttonLabel }) => {
       <BasicInput
         fullWidth
         label="Target"
+        type="number"
         prefix="$"
         placeholder={`e.g. ${data?.target || "2000"}`}
         value={target}
         onChange={(e) => setTarget(e.target.value)}
-        sx={{ marginBottom: pxToRem(16) }}
+        sx={{
+          marginBottom: pxToRem(16),
+          "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":
+            {
+              WebkitAppearance: "none",
+              margin: 0,
+            },
+          "& input[type=number]": {
+            MozAppearance: "textfield", // Per Firefox
+          },
+        }}
       />
 
       {/* Theme Input */}

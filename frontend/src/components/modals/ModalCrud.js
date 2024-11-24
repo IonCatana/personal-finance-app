@@ -7,6 +7,7 @@ import { ReactComponent as CloseIcon } from "@assets/images/icon-close-modal.svg
 import ModalAdd from "@components/modals/ModalAdd";
 import ModalEdit from "@components/modals/ModalEdit";
 import ModalDelete from "@components/modals/ModalDelete";
+import ModalAddMoney from "@components/modals/ModalAddMoney";
 
 const ModalCrud = ({
   open,
@@ -33,10 +34,10 @@ const ModalCrud = ({
 
   const renderTitle = useMemo(() => {
     if (isAdd) return "Add New Pot";
-    if (isEdit) return `Edit ${data?.name} Pot`;
-    if (isDelete) return `Delete ${data?.name}?`;
-    if (isAddMoney) return `Add to ${data?.name}`;
-    if (isWithdraw) return `Withdraw from ${data?.name}`;
+    if (isEdit) return `Edit '${data?.name}' Pot`;
+    if (isDelete) return `Delete '${data?.name}?'`;
+    if (isAddMoney) return `Add to '${data?.name}'`;
+    if (isWithdraw) return `Withdraw from '${data?.name}'`;
   }, [isAdd, isEdit, isDelete, isAddMoney, isWithdraw, data]);
 
   const renderContent = useMemo(() => {
@@ -85,6 +86,16 @@ const ModalCrud = ({
       );
     }
 
+    if (isAddMoney && data) {
+      return (
+        <ModalAddMoney
+          data={data}
+          onSubmit={onSubmit} // Aggiorna il totale
+          onCancel={onClose} // Chiudi la modale senza modifiche
+        />
+      );
+    }
+
     return <Typography>Invalid modal type provided</Typography>;
   }, [
     type,
@@ -95,6 +106,7 @@ const ModalCrud = ({
     isAdd,
     isEdit,
     isDelete,
+    isAddMoney,
     onSubmit,
   ]);
 
