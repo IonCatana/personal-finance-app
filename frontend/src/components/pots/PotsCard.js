@@ -194,7 +194,11 @@ const PotsCard = ({
           </ButtonSecondary>
           <ButtonSecondary
             sx={{ flex: 1 }}
-            onClick={() => handleOpenModal("withdraw")}>
+            onClick={() => {
+              setModalType("withdraw");
+              setModalData({ _id, name, total, target, color });
+              setModalOpen(true);
+            }}>
             Withdraw
           </ButtonSecondary>
         </Box>
@@ -223,6 +227,13 @@ const PotsCard = ({
                 token
               );
               onUpdatePot(updatedPot); // Aggiorna il totale
+            } else if (modalType === "withdraw") {
+              const updatedPot = await updatePot(
+                modalData._id,
+                updatedData,
+                token
+              );
+              onUpdatePot(updatedPot); // Aggiorna il totale sottratto
             }
           } catch (error) {
             console.error("Error in CRUD operation:", error);

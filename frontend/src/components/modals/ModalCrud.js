@@ -8,6 +8,7 @@ import ModalAdd from "@components/modals/ModalAdd";
 import ModalEdit from "@components/modals/ModalEdit";
 import ModalDelete from "@components/modals/ModalDelete";
 import ModalAddMoney from "@components/modals/ModalAddMoney";
+import ModalWithdraw from "@components/modals/ModalWithdraw";
 
 const ModalCrud = ({
   open,
@@ -96,6 +97,17 @@ const ModalCrud = ({
       );
     }
 
+    if (isWithdraw && data) {
+      return (
+        <ModalWithdraw
+          data={data}
+          onSubmit={(updatedData) => {
+            onSubmit({ ...updatedData, _id: data._id });
+          }}
+        />
+      );
+    }
+
     return <Typography>Invalid modal type provided</Typography>;
   }, [
     type,
@@ -107,6 +119,7 @@ const ModalCrud = ({
     isEdit,
     isDelete,
     isAddMoney,
+    isWithdraw,
     onSubmit,
   ]);
 

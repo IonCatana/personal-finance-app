@@ -1,38 +1,50 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { Box, Typography, LinearProgress } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { pxToRem } from "@utils/pxToRem";
 import ButtonPrimary from "@components/buttons/ButtonPrimary";
 import BasicInput from "@components/inputFields/BasicInput";
 import { useTheme } from "@mui/material/styles";
 
-const ModalAddMoney = ({ data, onSubmit, onCancel }) => {
+const ModalWithdraw = ({ data, onSubmit, onCancel }) => {
   const theme = useTheme();
   const [amount, setAmount] = useState("");
 
   const { total, target } = data;
   const currentPercentage = (total / target) * 100;
-  const addedPercentage = ((parseFloat(amount) || 0) / target) * 100; // Percentuale dell'importo aggiunto
-  const newTotal = total + (parseFloat(amount) || 0);
-  // const newPercentage = Math.min((newTotal / target) * 100, 100);
-
-  // Calcola l'importo massimo che può essere aggiunto senza superare il 100%
-  const maxAmount = target - total;
+  const remainingTotal = Math.max(total - (parseFloat(amount) || 0), 0); // Assicura che non vada sotto 0
+  const newPercentage = (remainingTotal / target) * 100;
 
   const handleAmountChange = (e) => {
     let value = parseFloat(e.target.value) || 0;
-    if (value > maxAmount) {
-      value = maxAmount; // Imposta automaticamente al massimo aggiungibile
+
+    // Impedisce di inserire numeri negativi
+    if (value < 0) {
+      value = 0; // Imposta il valore a 0 se è negativo
     }
-    setAmount(value.toString());
+
+    // Controlla se il valore supera il totale attuale
+    if (value > total) {
+      value = total; // Imposta il valore massimo possibile
+    }
+
+    setAmount(value.toString()); // Aggiorna l'importo visivamente come stringa
   };
 
   const handleSubmit = () => {
-    if (!amount || isNaN(amount) || amount <= 0) {
-      alert("Please enter a valid amount to add.");
+    const withdrawalAmount = parseFloat(amount);
+
+    if (!amount || isNaN(amount) || withdrawalAmount <= 0) {
+      alert("Please enter a valid amount to withdraw.");
       return;
     }
-    onSubmit({ ...data, total: total + parseFloat(amount) });
+
+    if (withdrawalAmount > total) {
+      alert("You cannot withdraw more than the available total.");
+      return;
+    }
+
+    onSubmit({ ...data, total: remainingTotal });
   };
 
   return (
@@ -43,7 +55,7 @@ const ModalAddMoney = ({ data, onSubmit, onCancel }) => {
           color: theme.palette.grey[500],
           marginBottom: pxToRem(16),
         }}>
-        Add money to this pot to achieve your saving goals.
+        Withdraw money from this pot to use for other purposes.
       </Typography>
       {/* Progress Section */}
       <Box sx={{ marginBottom: pxToRem(24) }}>
@@ -59,14 +71,14 @@ const ModalAddMoney = ({ data, onSubmit, onCancel }) => {
               typography: theme.typography.textPreset4,
               color: theme.palette.grey[500],
             }}>
-            New Amount
+            Remaining Amount
           </Typography>
           <Typography
             sx={{
               typography: theme.typography.textPreset2,
               color: theme.palette.grey[900],
             }}>
-            ${newTotal.toFixed(2)}
+            ${remainingTotal.toFixed(2)}
           </Typography>
         </Box>
         <Box
@@ -74,45 +86,51 @@ const ModalAddMoney = ({ data, onSubmit, onCancel }) => {
             position: "relative",
             height: pxToRem(8),
             borderRadius: pxToRem(4),
+            backgroundColor: theme.palette.beige[100], // Sfondo generale della barra
+            overflow: "hidden",
           }}>
-          {/* Barra del totale attuale (nero) */}
-          <LinearProgress
-            variant="determinate"
-            value={currentPercentage} // Percentuale attuale
-            sx={{
-              height: pxToRem(8),
-              borderRadius: `${pxToRem(4)} ${pxToRem(4)} ${pxToRem(
-                4
-              )} ${pxToRem(4)}`,
-              backgroundColor: theme.palette.beige[100],
-              "& .MuiLinearProgress-bar": {
-                backgroundColor: "black", // Colore del totale attuale
-                borderRadius: `${pxToRem(4)} ${pxToRem(0)} ${pxToRem(
-                  0
-                )} ${pxToRem(4)}`,
-              },
-            }}
-          />
-          {/* Barra dell'incremento (verde o colore del tema) */}
+          {/* Current Total (barra nera) */}
           <Box
             sx={{
               position: "absolute",
               top: 0,
-              left: `${currentPercentage}%`,
-              width: `calc(${Math.min(
-                addedPercentage,
-                100 - currentPercentage
-              )}% + ${pxToRem(2)})`,
+              left: 0,
+              width: `${currentPercentage}%`, // Percentuale attuale del totale
+              height: "100%",
+              borderRadius: `${pxToRem(4)} ${pxToRem(4)} ${pxToRem(
+                4
+              )} ${pxToRem(4)}`,
+              backgroundColor: "black",
+            }}
+          />
+          {/* Withdrawal Amount (barra rossa) */}
+          <Box
+            sx={{
+              position: "absolute",
+              top: 0,
+              left: `${(remainingTotal / target) * 100}%`, // La barra rossa parte dal totale rimanente
+              width: `${Math.min(
+                (parseFloat(amount) / target) * 100,
+                currentPercentage
+              )}%`, // Percentuale sottratta
               height: "100%",
               borderRadius: `${pxToRem(0)} ${pxToRem(4)} ${pxToRem(
                 4
               )} ${pxToRem(0)}`,
-              marginLeft: pxToRem(2),
-              backgroundColor: theme.palette.secondaryColors.green,
+              backgroundColor: theme.palette.secondaryColors.red, // Colore rosso
+              "&:before": {
+                content: '""',
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: pxToRem(2),
+                height: "100%",
+                backgroundColor: theme.palette.beige[100],
+              },
             }}
           />
         </Box>
-        {/* Percentuale e Target */}
+        {/* Percentage and Target */}
         <Box
           sx={{
             display: "flex",
@@ -124,9 +142,7 @@ const ModalAddMoney = ({ data, onSubmit, onCancel }) => {
               typography: "textPreset5Bold",
               color: theme.palette.grey[500],
             }}>
-            {`${Math.min(currentPercentage + addedPercentage, 100).toFixed(
-              2
-            )}%`}
+            {`${newPercentage.toFixed(2)}%`}
           </Typography>
           <Typography
             sx={{
@@ -140,7 +156,7 @@ const ModalAddMoney = ({ data, onSubmit, onCancel }) => {
       {/* Amount Input */}
       <BasicInput
         fullWidth
-        label="Amount to Add"
+        label="Amount to Withdraw"
         type="number"
         prefix="$"
         value={amount}
@@ -159,16 +175,16 @@ const ModalAddMoney = ({ data, onSubmit, onCancel }) => {
         }}
       />
       <ButtonPrimary fullWidth onClick={handleSubmit}>
-        Confirm Addition
+        Confirm Withdrawal
       </ButtonPrimary>
     </Box>
   );
 };
 
-ModalAddMoney.propTypes = {
-  data: PropTypes.object.isRequired,
-  onSubmit: PropTypes.func.isRequired,
-  onCancel: PropTypes.func.isRequired,
+ModalWithdraw.propTypes = {
+  data: PropTypes.object.isRequired, // Passa i dati del pot
+  onSubmit: PropTypes.func.isRequired, // Funzione chiamata per confermare
+  onCancel: PropTypes.func, // Funzione opzionale per annullare
 };
 
-export default ModalAddMoney;
+export default ModalWithdraw;
