@@ -176,3 +176,8 @@ body {
 .sidebar-menu .sidebar-menu-icon.active path {
   fill: var(--color-green);
 }
+
+.main-content {
+  overflow: auto;
+  scrollbar-width: none;
+}

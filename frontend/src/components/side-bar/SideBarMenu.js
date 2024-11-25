@@ -5,37 +5,69 @@ import { pxToRem } from "@utils/pxToRem";
 import { useTheme } from "@mui/material/styles";
 
 /**
- * SideBarMenu
- * -------------------------------
- * Questo componente rappresenta un singolo elemento del menu laterale (sidebar).
- * È progettato per adattarsi a diverse modalità, come una sidebar minimizzata
- * o espansa, e supporta stati attivi per evidenziare l'elemento selezionato.
+ * **Componente SideBarMenu**
  *
- * Funzionalità:
- * - Supporta un'icona e un'etichetta (testo) per l'elemento del menu.
- * - Cambia lo stile in base allo stato attivo (`active`).
- * - Adatta il layout alla modalità minimizzata o espansa della sidebar.
- * - Include una transizione fluida per colore e margini.
+ * Questo componente rappresenta un singolo elemento del menu nella sidebar.
+ * È altamente personalizzabile, responsivo e cambia aspetto in base a diverse condizioni come lo stato attivo
+ * e la minimizzazione della sidebar.
  *
- * Props:
- * - label (string, obbligatoria): Testo visualizzato accanto all'icona.
- * - icon (node, obbligatoria): Icona visualizzata accanto al testo.
- * - active (bool, opzionale): Stato attivo dell'elemento del menu.
- * - onClick (function, opzionale): Funzione chiamata al clic sull'elemento.
- * - isSidebarMinimized (bool, obbligatoria): Indica se la sidebar è minimizzata.
+ * ### **Props**
+ * - **label (string)**:
+ *   - Testo che rappresenta l'etichetta dell'elemento del menu.
+ * - **icon (node)**:
+ *   - Icona visiva associata all'elemento del menu.
+ * - **active (boolean)**:
+ *   - Indica se l'elemento è attualmente attivo (selezionato).
+ *   - Quando attivo, l'elemento cambia colore e visualizza un indicatore visivo.
+ * - **onClick (function)**:
+ *   - Funzione chiamata quando l'elemento viene cliccato.
+ * - **isSidebarMinimized (boolean)**:
+ *   - Indica se la sidebar è minimizzata.
+ *   - Determina se l'etichetta del menu deve essere visibile o nascosta.
  *
- * Uso:
- * - Importare e utilizzare per costruire menu laterali.
+ * ### **Stile e Layout**
+ * - **Contenitore principale (`sidebar-menu`)**:
+ *   - Utilizza `flexbox` per allineare l'icona e l'etichetta orizzontalmente o verticalmente, in base al breakpoint.
+ *   - Cambia il colore e lo sfondo quando l'elemento è attivo.
+ *   - Aggiunge un effetto hover per migliorare l'interazione.
+ * - **Icona (`sidebar-menu-icon`)**:
+ *   - Mostra l'icona dell'elemento.
+ *   - Sempre visibile, indipendentemente dallo stato di minimizzazione.
+ * - **Etichetta (`Typography`)**:
+ *   - Visualizzata solo quando la sidebar non è minimizzata.
+ *   - Supporta una tipografia dinamica per adattarsi ai diversi breakpoints.
  *
- * Esempio:
- * <SideBarMenu
- *   label="Dashboard"
- *   icon={<DashboardIcon />}
- *   active={true}
- *   onClick={() => console.log("Naviga al dashboard")}
- *   isSidebarMinimized={false}
- * />
+ * ### **Responsività**
+ * - Su schermi piccoli (`xs`):
+ *   - L'etichetta è nascosta e l'elemento è più compatto.
+ * - Su schermi medi e grandi (`md` e superiori):
+ *   - L'etichetta è visibile a meno che la sidebar non sia minimizzata.
+ *
+ * ### **Interazioni**
+ * - **Hover**:
+ *   - Cambia il colore del testo per gli elementi non attivi.
+ * - **Stato attivo**:
+ *   - Cambia colore e visualizza un indicatore visivo (barra colorata sul lato o sotto l'elemento, in base al layout).
+ *
+ * ### **Indicatori Visivi**
+ * - Un indicatore visivo (barra) appare accanto o sotto l'elemento se è attivo.
+ * - L'indicatore usa il colore `theme.palette.secondaryColors.green` per indicare lo stato attivo.
+ *
+ * ### **Comportamento Dinamico**
+ * - La larghezza, il padding e l'aspetto cambiano dinamicamente in base ai seguenti fattori:
+ *   - Stato di attivazione (`active`).
+ *   - Stato di minimizzazione della sidebar (`isSidebarMinimized`).
+ *   - Breakpoints definiti tramite Material-UI.
+ *
+ * ### **Note Tecniche**
+ * - **Transizioni**:
+ *   - Viene utilizzata una transizione CSS per rendere fluido il cambio di colore e margini durante le interazioni.
+ * - **Accessibilità**:
+ *   - L'uso di `Typography` garantisce una tipografia coerente con il resto dell'app.
+ * - **Modularità**:
+ *   - Questo componente può essere riutilizzato per rappresentare qualsiasi elemento di menu con un'icona e un'etichetta.
  */
+
 const SideBarMenu = ({ label, icon, active, onClick, isSidebarMinimized }) => {
   const theme = useTheme();
 

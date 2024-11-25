@@ -13,35 +13,60 @@ import RecurringBillsContent from "@pages/RecurringBills";
 import { useMenu } from "@context/MenuContext";
 
 /**
- * Dashboard Component
- * -------------------------------
- * Questo componente rappresenta la dashboard principale dell'applicazione, composta da:
- * - Una barra laterale (sidebar) che include un logo, un menu, e un'icona per minimizzare la barra.
- * - Una sezione principale che mostra il contenuto basato sul menu attualmente selezionato.
+ * **Dashboard Component**
  *
- * Funzionalità principali:
- * - Supporta la minimizzazione della barra laterale per migliorare l'usabilità su schermi grandi.
- * - Gestisce dinamicamente i contenuti mostrati nella sezione principale in base al menu attivo.
- * - Adatta il layout per dispositivi mobili utilizzando Media Queries di Material-UI.
+ * Questo componente rappresenta la vista principale della dashboard, suddivisa in due sezioni principali:
  *
- * Stato:
- * - `isSidebarMinimized` (boolean): Determina se la barra laterale è minimizzata.
- * - Utilizza il contesto `MenuContext` per gestire il menu attivo e cambiare i contenuti principali.
+ * 1. **Sidebar (sidebar-container)**:
+ *    - Contiene il logo, il menu laterale e il pulsante per minimizzare la sidebar.
+ *    - Può essere minimizzata per risparmiare spazio su schermi grandi.
+ *    - È responsiva e si adatta a schermi piccoli diventando "fixed" nella parte inferiore dello schermo.
  *
- * Hooks:
- * - `useMediaQuery`: Per rilevare se lo schermo è grande (breakpoint "md").
- * - `useTheme`: Per accedere al tema Material-UI e ai colori globali.
- * - `useEffect`: Per resettare lo stato `isSidebarMinimized` quando lo schermo diventa piccolo.
+ * 2. **Main Content (main-content)**:
+ *    - Visualizza il contenuto dinamico in base alla voce di menu selezionata.
+ *    - Supporta diverse viste come "Overview", "Transactions", "Budgets", "Pots", e "Recurring Bills".
+ *    - Implementa uno scroll verticale personalizzato per gestire grandi quantità di contenuti.
  *
- * Componenti utilizzati:
- * - `Logo`: Mostra il logo dell'applicazione in versione grande o piccola.
- * - `SideBarMenuList`: Un menu interattivo con più opzioni per navigare tra le sezioni.
- * - Contenuti dinamici (es. `OverviewContent`, `TransactionsContent`, ecc.) per ciascun menu.
+ * ### Stato e Logica:
+ * - **isSidebarMinimized (booleano)**:
+ *   - Gestisce lo stato di minimizzazione della sidebar.
+ *   - Cambia tramite il pulsante di minimizzazione ed è disabilitato su schermi piccoli.
+ * - **activeMenu (dal contesto MenuContext)**:
+ *   - Determina quale vista deve essere visualizzata nel contenuto principale.
+ * - **userToken**:
+ *   - Recuperato dal `localStorage`, è utilizzato per autorizzare il contenuto dinamico.
  *
- * Esempio di utilizzo:
- * ```jsx
- * <Dashboard />
- * ```
+ * ### Responsività:
+ * - **Breakpoints Material-UI**:
+ *   - Su schermi piccoli (`xs`), la sidebar si sposta in basso e diventa "fixed".
+ *   - Su schermi medi (`md` e superiori), la sidebar è visibile lateralmente con la possibilità di minimizzarla.
+ * - **Flexbox**:
+ *   - Il layout principale utilizza `display: flex` con `flexDirection` dinamico per adattarsi a schermi piccoli (colonna) e grandi (riga).
+ *
+ * ### Stile:
+ * - **Sidebar**:
+ *   - Ha un'animazione di transizione per la larghezza durante la minimizzazione.
+ *   - Il pulsante di minimizzazione include un'icona che ruota con un effetto visivo.
+ * - **Main Content**:
+ *   - Padding e margini dinamici per migliorare l'esperienza su dispositivi diversi.
+ *   - Include `overflowY: auto` per abilitare uno scroll verticale personalizzato.
+ *
+ * ### Funzionalità principali:
+ * - **Minimizzazione della Sidebar**:
+ *   - Permette di risparmiare spazio su schermi grandi.
+ *   - Impedisce la minimizzazione su dispositivi mobili.
+ * - **Contenuto Dinamico**:
+ *   - Cambia in base alla voce del menu selezionata tramite il contesto `MenuContext`.
+ *
+ * ### Componenti utilizzati:
+ * - **Logo**: Visualizza un logo dinamico che cambia in base allo stato della sidebar.
+ * - **SideBarMenuList**: Mostra il menu laterale con le voci selezionabili.
+ * - **OverviewContent, TransactionsContent, BudgetsContent, PotsContent, RecurringBillsContent**:
+ *   - Componenti che rappresentano le diverse viste della dashboard.
+ *
+ * ### Note tecniche:
+ * - `useEffect`: Resetta lo stato di `isSidebarMinimized` quando si passa a un breakpoint inferiore a `md`.
+ * - `useMediaQuery`: Verifica se lo schermo è più grande di `md` per abilitare la minimizzazione.
  */
 
 const Dashboard = () => {
@@ -70,7 +95,7 @@ const Dashboard = () => {
       className="dashboard"
       sx={{
         width: "100%",
-        height: "100%",
+        height: "100vh",
         display: "flex",
         flexDirection: { xs: "column", md: "row" },
         position: "relative",
@@ -163,6 +188,7 @@ const Dashboard = () => {
             sm: `${pxToRem(32)} ${pxToRem(40)}`,
             md: `${pxToRem(32)} ${pxToRem(40)} `,
           },
+          overflowY: "auto",
         }}>
         {activeMenu === 1 && <OverviewContent token={userToken} />}
         {activeMenu === 2 && <TransactionsContent />}
