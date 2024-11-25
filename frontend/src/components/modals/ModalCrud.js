@@ -4,6 +4,7 @@ import { Modal, Box, Typography } from "@mui/material";
 import { pxToRem } from "@utils/pxToRem";
 import { useTheme } from "@mui/material/styles";
 import { ReactComponent as CloseIcon } from "@assets/images/icon-close-modal.svg";
+import Snackbar from "@components/snackbar/SnackBar";
 import ModalAdd from "@components/modals/ModalAdd";
 import ModalEdit from "@components/modals/ModalEdit";
 import ModalDelete from "@components/modals/ModalDelete";
@@ -27,10 +28,23 @@ const ModalCrud = ({
   const isWithdraw = useMemo(() => type === "withdraw", [type]);
 
   const [selectedColor, setSelectedColor] = useState("");
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    label: "",
+    severity: "info", // 'success', 'error', 'warning', 'info'
+  });
 
   // Funzione chiamata quando cambia il valore
   const handleColorChange = (newSelection) => {
     setSelectedColor(newSelection.value); // Aggiorna lo stato con il valore selezionato
+  };
+
+  const handleSnackbarOpen = (label, severity = "info") => {
+    setSnackbar({ open: true, label, severity });
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbar({ ...snackbar, open: false });
   };
 
   const renderTitle = useMemo(() => {
@@ -57,7 +71,10 @@ const ModalCrud = ({
           options={options || []} // Colori o altre opzioni
           selectedColor={selectedColor} // Colore scelto
           onColorChange={handleColorChange} // Callback per aggiornare il colore
-          onSubmit={onSubmit} // Passa i dati raccolti al genitore
+          onSubmit={(newData) => {
+            onSubmit(newData);
+            handleSnackbarOpen("Pot added successfully!", "success");
+          }} // Passa i dati raccolti al genitore
           buttonLabel="Add Pot"
         />
       );
@@ -71,6 +88,7 @@ const ModalCrud = ({
           onColorChange={handleColorChange}
           onSubmit={(updatedData) => {
             onSubmit({ ...updatedData, _id: data._id });
+            handleSnackbarOpen("Pot updated successfully!", "success");
           }}
           buttonLabel="Save Changes"
         />
@@ -80,9 +98,16 @@ const ModalCrud = ({
     if (isDelete && data) {
       return (
         <ModalDelete
-          data={data} // Passa i dati del pot
-          onSubmit={onSubmit} // Funzione di eliminazione
-          onCancel={onClose} // Funzione per chiudere la modale senza eliminare
+          data={data}
+          onSubmit={() => {
+            handleSnackbarOpen("Pot deleted successfully!", "success");
+            // Ritarda la chiusura della modale per permettere allo Snackbar di mostrarsi
+            setTimeout(() => {
+              onSubmit(data);
+              onClose();
+            }, 3000); // Mostra lo Snackbar per 3 secondi
+          }}
+          onCancel={onClose}
         />
       );
     }
@@ -91,7 +116,10 @@ const ModalCrud = ({
       return (
         <ModalAddMoney
           data={data}
-          onSubmit={onSubmit} // Aggiorna il totale
+          onSubmit={(updatedData) => {
+            onSubmit(updatedData);
+            handleSnackbarOpen("Money added successfully!", "success");
+          }}
           onCancel={onClose} // Chiudi la modale senza modifiche
         />
       );
@@ -103,6 +131,7 @@ const ModalCrud = ({
           data={data}
           onSubmit={(updatedData) => {
             onSubmit({ ...updatedData, _id: data._id });
+            handleSnackbarOpen("Money withdrawn successfully!", "success");
           }}
         />
       );
@@ -124,68 +153,77 @@ const ModalCrud = ({
   ]);
 
   return (
-    <Modal
-      sx={{
-        margin: pxToRem(16),
-      }}
-      open={open}
-      onClose={onClose}>
-      <Box
+    <>
+      <Modal
         sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          backgroundColor: theme.palette.otherColors.white,
-          maxWidth: pxToRem(560),
-          width: "100%",
-          borderRadius: pxToRem(12),
-          padding: {
-            xs: `${pxToRem(24)} ${pxToRem(20)}`,
-            sm: `${pxToRem(32)}`,
-            md: `${pxToRem(32)}`,
-          },
-          boxShadow: theme.shadows[5],
-        }}>
-        {/* Titolo */}
+          margin: pxToRem(16),
+        }}
+        open={open}
+        onClose={onClose}>
         <Box
           sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: pxToRem(20),
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            backgroundColor: theme.palette.otherColors.white,
+            maxWidth: pxToRem(560),
+            width: "100%",
+            borderRadius: pxToRem(12),
+            padding: {
+              xs: `${pxToRem(24)} ${pxToRem(20)}`,
+              sm: `${pxToRem(32)}`,
+              md: `${pxToRem(32)}`,
+            },
+            boxShadow: theme.shadows[5],
           }}>
-          <Typography
-            sx={{
-              fontSize: pxToRem(20),
-              [theme.breakpoints.up("sm")]: {
-                fontSize: theme.typography.textPreset1.fontSize,
-              },
-              [theme.breakpoints.up("md")]: {
-                fontSize: theme.typography.textPreset1.fontSize,
-              },
-              fontWeight: theme.typography.textPreset1.fontWeight,
-              lineHeight: theme.typography.textPreset1.lineHeight,
-              color: theme.palette.grey[900], // Colore dinamico
-            }}>
-            {renderTitle}
-          </Typography>
+          {/* Titolo */}
           <Box
             sx={{
               display: "flex",
+              justifyContent: "space-between",
               alignItems: "center",
-              justifyContent: "center",
-              width: pxToRem(32),
-              height: pxToRem(32),
+              marginBottom: pxToRem(20),
             }}>
-            <CloseIcon style={{ cursor: "pointer" }} onClick={onClose} />
+            <Typography
+              sx={{
+                fontSize: pxToRem(20),
+                [theme.breakpoints.up("sm")]: {
+                  fontSize: theme.typography.textPreset1.fontSize,
+                },
+                [theme.breakpoints.up("md")]: {
+                  fontSize: theme.typography.textPreset1.fontSize,
+                },
+                fontWeight: theme.typography.textPreset1.fontWeight,
+                lineHeight: theme.typography.textPreset1.lineHeight,
+                color: theme.palette.grey[900], // Colore dinamico
+              }}>
+              {renderTitle}
+            </Typography>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: pxToRem(32),
+                height: pxToRem(32),
+              }}>
+              <CloseIcon style={{ cursor: "pointer" }} onClick={onClose} />
+            </Box>
           </Box>
-        </Box>
 
-        {/* Contenuto dinamico */}
-        {renderContent}
-      </Box>
-    </Modal>
+          {/* Contenuto dinamico */}
+          {renderContent}
+        </Box>
+      </Modal>
+      {/* Snackbar */}
+      <Snackbar
+        open={snackbar.open}
+        onClose={handleSnackbarClose}
+        label={snackbar.label}
+        severity={snackbar.severity}
+      />
+    </>
   );
 };
 
