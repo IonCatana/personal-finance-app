@@ -1,5 +1,3 @@
-// src/pages/SignIn.js
-
 import React from "react";
 import { Box, Typography } from "@mui/material";
 import { pxToRem } from "@utils/pxToRem";
@@ -8,6 +6,41 @@ import IllustrationSection from "@components/shared/IllustrationSection";
 import SignInForm from "@components/forms/SignInForm";
 import HeaderLogo from "@components/header/HeaderLogo";
 import { useTheme } from "@mui/material/styles";
+
+/**
+ * **Pagina SignIn**
+ *
+ * Questa pagina è dedicata alla funzionalità di accesso per l'applicazione. Combina una sezione illustrativa e un modulo
+ * di login per migliorare l'esperienza utente.
+ *
+ * ### Funzionalità principali:
+ *
+ * 1. **HeaderLogo**:
+ *    - Visualizza il logo dell'app in cima alla pagina, garantendo un branding coerente.
+ *
+ * 2. **Illustrazione (IllustrationSection)**:
+ *    - Mostra un'immagine motivazionale con un titolo e una descrizione per comunicare il valore dell'app all'utente.
+ *    - L'immagine utilizzata è `illustration-authentication.svg`.
+ *
+ * 3. **SignInForm**:
+ *    - Modulo per l'accesso degli utenti.
+ *    - Include campi per l'inserimento di credenziali come email e password.
+ *
+ * ### Stile e layout:
+ * - Utilizza Material-UI per il layout e lo stile, integrato con un tema personalizzato tramite l'hook `useTheme`.
+ * - **Box principale**:
+ *   - Centra il contenuto verticalmente e orizzontalmente con `flexbox`.
+ *   - Adatta i padding in base al dispositivo (responsività con `xs` e `md`).
+ * - **Illustrazione e modulo**:
+ *   - Divisi in due sezioni principali.
+ *   - L'illustrazione occupa metà dello spazio disponibile, mentre il modulo è centrato con una larghezza massima.
+ * - **Tema personalizzato**:
+ *   - Usa il tema per gestire colori, tipografia e spaziature, come il colore bianco di sfondo e i margini definiti.
+ *
+ * ### Note:
+ * - Il modulo è contenuto in un box con un bordo arrotondato e sfondo bianco, per un aspetto moderno e pulito.
+ * - Le dimensioni e i margini sono convertiti in rem tramite la funzione `pxToRem`, per garantire una migliore scalabilità.
+ */
 
 const SignIn = () => {
   const theme = useTheme();

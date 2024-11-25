@@ -1,5 +1,3 @@
-// src/pages/SignIn.js
-
 import React from "react";
 import { Box, Typography } from "@mui/material";
 import { pxToRem } from "@utils/pxToRem";
@@ -8,6 +6,43 @@ import IllustrationSection from "@components/shared/IllustrationSection";
 import SignUpForm from "@components/forms/SignUpForm";
 import HeaderLogo from "@components/header/HeaderLogo";
 import { useTheme } from "@mui/material/styles";
+
+/**
+ * **Pagina SignUp**
+ *
+ * Questa pagina è dedicata alla funzionalità di registrazione degli utenti per l'applicazione.
+ * Combina una sezione illustrativa e un modulo di registrazione, offrendo un layout moderno e responsivo.
+ *
+ * ### Funzionalità principali:
+ *
+ * 1. **HeaderLogo**:
+ *    - Visualizza il logo dell'app nella parte superiore della pagina.
+ *    - Garantisce continuità nel branding dell'app.
+ *
+ * 2. **Illustrazione (IllustrationSection)**:
+ *    - Include un'immagine illustrativa con un titolo e una descrizione motivazionale.
+ *    - L'illustrazione comunica il valore dell'app per l'utente finale.
+ *
+ * 3. **SignUpForm**:
+ *    - Modulo per la registrazione di nuovi utenti.
+ *    - Comprende campi per l'inserimento delle informazioni richieste per creare un account.
+ *
+ * ### Stile e layout:
+ * - Utilizza Material-UI per il design e il layout, sfruttando un tema personalizzato con l'hook `useTheme`.
+ * - **Box principale**:
+ *   - Centra il contenuto orizzontalmente e verticalmente con `flexbox`.
+ *   - Applica padding dinamico basato sulla dimensione dello schermo, assicurando responsività.
+ * - **Sezione modulo e illustrazione**:
+ *   - L'illustrazione occupa metà dello spazio disponibile, con contenuto visivamente accattivante.
+ *   - Il modulo di registrazione è centrato e racchiuso in un contenitore bianco arrotondato.
+ *
+ * ### Dettagli tecnici:
+ * - **pxToRem**: Convertitore di unità per garantire scalabilità e accessibilità del layout.
+ * - **Tema personalizzato**:
+ *   - Colori, tipografia e spaziature sono gestiti attraverso il tema Material-UI.
+ * - **Responsività**:
+ *   - Margini e padding sono configurati per adattarsi a dispositivi mobili e desktop.
+ */
 
 const SignIn = () => {
   const theme = useTheme();

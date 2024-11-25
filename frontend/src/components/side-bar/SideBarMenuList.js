@@ -59,7 +59,7 @@ const SideBarMenuList = ({ activeMenu, setActiveMenu, isSidebarMinimized }) => {
           md: `${pxToRem(24)} ${pxToRem(0)} `,
         },
         overflowY: "auto",
-        scrollbarWidth: "none", 
+        scrollbarWidth: "none",
         msOverflowStyle: "none",
         display: "flex",
         flexDirection: { xs: "row", md: "column" },

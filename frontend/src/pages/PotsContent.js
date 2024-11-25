@@ -6,6 +6,48 @@ import SectionHeaderContent from "@components/headers/SectionHeaderContent";
 import PotsCard from "@components/pots/PotsCard";
 import { getPots, createPot } from "@components/pots/apiPots";
 
+/**
+ * **Componente PotsContent**
+ *
+ * Questo componente è responsabile della gestione e visualizzazione dei "pots" (contenitori finanziari) dell'applicazione.
+ *
+ * ### Funzionalità principali:
+ *
+ * 1. **Caricamento dei pots**:
+ *    - Recupera i pots dal backend utilizzando la funzione `getPots` e aggiorna lo stato locale con i dati ricevuti.
+ *    - Gestisce un indicatore di caricamento (`loading`) per mostrare uno stato visivo durante il recupero dei dati.
+ *
+ * 2. **Creazione di un nuovo pot**:
+ *    - Permette di creare un nuovo pot utilizzando la funzione `createPot` e aggiorna lo stato locale aggiungendo il nuovo elemento.
+ *
+ * 3. **Aggiornamento dei pots**:
+ *    - Consente di aggiornare un pot esistente modificandone i dati tramite `handleUpdatePot`.
+ *    - Sostituisce il pot aggiornato nella lista locale dei pots.
+ *
+ * 4. **Eliminazione dei pots**:
+ *    - Rimuove un pot dalla lista locale utilizzando `handleDeletePot`.
+ *
+ * 5. **Interfaccia utente**:
+ *    - Visualizza un header con un pulsante per aggiungere nuovi pots, utilizzando il componente `SectionHeaderContent`.
+ *    - Mostra i pots come una griglia di card, con ogni card rappresentata dal componente `PotsCard`.
+ *
+ * ### Stile e layout:
+ * - Utilizza una griglia responsiva tramite Material-UI, con colonne che si adattano alle dimensioni dello schermo.
+ * - Gli spazi tra le card sono gestiti tramite `gap` definito con `pxToRem`.
+ *
+ * ### Props:
+ * - **token**: Token di autenticazione necessario per effettuare richieste al backend.
+ *
+ * ### Stato:
+ * - **pots**: Array che contiene l'elenco dei pots attualmente disponibili.
+ * - **loading**: Booleano che indica se i dati sono in fase di caricamento.
+ *
+ * ### Vantaggi:
+ * - Centralizza la gestione dei pots in un unico componente.
+ * - Supporta operazioni CRUD sui pots (Create, Read, Update, Delete).
+ * - Garantisce un'interfaccia reattiva e ben organizzata.
+ */
+
 const PotsContent = ({ token }) => {
   const [pots, setPots] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -28,13 +70,12 @@ const PotsContent = ({ token }) => {
   const handleAddPot = async (newPotData, token) => {
     try {
       const newPot = await createPot(newPotData, token);
-      setPots((prevPots) => [...prevPots, newPot]); // Aggiorna lo stato dei pots
+      setPots((prevPots) => [...prevPots, newPot]);
     } catch (error) {
       console.error("Errore nella creazione del pot:", error);
     }
   };
 
-  // Aggiorna i pots dopo un'operazione di edit o delete
   const handleUpdatePot = (updatedPot) => {
     setPots((prevPots) =>
       prevPots.map((pot) => (pot._id === updatedPot._id ? updatedPot : pot))
@@ -46,7 +87,7 @@ const PotsContent = ({ token }) => {
   };
 
   if (loading) {
-    return <div>Caricamento in corso...</div>; // Placeholder mentre i dati vengono caricati
+    return <div>Loading...</div>;
   }
 
   return (
@@ -56,7 +97,7 @@ const PotsContent = ({ token }) => {
         buttonLabel="+ Add New Pot"
         onButtonClick={() => console.log("Add New Pot clicked!")}
         buttonComponent={ButtonPrimary}
-        onAddPot={handleAddPot} // Passa la funzione al figlio
+        onAddPot={handleAddPot}
         token={token}
       />
 
@@ -82,8 +123,8 @@ const PotsContent = ({ token }) => {
               token={token}
               onAddMoney={() => console.log(`Add money to ${pot.name}`)}
               onWithdraw={() => console.log(`Withdraw money from ${pot.name}`)}
-              onUpdatePot={handleUpdatePot} // Funzione di aggiornamento
-              onDeletePot={handleDeletePot} // Funzione di eliminazione
+              onUpdatePot={handleUpdatePot}
+              onDeletePot={handleDeletePot}
             />
           );
         })}

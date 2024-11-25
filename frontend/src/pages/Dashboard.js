@@ -8,7 +8,7 @@ import { ReactComponent as MinimizeMenuIcon } from "@assets/images/icon-minimize
 import OverviewContent from "@pages/Overview";
 import TransactionsContent from "@pages/Transactions";
 import BudgetsContent from "@pages/Budgets";
-import PotsContent from "@pages/Pots";
+import PotsContent from "@pages/PotsContent";
 import RecurringBillsContent from "@pages/RecurringBills";
 import { useMenu } from "@context/MenuContext";
 

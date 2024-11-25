@@ -20,6 +20,7 @@ const path = require("path");
  * - @routes: src/routes
  * - @assets: src/assets
  * - @context: src/context
+ * - @services: src/services
  *
  * Uso:
  * - Importare file o moduli utilizzando gli alias definiti.
