@@ -73,7 +73,11 @@ const BudgetsOverview = () => {
       sx={{
         backgroundColor: theme.palette.otherColors.white,
         borderRadius: pxToRem(12),
-        padding: pxToRem(24),
+        padding: {
+          xs: `${pxToRem(24)} ${pxToRem(20)}`,
+          sm: pxToRem(32),
+          md: pxToRem(32),
+        },
       }}>
       <SectionHeaderCard
         title="Budgets"
@@ -84,80 +88,105 @@ const BudgetsOverview = () => {
       <Box
         sx={{
           display: "flex",
-          flexDirection: { xs: "column", md: "row", lg: "row" },
+          flexDirection: { xs: "column", sm: "row", md: "row", lg: "row" },
           alignItems: "center",
           gap: { xs: pxToRem(16), md: pxToRem(20), lg: pxToRem(20) },
           justifyContent: "space-between",
           marginTop: pxToRem(20),
-          padding: `${pxToRem(31)} ${pxToRem(0)} ${pxToRem(31)} ${pxToRem(0)}`,
+          padding: {
+            xs: `${pxToRem(0)}`,
+            sm: `${pxToRem(32)} ${pxToRem(0)} ${pxToRem(32)} ${pxToRem(0)}`,
+            md: `${pxToRem(32)} ${pxToRem(0)} ${pxToRem(32)} ${pxToRem(0)}`,
+            lg: `${pxToRem(32)} ${pxToRem(0)} ${pxToRem(32)} ${pxToRem(0)}`,
+          },
         }}>
         {/* Grafico ad anello */}
         <Box
           sx={{
-            maxWidth: pxToRem(240),
             width: "100%",
-            height: pxToRem(240),
-            position: "relative",
             display: "flex",
-            justifuSelf: "center",
-            
+            justifyContent: "center",
+            alignItems: "center",
           }}>
-          <Doughnut
-            sx={{ border: "1px solid #f43" }}
-            data={chartData}
-            options={{
-              responsive: true,
-              maintainAspectRatio: false,
-              cutout: "70%",
-              plugins: {
-                legend: {
-                  display: false,
-                },
-              },
-            }}
-          />
           <Box
             sx={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              textAlign: "center",
-              fontSize: pxToRem(20),
-              zIndex: 1,
+              maxWidth: pxToRem(240),
+              width: "100%",
+              height: pxToRem(240),
+              position: "relative",
+              display: "flex",
+              justifuSelf: "center",
             }}>
-            <Typography
+            <Doughnut
+              data={chartData}
+              options={{
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: "70%",
+                plugins: {
+                  legend: {
+                    display: false,
+                  },
+                },
+              }}
+            />
+            <Box
               sx={{
-                typography: "textPreset1",
-                color: theme.palette.grey[900],
-                marginBottom: pxToRem(8),
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                textAlign: "center",
+                fontSize: pxToRem(20),
+                zIndex: 2,
               }}>
-              ${totalSpent}
-            </Typography>
-            <Typography
+              <Typography
+                sx={{
+                  typography: "textPreset1",
+                  color: theme.palette.grey[900],
+                  marginBottom: pxToRem(8),
+                }}>
+                ${totalSpent}
+              </Typography>
+              <Typography
+                sx={{
+                  typography: "textPreset5",
+                  color: theme.palette.grey[500],
+                }}>
+                of ${totalLimit} limit
+              </Typography>
+            </Box>
+            <Box
               sx={{
-                typography: "textPreset5",
-                color: theme.palette.grey[500],
-              }}>
-              of ${totalLimit} limit
-            </Typography>
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: pxToRem(195),
+                height: pxToRem(195),
+                borderRadius: "50%",
+                opacity: 0.5,
+                backgroundColor: theme.palette.otherColors.white,
+                zIndex: 1,
+              }}></Box>
           </Box>
         </Box>
 
         {/* Lista dettagli dei budget */}
         <Box
           sx={{
-            display: "flex",
+            display: { xs: "grid", sm: "flex" },
+            gridTemplateColumns: "repeat(2 ,1fr)",
             flexDirection: "column",
             gap: pxToRem(12),
-            maxWidth: pxToRem(100),
+            maxWidth: { xs: "100%", sm: pxToRem(100) },
             width: "100%",
           }}>
           {budgets.slice(0, 4).map((budget) => (
             <PotsInfoCard
               key={budget._id}
               name={budget.category}
-              total={`$${budget.maximum}`}
+              total={`$${budget.maximum.toFixed(2)}`}
               color={budget.color}
             />
           ))}

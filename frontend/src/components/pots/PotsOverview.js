@@ -43,7 +43,11 @@ const PotsOverview = () => {
       sx={{
         backgroundColor: theme.palette.otherColors.white,
         borderRadius: pxToRem(12),
-        padding: pxToRem(24),
+        padding: {
+          xs: `${pxToRem(24)} ${pxToRem(20)}`,
+          sm: pxToRem(32),
+          md: pxToRem(32),
+        },
       }}>
       {/* Intestazione della sezione */}
       <SectionHeaderCard
