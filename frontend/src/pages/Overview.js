@@ -4,13 +4,11 @@ import { pxToRem } from "@utils/pxToRem";
 import { useTheme } from "@mui/material/styles";
 import StatCard from "@components/card/StatCard";
 import PotsOverview from "@components/pots/PotsOverview";
+import BudgetsOverview from "@components/budget/BudgetsOverview";
 import SectionHeaderContent from "@components/headers/SectionHeaderContent";
-import SectionHeaderCard from "@components/card/SectionHeaderCard";
-import { useMenu } from "@context/MenuContext";
 
 const OverviewContent = () => {
   const theme = useTheme();
-  const { setActiveMenu } = useMenu();
 
   const userToken = localStorage.getItem("token");
   return (
@@ -59,15 +57,10 @@ const OverviewContent = () => {
         <Box
           className="column-right"
           sx={{
-            maxWidth: { xs: "100%", sm: "100%", md: pxToRem(428) },
+            maxWidth: { xs: "100%", sm: "100%", md: "100%", lg: pxToRem(428) },
             width: "100%",
-            border: `1px solid ${theme.palette.grey[900]}`,
           }}>
-          <SectionHeaderCard
-            title="Budgets"
-            buttonLabel="See Details"
-            onButtonClick={() => setActiveMenu(3)}
-          />
+          <BudgetsOverview token={userToken} />
         </Box>
       </Box>
     </Box>

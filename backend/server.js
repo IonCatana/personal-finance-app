@@ -10,6 +10,7 @@ const authMiddleware = require("@middleware/authMiddleware");
 const authSignUp = require("@routes/authSignUp");
 const authSignIn = require("@routes/authSignIn");
 const potRoutes = require("@routes/pots");
+const budgetRoutes = require("./routes/budget");
 
 const corsOptions = {
   origin: ["http://localhost:3000"],
@@ -34,6 +35,7 @@ app.use("/api/auth/signin", authSignIn);
 
 // Rotte protette (gestione dei pots)
 app.use("/api/pots", authMiddleware, potRoutes);
+app.use("/api/budgets", authMiddleware, budgetRoutes);
 
 // Porta di ascolto
 const PORT = process.env.PORT || 5000;
