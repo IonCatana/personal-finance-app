@@ -8,12 +8,54 @@ import ChartBudget from "@components/budget/ChartBudget";
 import SectionHeaderCard from "@components/card/SectionHeaderCard";
 import { useBudgetsData } from "@hooks/useBudgetsData";
 import BudgetCard from "@components/budget/BudgetCard";
+import BudgetsInfoCard from "@components/budget/BudgetsInfoCard";
+import {
+  getBudgets,
+  updateBudget,
+  deleteBudget,
+} from "@components/budget/apiBudgets";
 
 const BudgetsContent = () => {
   const theme = useTheme();
 
-  const { chartData, totalSpent, totalLimit, budgets, loading } =
-    useBudgetsData();
+  const [budgets, setBudgets] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+  const { chartData, totalSpent, totalLimit } = useBudgetsData();
+
+  React.useEffect(() => {
+    const fetchBudgets = async () => {
+      try {
+        const data = await getBudgets();
+        setBudgets(data);
+      } catch (error) {
+        console.error("Errore nel caricamento dei budget:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBudgets();
+  }, []);
+
+  const handleUpdate = async (updatedBudget) => {
+    try {
+      const updated = await updateBudget(updatedBudget._id, updatedBudget);
+      setBudgets((prev) =>
+        prev.map((budget) => (budget._id === updated._id ? updated : budget))
+      );
+    } catch (error) {
+      console.error("Errore nell'aggiornamento:", error);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteBudget(id);
+      setBudgets((prev) => prev.filter((budget) => budget._id !== id));
+    } catch (error) {
+      console.error("Errore nell'eliminazione:", error);
+    }
+  };
 
   if (loading) {
     return (
@@ -118,7 +160,18 @@ const BudgetsContent = () => {
           sx={{
             flex: 1,
           }}>
-          right
+          {budgets.map((budget) => (
+            <BudgetsInfoCard
+              key={budget._id}
+              _id={budget._id}
+              category={budget.category}
+              maximum={budget.maximum}
+              spentAmount={budget.spentAmount}
+              color={budget.color || "#E0E0E0"}
+              onUpdate={handleUpdate}
+              onDelete={handleDelete}
+            />
+          ))}
         </Box>
       </Box>
     </>

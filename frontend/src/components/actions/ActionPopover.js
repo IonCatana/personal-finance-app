@@ -19,14 +19,13 @@ const ActionPopover = ({ actions, anchorEl, onClose }) => {
       transformOrigin={{
         vertical: "top",
         horizontal: "right",
+      }}
+      sx={{
+        borderRadius: pxToRem(12),
       }}>
       <List
         sx={{
-          borderRadius: pxToRem(8),
-          padding: `${pxToRem(0)} `,
-          boxShadow: `${pxToRem(8)} ${pxToRem(8)} ${pxToRem(16)} ${pxToRem(
-            0
-          )} ${theme.palette.grey[900]}`,
+          padding: `${pxToRem(0)}`,
           position: "relative",
           "&::before": {
             content: '""',
