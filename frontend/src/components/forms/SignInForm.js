@@ -37,7 +37,7 @@ const SignInForm = () => {
         }
       );
 
-      console.log("Login successful, token received:", response.data.token);
+      // console.log("Login successful, token received:", response.data.token);
       // Salva il token nel contesto
       saveToken(response.data.token);
 
