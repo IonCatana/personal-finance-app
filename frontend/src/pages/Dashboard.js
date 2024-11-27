@@ -5,11 +5,11 @@ import Logo from "@components/logo/Logo";
 import { useTheme } from "@mui/material/styles";
 import SideBarMenuList from "@components/side-bar/SideBarMenuList";
 import { ReactComponent as MinimizeMenuIcon } from "@assets/images/icon-minimize-menu.svg";
-import OverviewContent from "@pages/Overview";
-import TransactionsContent from "@pages/Transactions";
-import BudgetsContent from "@pages/Budgets";
+import OverviewContent from "@pages/OverviewContent";
+import TransactionsContent from "@pages/TransactionsContent";
+import BudgetsContent from "@pages/BudgetsContent";
 import PotsContent from "@pages/PotsContent";
-import RecurringBillsContent from "@pages/RecurringBills";
+import RecurringBillsContent from "@pages/RecurringBillsContent";
 import { useMenu } from "@context/MenuContext";
 
 /**
@@ -191,10 +191,10 @@ const Dashboard = () => {
           overflowY: "auto",
         }}>
         {activeMenu === 1 && <OverviewContent token={userToken} />}
-        {activeMenu === 2 && <TransactionsContent />}
-        {activeMenu === 3 && <BudgetsContent />}
+        {activeMenu === 2 && <TransactionsContent token={userToken} />}
+        {activeMenu === 3 && <BudgetsContent token={userToken} />}
         {activeMenu === 4 && <PotsContent token={userToken} />}
-        {activeMenu === 5 && <RecurringBillsContent />}
+        {activeMenu === 5 && <RecurringBillsContent token={userToken} />}
       </Box>
     </Box>
   );

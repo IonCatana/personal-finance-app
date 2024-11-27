@@ -84,7 +84,7 @@ const BudgetsOverview = () => {
         buttonLabel="See Details"
         onButtonClick={() => setActiveMenu(3)}
       />
-
+      {/* Chart Budget */}
       <Box
         sx={{
           display: "flex",
@@ -162,10 +162,10 @@ const BudgetsOverview = () => {
                 top: "50%",
                 left: "50%",
                 transform: "translate(-50%, -50%)",
-                width: pxToRem(195),
-                height: pxToRem(195),
+                width: pxToRem(192),
+                height: pxToRem(192),
                 borderRadius: "50%",
-                opacity: 0.5,
+                opacity: 0.2,
                 backgroundColor: theme.palette.otherColors.white,
                 zIndex: 1,
               }}></Box>
