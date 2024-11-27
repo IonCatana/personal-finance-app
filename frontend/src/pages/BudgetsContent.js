@@ -96,8 +96,8 @@ const BudgetsContent = () => {
                     borderBottom: "none",
                     paddingBottom: 0,
                   },
-                  "& > :first-child": {
-                    paddingTop: pxToRem(4),
+                  "& > :first-of-type": {
+                    paddingTop: pxToRem(4), // Usato al posto di :first-child
                   },
                 }}>
                 {budgets.map((budget) => (
