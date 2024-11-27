@@ -10,6 +10,53 @@ import { pxToRem } from "@utils/pxToRem";
 import { useTheme } from "@mui/material/styles";
 import { useToken } from "@context/TokenContext";
 
+/**
+ * **SignInForm Component**
+ *
+ * Questo componente gestisce il modulo di login dell'utente.
+ *
+ * **Funzionalità principali**:
+ * - **Gestione dell'input**:
+ *   - Acquisisce email e password dall'utente tramite campi di input controllati.
+ *   - Mostra o nasconde la password al clic sull'icona corrispondente.
+ * - **Autenticazione tramite API**:
+ *   - Invia una richiesta POST al backend per autenticare l'utente.
+ *   - In caso di successo, salva il token di autenticazione tramite il `TokenContext` e reindirizza alla pagina principale.
+ *   - Gestisce eventuali errori mostrando un messaggio di errore all'utente.
+ * - **UI/UX migliorata**:
+ *   - Utilizza componenti predefiniti come `BasicInput` e `ButtonPrimary` per mantenere uno stile coerente.
+ *   - Fornisce un link per la creazione di un nuovo account.
+ *
+ * **Hook e librerie utilizzati**:
+ * - **useState**: Per gestire lo stato dei campi di input, la visibilità della password e gli errori.
+ * - **useNavigate** (da `react-router-dom`): Per navigare programmaticamente tra le pagine.
+ * - **axios**: Per gestire la richiesta API al backend.
+ * - **useToken** (dal `TokenContext`): Per salvare il token di autenticazione e gestire lo stato dell'utente.
+ *
+ * **Esempio di utilizzo**:
+ * Il componente può essere utilizzato in una pagina di login come segue:
+ * ```javascript
+ * import SignInForm from './SignInForm';
+ *
+ * const LoginPage = () => (
+ *   <div>
+ *     <h1>Login</h1>
+ *     <SignInForm />
+ *   </div>
+ * );
+ * ```
+ *
+ * **Comportamento personalizzabile**:
+ * - I componenti di input (`BasicInput`) e pulsanti (`ButtonPrimary`) possono essere personalizzati per adattarsi al design del progetto.
+ * - È possibile configurare l'URL del backend e il token tramite il modulo di API Client centralizzato.
+ *
+ * **Stati gestiti**:
+ * - `email`: Contiene l'email dell'utente.
+ * - `password`: Contiene la password dell'utente.
+ * - `showPassword`: Booleano per gestire la visibilità della password.
+ * - `error`: Messaggio di errore in caso di autenticazione fallita.
+ */
+
 const SignInForm = () => {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -19,10 +66,7 @@ const SignInForm = () => {
   const [error, setError] = useState("");
   const { saveToken } = useToken();
 
-  //  Mostra o nasconde la password al clic sull'icona.
   const handleClickShowPassword = () => setShowPassword((show) => !show);
-
-  //  Evita il comportamento predefinito quando si clicca sull'icona.
   const handleMouseDownPassword = (event) => event.preventDefault();
 
   const handleSubmit = async (event) => {
@@ -38,10 +82,8 @@ const SignInForm = () => {
       );
 
       // console.log("Login successful, token received:", response.data.token);
-      // Salva il token nel contesto
       saveToken(response.data.token);
 
-      // Naviga alla pagina principale
       navigate("/");
     } catch (error) {
       setError(

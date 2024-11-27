@@ -19,6 +19,69 @@ import { useTheme } from "@mui/material/styles";
 import showPasswordIcon from "@assets/images/icon-show-password.svg";
 import hidePasswordIcon from "@assets/images/icon-hide-password.svg";
 
+/**
+ * **SignUpForm Component**
+ *
+ * Questo componente gestisce il modulo di registrazione per un nuovo utente.
+ *
+ * **Funzionalità principali**:
+ * - **Gestione dell'input**:
+ *   - Permette all'utente di inserire nome, email e password tramite campi di input controllati.
+ *   - Include la validazione dell'email in tempo reale.
+ *   - Consente di mostrare o nascondere la password al clic sull'icona corrispondente.
+ * - **Registrazione tramite API**:
+ *   - Invia una richiesta POST al backend per creare un nuovo account.
+ *   - Gestisce errori di registrazione mostrando messaggi specifici.
+ *   - Mostra una modale di conferma al completamento della registrazione con successo.
+ * - **Navigazione**:
+ *   - Reindirizza alla pagina di login dopo una registrazione avvenuta con successo.
+ *   - Include un link per accedere se l'utente possiede già un account.
+ * - **UI/UX migliorata**:
+ *   - Utilizza componenti predefiniti come `BasicInput` e `ButtonPrimary` per mantenere uno stile coerente.
+ *   - Mostra messaggi di errore per email non valide o password non conformi.
+ *
+ * **Hook e librerie utilizzati**:
+ * - **useState**: Per gestire lo stato dei campi di input, la visibilità della password, gli errori e lo stato della modale.
+ * - **useNavigate** (da `react-router-dom`): Per navigare programmaticamente alla pagina di login.
+ * - **axios**: Per gestire la richiesta API al backend.
+ *
+ * **Esempio di utilizzo**:
+ * Puoi utilizzare il componente in una pagina di registrazione come segue:
+ * ```javascript
+ * import SignUpForm from './SignUpForm';
+ *
+ * const SignUpPage = () => (
+ *   <div>
+ *     <h1>Create an Account</h1>
+ *     <SignUpForm />
+ *   </div>
+ * );
+ * ```
+ *
+ * **Campi di input**:
+ * - **Name**: Campo per il nome dell'utente.
+ * - **Email**: Campo per l'indirizzo email con validazione in tempo reale.
+ * - **Create Password**: Campo per la password con requisiti di sicurezza (minimo 8 caratteri).
+ *
+ * **Stati gestiti**:
+ * - `username`: Contiene il nome dell'utente.
+ * - `email`: Contiene l'email dell'utente.
+ * - `password`: Contiene la password inserita dall'utente.
+ * - `showPassword`: Booleano per gestire la visibilità della password.
+ * - `error`: Messaggio di errore in caso di validazione fallita o registrazione non riuscita.
+ * - `isModalOpen`: Booleano per gestire lo stato della modale di conferma registrazione.
+ *
+ * **Comportamento personalizzabile**:
+ * - I componenti `BasicInput` e `ButtonPrimary` possono essere personalizzati per adattarsi al design specifico del progetto.
+ * - L'URL del backend può essere configurato dinamicamente per ambienti diversi.
+ *
+ * **Gestione degli errori**:
+ * - Mostra messaggi specifici per:
+ *   - Email non valida.
+ *   - Errore durante la registrazione (es. email già registrata).
+ */
+
+
 const SignUpForm = () => {
   const theme = useTheme();
   const navigate = useNavigate();
