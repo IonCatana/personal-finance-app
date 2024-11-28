@@ -19,8 +19,8 @@ const BudgetsInfoCard = ({
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const remaining = maximum - spentAmount;
-  const percentage = (spentAmount / maximum) * 100;
+  const remaining = Math.max(0, maximum - spentAmount);
+  const percentage = Math.min(100, (spentAmount / maximum) * 100);
 
   const handlePopover = (event) =>
     setAnchorEl(event ? event.currentTarget : null);
@@ -30,7 +30,7 @@ const BudgetsInfoCard = ({
     const updatedBudget = {
       _id,
       category,
-      maximum: maximum + 10,
+      maximum: maximum,
       spentAmount,
       color,
     };
@@ -96,16 +96,110 @@ const BudgetsInfoCard = ({
         />
       </Box>
       <Box>
-        <Typography>Total Spent: ${spentAmount.toFixed(2)}</Typography>
-        <Typography>Remaining: ${remaining.toFixed(2)}</Typography>
-        <LinearProgress
-          variant="determinate"
-          value={percentage}
+        <Typography
           sx={{
-            backgroundColor: theme.palette.grey[200],
-            "& .MuiLinearProgress-bar": { backgroundColor: color },
-          }}
-        />
+            typography: "textPreset4",
+            color: theme.palette.grey[500],
+            marginBottom: pxToRem(16),
+          }}>
+          Maximum of ${maximum.toFixed(2)}
+        </Typography>
+        <Box
+          sx={{
+            padding: pxToRem(4),
+            borderRadius: pxToRem(8),
+            backgroundColor: theme.palette.beige[100],
+            marginBottom: pxToRem(16),
+          }}>
+          <LinearProgress
+            variant="determinate"
+            value={percentage}
+            sx={{
+              height: pxToRem(24),
+              borderRadius: pxToRem(4),
+              backgroundColor: theme.palette.beige[100],
+              "& .MuiLinearProgress-bar": {
+                backgroundColor: color,
+                borderRadius: pxToRem(4),
+              },
+            }}
+          />
+        </Box>
+        <Box
+          sx={{
+            display: { xs: "grid", sm: "flex" },
+            gridTemplateColumns: "repeat(2 ,1fr)",
+            justifyContent: "space-between",
+            gap: pxToRem(12),
+            width: "100%",
+          }}>
+          <Box
+            sx={{
+              flex: 1,
+              paddingLeft: pxToRem(20),
+              position: "relative",
+              "&:after": {
+                content: '""',
+                display: "block",
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: pxToRem(4),
+                borderRadius: `${pxToRem(8)}`,
+                height: "100%",
+                backgroundColor: color,
+              },
+            }}>
+            <Typography
+              sx={{
+                typography: "textPreset5",
+                color: theme.palette.grey[500],
+                marginBottom: pxToRem(4),
+              }}>
+              Spent
+            </Typography>
+            <Typography
+              sx={{
+                typography: "textPreset4Bold",
+                color: theme.palette.grey[900],
+              }}>
+              ${spentAmount.toFixed(2)}
+            </Typography>
+          </Box>
+          <Box
+            sx={{
+              flex: 1,
+              paddingLeft: pxToRem(20),
+              position: "relative",
+              "&:after": {
+                content: '""',
+                display: "block",
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: pxToRem(4),
+                borderRadius: `${pxToRem(8)}`,
+                height: "100%",
+                backgroundColor: theme.palette.beige[100],
+              },
+            }}>
+            <Typography
+              sx={{
+                typography: "textPreset5",
+                color: theme.palette.grey[500],
+                marginBottom: pxToRem(4),
+              }}>
+              Remaining
+            </Typography>
+            <Typography
+              sx={{
+                typography: "textPreset4Bold",
+                color: theme.palette.grey[900],
+              }}>
+              ${remaining.toFixed(2)}
+            </Typography>
+          </Box>
+        </Box>
       </Box>
     </Box>
   );

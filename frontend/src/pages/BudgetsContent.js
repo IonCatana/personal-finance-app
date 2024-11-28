@@ -97,6 +97,7 @@ const BudgetsContent = () => {
           sx={{
             maxWidth: { xs: "100%", sm: "100%", md: "100%", lg: pxToRem(428) },
             width: "100%",
+            height: "auto",
             backgroundColor: theme.palette.otherColors.white,
             borderRadius: pxToRem(12),
             padding: {
@@ -159,6 +160,9 @@ const BudgetsContent = () => {
           className="right"
           sx={{
             flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            gap: pxToRem(24),
           }}>
           {budgets.map((budget) => (
             <BudgetsInfoCard
