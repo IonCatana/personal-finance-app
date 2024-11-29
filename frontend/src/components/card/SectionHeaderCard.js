@@ -27,7 +27,12 @@ import { useTheme } from "@mui/material/styles";
  *   onButtonClick={() => console.log("Pulsante cliccato")}
  * />
  */
-const SectionHeaderCard = ({ title, buttonLabel, onButtonClick }) => {
+const SectionHeaderCard = ({
+  title,
+  buttonLabel,
+  onButtonClick,
+  titleTypography,
+}) => {
   const theme = useTheme(); // Permette di accedere ai colori e agli stili definiti nel tema
 
   return (
@@ -41,7 +46,7 @@ const SectionHeaderCard = ({ title, buttonLabel, onButtonClick }) => {
       {/* Titolo della sezione */}
       <Typography
         sx={{
-          typography: "textPreset2",
+          typography: titleTypography || "textPreset2",
           color: theme.palette.grey[900],
         }}>
         {title}
@@ -61,6 +66,7 @@ SectionHeaderCard.propTypes = {
   title: PropTypes.string.isRequired, // Titolo della sezione
   buttonLabel: PropTypes.string, // Testo del pulsante (opzionale)
   onButtonClick: PropTypes.func, // Funzione chiamata al clic del pulsante (opzionale)
+  titleTypography: PropTypes.string, // Stile tipografico personalizzabile per il titolo
 };
 
 export default SectionHeaderCard;

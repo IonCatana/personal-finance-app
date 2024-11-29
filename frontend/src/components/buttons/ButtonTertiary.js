@@ -54,7 +54,7 @@ const ButtonTertiary = ({ children, withIcon, to, sx = {}, ...props }) => {
         textTransform: "none",
         padding: `${pxToRem(0)}`,
         boxShadow: "none",
-        backgroundColor: theme.palette.otherColors.white,
+        backgroundColor: "transparent",
         "&:hover": {
           boxShadow: "none",
           color: theme.palette.grey[900],
