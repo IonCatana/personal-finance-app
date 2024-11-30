@@ -402,22 +402,26 @@
     {
       "category": "Entertainment",
       "maximum": 50.00,
-      "theme": "#277C78"
+      "spentAmount": 15.00,
+      "color": "#277C78"
     },
     {
       "category": "Bills",
       "maximum": 750.00,
-      "theme": "#82C9D7"
+      "spentAmount": 235.50,
+      "color": "#82C9D7"
     },
     {
       "category": "Dining Out",
       "maximum": 75.00,
-      "theme": "#F2CDAC"
+      "spentAmount": 55.50,
+      "color": "#F2CDAC"
     },
     {
       "category": "Personal Care",
       "maximum": 100.00,
-      "theme": "#626070"
+      "spentAmount": 40.00,
+      "color": "#626070"
     }
   ],
   "pots": [
