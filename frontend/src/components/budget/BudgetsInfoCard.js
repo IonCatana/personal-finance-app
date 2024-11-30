@@ -47,7 +47,7 @@ const BudgetsInfoCard = ({
 BudgetsInfoCard.propTypes = {
   _id: PropTypes.string.isRequired,
   category: PropTypes.string.isRequired,
-  maximum: PropTypes.number.isRequired,
+  maximum: PropTypes.number,
   spentAmount: PropTypes.number.isRequired,
   color: PropTypes.string.isRequired,
   onUpdate: PropTypes.func.isRequired,

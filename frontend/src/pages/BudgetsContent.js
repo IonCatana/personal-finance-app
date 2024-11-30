@@ -13,9 +13,10 @@ import {
   getBudgets,
   updateBudget,
   deleteBudget,
+  createBudget,
 } from "@components/budget/apiBudgets";
 
-const BudgetsContent = () => {
+const BudgetsContent = ({ token }) => {
   const theme = useTheme();
 
   const [budgets, setBudgets] = React.useState([]);
@@ -25,7 +26,7 @@ const BudgetsContent = () => {
   React.useEffect(() => {
     const fetchBudgets = async () => {
       try {
-        const data = await getBudgets();
+        const data = await getBudgets(token);
         setBudgets(data);
       } catch (error) {
         console.error("Errore nel caricamento dei budget:", error);
@@ -35,7 +36,16 @@ const BudgetsContent = () => {
     };
 
     fetchBudgets();
-  }, []);
+  }, [token]);
+
+  const handleAddBudget = async (newBudgetData, token) => {
+    try {
+      const newBudget = await createBudget(newBudgetData, token);
+      setBudgets((prev) => [...prev, newBudget]);
+    } catch (error) {
+      console.error("Errore nella creazione del budget:", error);
+    }
+  };
 
   const handleUpdate = async (updatedBudget) => {
     try {
@@ -78,6 +88,8 @@ const BudgetsContent = () => {
         buttonLabel="+ Add New Budget"
         onButtonClick={() => console.log("Add New Budget clicked!")}
         buttonComponent={ButtonPrimary}
+        modalType="addBudget"
+        onAddItem={handleAddBudget}
       />
       <Box
         className="budgets-content"

@@ -9,6 +9,7 @@ import ModalAdd from "@components/modals/ModalAdd";
 import ModalEdit from "@components/modals/ModalEdit";
 import ModalDelete from "@components/modals/ModalDelete";
 import ModalAddMoney from "@components/modals/ModalAddMoney";
+import ModalAddBudget from "@components/modals/ModalAddBudget";
 import ModalWithdraw from "@components/modals/ModalWithdraw";
 
 const ModalCrud = ({
@@ -26,8 +27,10 @@ const ModalCrud = ({
   const isAdd = useMemo(() => type === "add", [type]);
   const isAddMoney = useMemo(() => type === "addMoney", [type]);
   const isWithdraw = useMemo(() => type === "withdraw", [type]);
+  const isAddBudget = useMemo(() => type === "addBudget", [type]);
 
   const [selectedColor, setSelectedColor] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [snackbar, setSnackbar] = useState({
     open: false,
     label: "",
@@ -37,6 +40,10 @@ const ModalCrud = ({
   // Funzione chiamata quando cambia il valore
   const handleColorChange = (newSelection) => {
     setSelectedColor(newSelection.value); // Aggiorna lo stato con il valore selezionato
+  };
+
+  const handleCategoryChange = (newSelection) => {
+    setSelectedCategory(newSelection.value); // Aggiorna lo stato con il valore selezionato
   };
 
   const handleSnackbarOpen = (label, severity = "info") => {
@@ -53,14 +60,33 @@ const ModalCrud = ({
     if (isDelete) return `Delete '${data?.name}?'`;
     if (isAddMoney) return `Add to '${data?.name}'`;
     if (isWithdraw) return `Withdraw from '${data?.name}'`;
-  }, [isAdd, isEdit, isDelete, isAddMoney, isWithdraw, data]);
+    if (isAddBudget) return "Add Budget";
+  }, [isAdd, isEdit, isDelete, isAddMoney, isWithdraw, isAddBudget, data]);
 
   const renderContent = useMemo(() => {
     if (!type) {
       return (
         <Typography>
-          Invalid modal type provided. Please check the configuration.
+          No modal type provided. Please configure the modal appropriately.
         </Typography>
+      );
+    }
+
+    if (isAddBudget) {
+      return (
+        <ModalAddBudget
+          data={data || {}}
+          options={options || []}
+          selectedColor={selectedColor}
+          selectedCategory={selectedCategory}
+          onColorChange={handleColorChange}
+          onCategoryChange={handleCategoryChange}
+          onSubmit={(newData) => {
+            onSubmit(newData);
+            handleSnackbarOpen("Budget added successfully!", "success");
+          }}
+          buttonLabel="Add Budget"
+        />
       );
     }
 
@@ -144,11 +170,13 @@ const ModalCrud = ({
     options,
     onClose,
     selectedColor,
+    selectedCategory,
     isAdd,
     isEdit,
     isDelete,
     isAddMoney,
     isWithdraw,
+    isAddBudget,
     onSubmit,
   ]);
 
@@ -230,7 +258,14 @@ const ModalCrud = ({
 ModalCrud.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  type: PropTypes.oneOf(["add", "edit", "delete", "addMoney", "withdraw"]),
+  type: PropTypes.oneOf([
+    "add",
+    "edit",
+    "delete",
+    "addMoney",
+    "withdraw",
+    "addBudget",
+  ]),
   data: PropTypes.object,
   onSubmit: PropTypes.func.isRequired,
   options: PropTypes.array,

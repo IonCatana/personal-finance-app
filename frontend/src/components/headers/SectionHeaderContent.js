@@ -10,7 +10,8 @@ const SectionHeaderContent = ({
   buttonLabel,
   onButtonClick,
   buttonComponent: ButtonComponent,
-  onAddPot,
+  onAddItem,
+  modalType,
 }) => {
   const theme = useTheme();
 
@@ -59,10 +60,10 @@ const SectionHeaderContent = ({
       <ModalCrud
         open={isModalOpen}
         onClose={handleCloseModal}
-        type="add"
+        type={modalType}
         data={null}
         onSubmit={(newPotData) => {
-          onAddPot(newPotData);
+          onAddItem(newPotData);
           handleCloseModal();
         }}
       />
@@ -75,7 +76,8 @@ SectionHeaderContent.propTypes = {
   buttonLabel: PropTypes.string,
   onButtonClick: PropTypes.func,
   buttonComponent: PropTypes.elementType,
-  onAddPot: PropTypes.func,
+  onAddItem: PropTypes.func,
+  modalType: PropTypes.oneOf(["add", "addBudget"]),
 };
 
 export default SectionHeaderContent;

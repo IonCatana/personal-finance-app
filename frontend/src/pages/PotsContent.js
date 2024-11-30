@@ -97,7 +97,8 @@ const PotsContent = ({ token }) => {
         buttonLabel="+ Add New Pot"
         onButtonClick={() => console.log("Add New Pot clicked!")}
         buttonComponent={ButtonPrimary}
-        onAddPot={handleAddPot}
+        onAddItem={handleAddPot}
+        modalType="add"
         token={token}
       />
 
