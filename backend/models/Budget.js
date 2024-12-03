@@ -18,9 +18,9 @@ const budgetSchema = new mongoose.Schema({
     ],
     required: true,
   },
-  maximum: { type: Number, required: true }, // limite massimo del budget
-  spentAmount: { type: Number, default: 0 }, // spesa corrente nella categoria
-  color: { type: String }, // colore tematico
+  maximum: { type: Number },
+  spentAmount: { type: Number, default: 0 },
+  color: { type: String },
 });
 
 module.exports = mongoose.model("Budget", budgetSchema);

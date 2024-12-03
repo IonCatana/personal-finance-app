@@ -80,7 +80,7 @@ const BudgetsOverview = () => {
             <PotsInfoCard
               key={budget._id}
               name={budget.category}
-              total={`$${budget.maximum.toFixed(2)}`}
+              total={`$${budget.maximum}`}
               color={budget.color}
             />
           ))}

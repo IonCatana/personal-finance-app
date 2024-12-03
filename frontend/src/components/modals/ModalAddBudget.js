@@ -16,7 +16,7 @@ const ModalAdd = ({
   buttonLabel,
 }) => {
   const theme = useTheme();
-  const [target, setTarget] = useState(data?.target || "");
+  const [maximum, setMaximum] = useState(data?.maximum || "");
   const [categoryValue, setCategoryValue] = useState(
     data?.category || categoryOptions[0]?.value
   );
@@ -35,13 +35,13 @@ const ModalAdd = ({
   };
 
   const handleSubmit = () => {
-    if (!categoryValue || !target || !colorValue) {
+    if (!categoryValue || !maximum || !colorValue) {
       alert("All fields are required.");
       return;
     }
     onSubmit({
       category: categoryValue,
-      target: parseFloat(target),
+      maximum: parseFloat(maximum),
       color: colorValue,
     });
   };
@@ -71,8 +71,8 @@ const ModalAdd = ({
         prefix="$"
         type="number"
         placeholder="e.g. 2000"
-        value={target}
-        onChange={(e) => setTarget(e.target.value)}
+        value={maximum}
+        onChange={(e) => setMaximum(e.target.value)}
         sx={{
           marginBottom: pxToRem(16),
           "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":

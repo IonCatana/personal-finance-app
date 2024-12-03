@@ -61,7 +61,7 @@ const BudgetHeader = ({ category, maximum, color, onEdit, onDelete }) => {
           typography: "textPreset4",
           color: theme.palette.grey[500],
         }}>
-        Maximum of ${maximum.toFixed(2)}
+        Maximum of ${maximum?.toFixed(2) || "0.00"}
       </Typography>
     </>
   );
@@ -69,6 +69,7 @@ const BudgetHeader = ({ category, maximum, color, onEdit, onDelete }) => {
 
 BudgetHeader.propTypes = {
   category: PropTypes.string.isRequired,
+  maximum: PropTypes.number,
   color: PropTypes.string.isRequired,
   onEdit: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,

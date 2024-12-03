@@ -15,8 +15,8 @@ const BudgetsInfoCard = ({
   onUpdate,
   onDelete,
 }) => {
-  const remaining = Math.max(0, maximum - spentAmount);
-  const percentage = Math.min(100, (spentAmount / maximum) * 100);
+  const remaining = Math.max(0, (maximum || 0) - (spentAmount || 0));
+  const percentage = maximum ? Math.min(100, (spentAmount / maximum) * 100) : 0;
 
   return (
     <Box

@@ -3,7 +3,7 @@ import { Box, Typography } from "@mui/material";
 import { pxToRem } from "@utils/pxToRem";
 import { useTheme } from "@mui/material/styles";
 
-const BudgetCard = ({ category, spentAmount, maximum, color }) => {
+const BudgetCard = ({ category, spentAmount = 0, maximum = 0, color }) => {
   const theme = useTheme();
 
   return (
