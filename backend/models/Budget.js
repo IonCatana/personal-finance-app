@@ -5,6 +5,7 @@ const budgetSchema = new mongoose.Schema({
   category: {
     type: String,
     enum: [
+      "All Transactions",
       "Entertainment",
       "Bills",
       "Groceries",
