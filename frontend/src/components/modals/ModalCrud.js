@@ -11,6 +11,7 @@ import ModalDelete from "@components/modals/ModalDelete";
 import ModalAddMoney from "@components/modals/ModalAddMoney";
 import ModalAddBudget from "@components/modals/ModalAddBudget";
 import ModalWithdraw from "@components/modals/ModalWithdraw";
+import ModalEditBudget from "@components/modals/ModalEditBudget";
 
 const ModalCrud = ({
   open,
@@ -28,6 +29,7 @@ const ModalCrud = ({
   const isAddMoney = useMemo(() => type === "addMoney", [type]);
   const isWithdraw = useMemo(() => type === "withdraw", [type]);
   const isAddBudget = useMemo(() => type === "addBudget", [type]);
+  const isEditBudget = useMemo(() => type === "editBudget", [type]);
 
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -61,7 +63,17 @@ const ModalCrud = ({
     if (isAddMoney) return `Add to '${data?.name}'`;
     if (isWithdraw) return `Withdraw from '${data?.name}'`;
     if (isAddBudget) return "Add Budget";
-  }, [isAdd, isEdit, isDelete, isAddMoney, isWithdraw, isAddBudget, data]);
+    if (isEditBudget) return `Edit Budget '${data?.name}'`;
+  }, [
+    isAdd,
+    isEdit,
+    isDelete,
+    isAddMoney,
+    isWithdraw,
+    isAddBudget,
+    isEditBudget,
+    data,
+  ]);
 
   const renderContent = useMemo(() => {
     if (!type) {
@@ -102,6 +114,23 @@ const ModalCrud = ({
             handleSnackbarOpen("Pot added successfully!", "success");
           }} // Passa i dati raccolti al genitore
           buttonLabel="Add Pot"
+        />
+      );
+    }
+
+    if (isEditBudget && data) {
+      return (
+        <ModalEditBudget
+          data={data}
+          selectedColor={selectedColor}
+          selectedCategory={selectedCategory}
+          onColorChange={handleColorChange}
+          onCategoryChange={handleCategoryChange}
+          onSubmit={(updatedData) => {
+            onSubmit({ ...updatedData, _id: data._id });
+            handleSnackbarOpen("Budget updated successfully!", "success");
+          }}
+          buttonLabel="Save Changes"
         />
       );
     }
@@ -177,6 +206,7 @@ const ModalCrud = ({
     isAddMoney,
     isWithdraw,
     isAddBudget,
+    isEditBudget,
     onSubmit,
   ]);
 
@@ -265,6 +295,7 @@ ModalCrud.propTypes = {
     "addMoney",
     "withdraw",
     "addBudget",
+    "editBudget",
   ]),
   data: PropTypes.object,
   onSubmit: PropTypes.func.isRequired,

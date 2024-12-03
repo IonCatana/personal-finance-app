@@ -28,6 +28,7 @@ const BudgetsInfoCard = ({
         flexDirection: "column",
       }}>
       <BudgetHeader
+        _id={_id}
         category={category}
         maximum={maximum}
         color={color}

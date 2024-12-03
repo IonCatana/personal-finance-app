@@ -1,15 +1,22 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { Box, Typography } from "@mui/material";
 import { Doughnut } from "react-chartjs-2";
 import { pxToRem } from "@utils/pxToRem";
 import { useTheme } from "@mui/material/styles";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 
-// Registra gli elementi di Chart.js
+// Register Chart.js elements
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const ChartBudget = ({ chartData, totalSpent, totalLimit }) => {
   const theme = useTheme();
+  const chartRef = useRef(null);
+
+  useEffect(() => {
+    if (chartRef.current) {
+      chartRef.current.update();
+    }
+  }, [chartData]);
 
   return (
     <Box
@@ -29,6 +36,7 @@ const ChartBudget = ({ chartData, totalSpent, totalLimit }) => {
           justifyContent: "center",
         }}>
         <Doughnut
+          ref={chartRef}
           data={chartData}
           options={{
             responsive: true,
@@ -79,8 +87,7 @@ const ChartBudget = ({ chartData, totalSpent, totalLimit }) => {
             opacity: 0.2,
             backgroundColor: theme.palette.otherColors.white,
             zIndex: 1,
-          }}
-        ></Box>
+          }}></Box>
       </Box>
     </Box>
   );

@@ -6,7 +6,7 @@ import { useTheme } from "@mui/material/styles";
 import { ReactComponent as EllipsisIcon } from "@assets/images/icon-ellipsis.svg";
 import ActionPopover from "@components/actions/ActionPopover";
 
-const BudgetHeader = ({ category, maximum, color, onEdit, onDelete }) => {
+const BudgetHeader = ({ _id, category, maximum, color, onEdit, onDelete }) => {
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -44,7 +44,10 @@ const BudgetHeader = ({ category, maximum, color, onEdit, onDelete }) => {
         />
         <ActionPopover
           actions={[
-            { label: "Edit Budget", onClick: onEdit },
+            {
+              label: "Edit Budget",
+              onClick: () => onEdit({ _id, category, maximum, color }),
+            },
             {
               label: "Delete Budget",
               onClick: onDelete,
