@@ -12,6 +12,7 @@ import ModalAddMoney from "@components/modals/ModalAddMoney";
 import ModalAddBudget from "@components/modals/ModalAddBudget";
 import ModalWithdraw from "@components/modals/ModalWithdraw";
 import ModalEditBudget from "@components/modals/ModalEditBudget";
+import ModalDeleteBudget from "@components/modals/ModalDeleteBudget";
 
 const ModalCrud = ({
   open,
@@ -30,6 +31,7 @@ const ModalCrud = ({
   const isWithdraw = useMemo(() => type === "withdraw", [type]);
   const isAddBudget = useMemo(() => type === "addBudget", [type]);
   const isEditBudget = useMemo(() => type === "editBudget", [type]);
+  const isDeleteBudget = useMemo(() => type === "deleteBudget", [type]);
 
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -63,7 +65,8 @@ const ModalCrud = ({
     if (isAddMoney) return `Add to '${data?.name}'`;
     if (isWithdraw) return `Withdraw from '${data?.name}'`;
     if (isAddBudget) return "Add Budget";
-    if (isEditBudget) return `Edit Budget '${data?.name}'`;
+    if (isEditBudget) return `Edit Budget '${data?.category}'`;
+    if (isDeleteBudget) return `Delete Budget '${data?.category}'`;
   }, [
     isAdd,
     isEdit,
@@ -72,6 +75,7 @@ const ModalCrud = ({
     isWithdraw,
     isAddBudget,
     isEditBudget,
+    isDeleteBudget,
     data,
   ]);
 
@@ -167,6 +171,23 @@ const ModalCrud = ({
       );
     }
 
+    if (isDeleteBudget && data) {
+      return (
+        <ModalDeleteBudget
+          data={data}
+          onSubmit={() => {
+            handleSnackbarOpen("Budget deleted successfully!", "success");
+            // Ritarda la chiusura della modale per permettere allo Snackbar di mostrarsi
+            setTimeout(() => {
+              onSubmit(data);
+              onClose();
+            }, 3000); // Mostra lo Snackbar per 3 secondi
+          }}
+          onCancel={onClose}
+        />
+      );
+    }
+
     if (isAddMoney && data) {
       return (
         <ModalAddMoney
@@ -207,6 +228,7 @@ const ModalCrud = ({
     isWithdraw,
     isAddBudget,
     isEditBudget,
+    isDeleteBudget,
     onSubmit,
   ]);
 
@@ -296,6 +318,7 @@ ModalCrud.propTypes = {
     "withdraw",
     "addBudget",
     "editBudget",
+    "deleteBudget",
   ]),
   data: PropTypes.object,
   onSubmit: PropTypes.func.isRequired,

@@ -22,7 +22,7 @@ const BudgetsContent = () => {
 
   const [budgets, setBudgets] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
-  const [editModalOpen, setEditModalOpen] = React.useState(false);
+  const [modalType, setModalType] = React.useState(null);
   const [selectedBudget, setSelectedBudget] = React.useState(null);
   const { chartData, totalSpent, totalLimit } = useBudgetsData(budgets);
 
@@ -61,7 +61,7 @@ const BudgetsContent = () => {
           budget._id === updatedBudget._id ? updatedBudgetData : budget
         )
       );
-      setEditModalOpen(false);
+      setModalType(null);
       setSelectedBudget(null);
     } catch (error) {
       console.error("Error updating budget:", error);
@@ -72,6 +72,8 @@ const BudgetsContent = () => {
     try {
       await deleteBudget(id);
       setBudgets((prev) => prev.filter((budget) => budget._id !== id));
+      setModalType(null);
+      setSelectedBudget(null);
     } catch (error) {
       console.error("Error deleting budget:", error);
     }
@@ -79,14 +81,18 @@ const BudgetsContent = () => {
 
   const handleEditModalOpen = (budget) => {
     setSelectedBudget(budget);
-    setEditModalOpen(true);
+    setModalType("editBudget");
   };
 
-  const handleEditModalClose = () => {
-    setEditModalOpen(false);
+  const handleDeleteModalOpen = (budget) => {
+    setSelectedBudget(budget);
+    setModalType("deleteBudget");
+  };
+
+  const handleModalClose = () => {
+    setModalType(null);
     setSelectedBudget(null);
   };
-
   if (loading) {
     return (
       <Box
@@ -210,7 +216,7 @@ const BudgetsContent = () => {
                   spentAmount={budget.spentAmount}
                   color={budget.color || "#E0E0E0"}
                   onUpdate={handleEditModalOpen}
-                  onDelete={handleDelete}
+                  onDelete={() => handleDeleteModalOpen(budget)}
                 />
               )
           )}
@@ -218,11 +224,15 @@ const BudgetsContent = () => {
       </Box>
       {/* Modal for Edit Budget */}
       <ModalCrud
-        open={editModalOpen}
-        onClose={handleEditModalClose}
-        type="editBudget"
+        open={!!modalType}
+        onClose={handleModalClose}
+        type={modalType}
         data={selectedBudget}
-        onSubmit={handleUpdate}
+        onSubmit={
+          modalType === "editBudget"
+            ? handleUpdate
+            : () => handleDelete(selectedBudget._id)
+        }
       />
     </>
   );

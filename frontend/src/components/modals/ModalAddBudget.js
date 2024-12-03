@@ -86,7 +86,7 @@ const ModalAdd = ({
         }}
       />
       <BasicInput
-        label="Theme"
+        label="Color Tag"
         options={colorOptions}
         value={colorValue}
         onChange={(selectedOption) => handleColorChange(selectedOption)}

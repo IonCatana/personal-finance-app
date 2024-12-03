@@ -9,7 +9,7 @@ import { colorOptions } from "@components/colors/colorOptions";
 import { categoryOptions } from "@components/category/categoryOptions";
 
 const ModalEditBudget = ({
-  data,
+  data = {},
   onColorChange,
   onCategoryChange,
   onSubmit,
@@ -83,7 +83,7 @@ const ModalEditBudget = ({
         }}
       />
       <BasicInput
-        label="Theme"
+        label="Color Tag"
         options={colorOptions}
         value={colorValue}
         onChange={(selectedOption) => handleColorChange(selectedOption)}
