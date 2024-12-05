@@ -6,9 +6,11 @@ import apiClient from "@utils/apiClient";
  */
 
 // Recupera tutte le transazioni con parametri opzionali
-export const fetchTransactions = async (params = {}) => {
+export const fetchTransactions = async (page = 0, rowsPerPage = 10) => {
   try {
-    const response = await apiClient.get("/transactions", { params }); // Passa search, category, sort
+    const response = await apiClient.get("/transactions", {
+      params: { page, rowsPerPage },
+    });
     return response.data;
   } catch (error) {
     console.error("Errore nel recupero delle transactions:", error);
@@ -29,7 +31,10 @@ export const createTransaction = async (transactionData) => {
 
 export const updateTransaction = async (transactionId, updatedData) => {
   try {
-    const response = await apiClient.put(`/transactions/${transactionId}`, updatedData);
+    const response = await apiClient.put(
+      `/transactions/${transactionId}`,
+      updatedData
+    );
     return response.data;
   } catch (error) {
     console.error("Errore nell'aggiornamento della transaction:", error);
