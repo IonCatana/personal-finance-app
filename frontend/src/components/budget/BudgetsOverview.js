@@ -40,7 +40,11 @@ const BudgetsOverview = () => {
           alignItems: "center",
           height: "100%",
         }}>
-        <CircularProgress />
+        <CircularProgress
+          style={{
+            color: theme.palette.secondaryColors.green,
+          }}
+        />
       </Box>
     );
   }

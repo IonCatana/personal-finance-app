@@ -7,6 +7,7 @@ const transactionSchema = new mongoose.Schema({
   category: {
     type: String,
     enum: [
+      "All Transactions",
       "Entertainment",
       "Bills",
       "Groceries",

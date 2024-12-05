@@ -5,6 +5,7 @@ import ButtonPrimary from "@components/buttons/ButtonPrimary";
 import SectionHeaderContent from "@components/headers/SectionHeaderContent";
 import PotsCard from "@components/pots/PotsCard";
 import { getPots, createPot } from "@components/pots/apiPots";
+import { useTheme } from "@mui/material/styles";
 
 /**
  * **Componente PotsContent**
@@ -49,6 +50,7 @@ import { getPots, createPot } from "@components/pots/apiPots";
  */
 
 const PotsContent = ({ token }) => {
+  const theme = useTheme();
   const [pots, setPots] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -95,7 +97,11 @@ const PotsContent = ({ token }) => {
           alignItems: "center",
           height: "100%",
         }}>
-        <CircularProgress />
+        <CircularProgress
+          style={{
+            color: theme.palette.secondaryColors.green,
+          }}
+        />
       </Box>
     );
   }
