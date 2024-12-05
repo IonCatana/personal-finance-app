@@ -146,11 +146,14 @@ const Dashboard = () => {
           className="minimize-menu-container"
           onClick={handleMinimizeClick}
           sx={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
             margin: `${pxToRem(24)} ${pxToRem(0)} ${pxToRem(58.24)} ${pxToRem(
               0
             )}`,
             padding: isSidebarMinimized
-              ? `${pxToRem(16)} ${pxToRem(16)}`
+              ? `${pxToRem(16)} ${pxToRem(32)}`
               : `${pxToRem(16)} ${pxToRem(32)}`,
             display: { xs: "none", md: "flex" },
             alignItems: "center",
