@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Box, CircularProgress } from "@mui/material";
 import { pxToRem } from "@utils/pxToRem";
 import { useTheme } from "@mui/material/styles";
@@ -7,12 +7,29 @@ import PotsInfoCard from "@components/pots/PotsInfoCard";
 import ChartBudget from "@components/budget/ChartBudget";
 import { useBudgetsData } from "@hooks/useBudgetsData";
 import { useMenu } from "@context/MenuContext";
+import { getBudgets } from "@components/budget/apiBudgets";
 
 const BudgetsOverview = () => {
   const theme = useTheme();
   const { setActiveMenu } = useMenu();
-  const { chartData, totalSpent, totalLimit, budgets, loading } =
-    useBudgetsData();
+  const [budgets, setBudgets] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const { chartData, totalSpent, totalLimit } = useBudgetsData(budgets);
+
+  useEffect(() => {
+    const fetchBudgets = async () => {
+      try {
+        const data = await getBudgets();
+        setBudgets(data);
+      } catch (error) {
+        console.error("Error fetching budgets:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBudgets();
+  }, []);
 
   if (loading) {
     return (

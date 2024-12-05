@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, CircularProgress } from "@mui/material";
 import { pxToRem } from "@utils/pxToRem";
 import { useTheme } from "@mui/material/styles";
 import PotsInfoCard from "@components/pots/PotsInfoCard";
@@ -32,7 +32,17 @@ const PotsOverview = () => {
   }, [token]);
 
   if (loading) {
-    return <Typography>Loading...</Typography>;
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100%",
+        }}>
+        <CircularProgress />
+      </Box>
+    );
   }
 
   // Calcolo dinamico del totale risparmiato

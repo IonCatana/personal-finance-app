@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import { pxToRem } from "@utils/pxToRem";
 import ButtonPrimary from "@components/buttons/ButtonPrimary";
 import SectionHeaderContent from "@components/headers/SectionHeaderContent";
@@ -87,7 +87,17 @@ const PotsContent = ({ token }) => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100%",
+        }}>
+        <CircularProgress />
+      </Box>
+    );
   }
 
   return (

@@ -61,12 +61,12 @@ const ModalCrud = ({
   const renderTitle = useMemo(() => {
     if (isAdd) return "Add New Pot";
     if (isEdit) return `Edit '${data?.name}' Pot`;
-    if (isDelete) return `Delete '${data?.name}?'`;
+    if (isDelete) return `Delete '${data?.name}?'?`;
     if (isAddMoney) return `Add to '${data?.name}'`;
     if (isWithdraw) return `Withdraw from '${data?.name}'`;
     if (isAddBudget) return "Add Budget";
     if (isEditBudget) return `Edit Budget '${data?.category}'`;
-    if (isDeleteBudget) return `Delete Budget '${data?.category}'`;
+    if (isDeleteBudget) return `Delete Budget '${data?.category}'?`;
   }, [
     isAdd,
     isEdit,

@@ -1,29 +1,11 @@
-import { useState, useEffect } from "react";
-import { getBudgets } from "@components/budget/apiBudgets";
+// useBudgetsData.js
+export const useBudgetsData = (budgets) => {
+  const validBudgets = budgets || [];
 
-export const useBudgetsData = () => {
-  const [budgets, setBudgets] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const filteredBudgets = validBudgets.filter(
+    (budget) => budget.spentAmount > 0
+  );
 
-  useEffect(() => {
-    const fetchBudgets = async () => {
-      try {
-        const data = await getBudgets();
-        setBudgets(data);
-      } catch (error) {
-        console.error("Errore nel recupero dei budget:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBudgets();
-  }, []);
-
-  // Filtra solo i budget con un importo speso maggiore di 0
-  const filteredBudgets = budgets.filter((budget) => budget.spentAmount > 0);
-
-  // Dati per il grafico
   const chartData = {
     labels: filteredBudgets.map((budget) => budget.category),
     datasets: [
@@ -37,12 +19,14 @@ export const useBudgetsData = () => {
     ],
   };
 
-  // Calcolo del totale speso e del limite massimo
-  const totalSpent = budgets.reduce(
+  const totalSpent = validBudgets.reduce(
     (acc, budget) => acc + budget.spentAmount,
     0
   );
-  const totalLimit = budgets.reduce((acc, budget) => acc + budget.maximum, 0);
+  const totalLimit = validBudgets.reduce(
+    (acc, budget) => acc + budget.maximum,
+    0
+  );
 
-  return { budgets, chartData, totalSpent, totalLimit, loading };
+  return { chartData, totalSpent, totalLimit };
 };
