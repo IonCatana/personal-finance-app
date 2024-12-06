@@ -219,8 +219,8 @@ const BasicInput = ({
                 src={dropdownIcon}
                 alt="Dropdown Icon"
                 style={{
-                  width: pxToRem(16),
-                  height: pxToRem(16),
+                  width: pxToRem(11),
+                  height: pxToRem(6),
                   position: "absolute",
                   right: pxToRem(4),
                 }}
@@ -253,6 +253,7 @@ const BasicInput = ({
         ) : (
           <InputBase
             fullWidth
+            placeholder={props.placeHolder}
             value={value}
             onChange={onChange}
             sx={{
@@ -268,11 +269,7 @@ const BasicInput = ({
         )}
 
         {/* Icona finale (se presente) */}
-        {endIcon && (
-          <InputAdornment position="end" sx={{ marginRight: pxToRem(8) }}>
-            {endIcon}
-          </InputAdornment>
-        )}
+        {endIcon && <InputAdornment position="end">{endIcon}</InputAdornment>}
       </Box>
 
       {/* Messaggio di errore sotto l'input */}

@@ -118,14 +118,22 @@ const TransactionTable = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {transactions
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((transaction) => (
-                <TransactionRow
-                  key={transaction._id}
-                  transaction={transaction}
-                />
-              ))}
+            {Array.isArray(transactions) && transactions.length > 0 ? (
+              transactions
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((transaction) => (
+                  <TransactionRow
+                    key={transaction._id}
+                    transaction={transaction}
+                  />
+                ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={4} align="center">
+                  <Typography>No transactions found.</Typography>
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </TableContainer>

@@ -6,10 +6,16 @@ import apiClient from "@utils/apiClient";
  */
 
 // Recupera tutte le transazioni con parametri opzionali
-export const fetchTransactions = async (page = 0, rowsPerPage = 10) => {
+export const fetchTransactions = async (
+  page = 0,
+  rowsPerPage = 10,
+  search = "",
+  category = "All Transactions",
+  sort = "latest"
+) => {
   try {
     const response = await apiClient.get("/transactions", {
-      params: { page, rowsPerPage },
+      params: { page, rowsPerPage, search, category, sort },
     });
     return response.data;
   } catch (error) {
