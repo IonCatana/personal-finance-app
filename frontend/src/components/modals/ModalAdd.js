@@ -58,7 +58,7 @@ const ModalAdd = ({ data, onColorChange, onSubmit, buttonLabel }) => {
         placeholder="e.g. Rainy Days"
         value={name}
         onChange={handleNameChange}
-        error={error} // Imposta l'errore sul campo input
+        error={error}  
         errorText={error ? "You have reached the maximum character limit." : ""}
         sx={{ marginBottom: pxToRem(16) }}
       />

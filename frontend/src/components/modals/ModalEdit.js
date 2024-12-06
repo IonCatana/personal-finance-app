@@ -60,7 +60,6 @@ const ModalEdit = ({ data = {}, onColorChange, onSubmit, buttonLabel }) => {
         If your saving targets change, feel free to update your pots.
       </Typography>
 
-      {/* Pot Name Input */}
       <BasicInput
         fullWidth
         label="Pot Name"
@@ -68,12 +67,11 @@ const ModalEdit = ({ data = {}, onColorChange, onSubmit, buttonLabel }) => {
         placeholder={`e.g. ${data?.name || "Rainy Days"}`}
         value={name}
         onChange={handleNameChange}
-        error={error} // Imposta l'errore sul campo input
+        error={error}
         errorText={error ? "You have reached the maximum character limit." : ""}
         sx={{ marginBottom: pxToRem(16) }}
       />
 
-      {/* Target Input */}
       <BasicInput
         fullWidth
         label="Target"
@@ -90,12 +88,11 @@ const ModalEdit = ({ data = {}, onColorChange, onSubmit, buttonLabel }) => {
               margin: 0,
             },
           "& input[type=number]": {
-            MozAppearance: "textfield", // Per Firefox
+            MozAppearance: "textfield", 
           },
         }}
       />
 
-      {/* Color Tag Input */}
       <BasicInput
         label="Color Tag"
         options={colorOptions}
