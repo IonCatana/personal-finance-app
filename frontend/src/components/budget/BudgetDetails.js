@@ -144,7 +144,7 @@ const BudgetDetails = ({ spentAmount, remaining, transactions, color }) => {
                   <img
                     width="32"
                     height="32"
-                    src="https://picsum.photos/200/300"
+                    src={transaction.avatar}
                     alt="picusm"
                   />
                 </Box>

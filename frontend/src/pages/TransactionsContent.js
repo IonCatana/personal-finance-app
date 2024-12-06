@@ -253,10 +253,10 @@ const TransactionsContent = () => {
               maxWidth: pxToRem(64),
               width: "100%",
             }}>
-            <Box onClick={handleCategoryClick}>
+            <Box onClick={handleSortClick}>
               <img
-                src={CategoryIcon}
-                alt={CategoryIcon}
+                src={SortIcon}
+                alt={SortIcon}
                 style={{
                   width: pxToRem(15),
                   height: pxToRem(15),
@@ -264,10 +264,10 @@ const TransactionsContent = () => {
                 }}
               />
             </Box>
-            <Box onClick={handleSortClick}>
+            <Box onClick={handleCategoryClick}>
               <img
-                src={SortIcon}
-                alt={SortIcon}
+                src={CategoryIcon}
+                alt={CategoryIcon}
                 style={{
                   width: pxToRem(15),
                   height: pxToRem(15),

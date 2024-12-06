@@ -65,14 +65,14 @@ const ChartBudget = ({ chartData, totalSpent, totalLimit }) => {
               color: theme.palette.grey[900],
               marginBottom: pxToRem(8),
             }}>
-            ${totalSpent}
+            ${totalSpent.toFixed(2)}
           </Typography>
           <Typography
             sx={{
               typography: "textPreset5",
               color: theme.palette.grey[500],
             }}>
-            of ${totalLimit} limit
+            of ${totalLimit.toFixed(2)} limit
           </Typography>
         </Box>
         <Box

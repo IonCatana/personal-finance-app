@@ -19,8 +19,7 @@ const TransactionRow = ({ transaction }) => {
         }}>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <img
-            // src={transaction.avatar}
-            src={`https://picsum.photos/seed/40/40`}
+            src={transaction.avatar}
             alt={transaction.name}
             style={{
               width: pxToRem(40),
