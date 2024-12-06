@@ -15,7 +15,7 @@ export const useBudgetsData = (budgets, transactions = []) => {
     labels: filteredBudgets.map((budget) => budget.category),
     datasets: [
       {
-        data: filteredBudgets.map((budget) => budget.spentAmount),
+        data: filteredBudgets.map((budget) => Math.abs(budget.spentAmount)),
         backgroundColor: filteredBudgets.map(
           (budget) => budget.color || "#E0E0E0"
         ),
