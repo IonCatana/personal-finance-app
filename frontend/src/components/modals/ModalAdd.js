@@ -9,15 +9,27 @@ import { colorOptions } from "@components/colors/colorOptions";
 
 const ModalAdd = ({ data, onColorChange, onSubmit, buttonLabel }) => {
   const theme = useTheme();
+  const MAX_CHARACTERS = 30;
   const [name, setName] = useState(data?.name || "");
   const [target, setTarget] = useState(data?.target || "");
   const [colorValue, setColorValue] = useState(
     data?.color || colorOptions[0]?.value
   );
+  const [error, setError] = useState(false);
 
   const handleColorChange = (selectedOption) => {
     setColorValue(selectedOption.value); // Imposta il valore del colore selezionato
     onColorChange(selectedOption); // Callback per comunicare al genitore
+  };
+
+  const handleNameChange = (e) => {
+    const value = e.target.value;
+    if (value.length > MAX_CHARACTERS) {
+      setError(true);
+      return;
+    }
+    setError(false);
+    setName(value);
   };
 
   const handleSubmit = () => {
@@ -42,10 +54,12 @@ const ModalAdd = ({ data, onColorChange, onSubmit, buttonLabel }) => {
       <BasicInput
         fullWidth
         label="Pot Name"
-        infoText="X characters left"
+        infoText={`${MAX_CHARACTERS - name.length} characters left`}
         placeholder="e.g. Rainy Days"
         value={name}
-        onChange={(e) => setName(e.target.value)}
+        onChange={handleNameChange}
+        error={error} // Imposta l'errore sul campo input
+        errorText={error ? "You have reached the maximum character limit." : ""}
         sx={{ marginBottom: pxToRem(16) }}
       />
       <BasicInput
@@ -64,12 +78,12 @@ const ModalAdd = ({ data, onColorChange, onSubmit, buttonLabel }) => {
               margin: 0,
             },
           "& input[type=number]": {
-            MozAppearance: "textfield", // Per Firefox
+            MozAppearance: "textfield",
           },
         }}
       />
       <BasicInput
-        label="Theme"
+        label="Color Tag"
         options={colorOptions}
         value={colorValue}
         onChange={(selectedOption) => handleColorChange(selectedOption)}

@@ -10,9 +10,11 @@ import { colorOptions } from "@components/colors/colorOptions";
 
 const ModalEdit = ({ data = {}, onColorChange, onSubmit, buttonLabel }) => {
   const theme = useTheme();
+  const MAX_CHARACTERS = 30;
   const [name, setName] = useState(data?.name || "");
   const [target, setTarget] = useState(data?.target?.toString() || "");
   const [colorValue, setcolorValue] = useState(data?.color || "");
+  const [error, setError] = useState(false);
 
   const normalizeSpaces = (str) => {
     return str.trim().replace(/\s+/g, " ");
@@ -21,6 +23,16 @@ const ModalEdit = ({ data = {}, onColorChange, onSubmit, buttonLabel }) => {
   const handleColorChange = (newSelection) => {
     setcolorValue(newSelection.value);
     onColorChange(newSelection);
+  };
+
+  const handleNameChange = (e) => {
+    const value = e.target.value;
+    if (value.length > MAX_CHARACTERS) {
+      setError(true);
+      return;
+    }
+    setError(false);
+    setName(value);
   };
 
   const handleSubmit = () => {
@@ -52,10 +64,12 @@ const ModalEdit = ({ data = {}, onColorChange, onSubmit, buttonLabel }) => {
       <BasicInput
         fullWidth
         label="Pot Name"
-        infoText="X characters left"
+        infoText={`${MAX_CHARACTERS - name.length} characters left`}
         placeholder={`e.g. ${data?.name || "Rainy Days"}`}
         value={name}
-        onChange={(e) => setName(e.target.value)}
+        onChange={handleNameChange}
+        error={error} // Imposta l'errore sul campo input
+        errorText={error ? "You have reached the maximum character limit." : ""}
         sx={{ marginBottom: pxToRem(16) }}
       />
 
@@ -81,9 +95,9 @@ const ModalEdit = ({ data = {}, onColorChange, onSubmit, buttonLabel }) => {
         }}
       />
 
-      {/* Theme Input */}
+      {/* Color Tag Input */}
       <BasicInput
-        label="Theme"
+        label="Color Tag"
         options={colorOptions}
         value={colorValue}
         onChange={(e) => {
