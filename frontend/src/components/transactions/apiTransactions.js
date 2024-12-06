@@ -24,6 +24,19 @@ export const fetchTransactions = async (
   }
 };
 
+// Recupera le transazioni per una categoria specifica
+export const fetchTransactionsByCategory = async (category) => {
+  try {
+    const response = await apiClient.get("/transactions", {
+      params: { category }, // Passa la categoria come query param
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching transactions by category:", error);
+    throw error;
+  }
+};
+
 // Aggiungi altre funzioni API per gestire le transazioni (ad esempio POST, PUT, DELETE)
 export const createTransaction = async (transactionData) => {
   try {

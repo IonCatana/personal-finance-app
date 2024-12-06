@@ -1,11 +1,16 @@
-// useBudgetsData.js
-export const useBudgetsData = (budgets) => {
+export const useBudgetsData = (budgets, transactions = []) => {
   const validBudgets = budgets || [];
 
-  const filteredBudgets = validBudgets.filter(
-    (budget) => budget.spentAmount > 0
-  );
+  // Calcola dinamicamente il `spentAmount` per ogni budget
+  const filteredBudgets = validBudgets.map((budget) => {
+    const spentAmount = transactions
+      .filter((transaction) => transaction.category === budget.category)
+      .reduce((sum, transaction) => sum + transaction.amount, 0);
 
+    return { ...budget, spentAmount }; // Aggiorna ogni budget con `spentAmount`
+  });
+
+  // Prepara i dati per il grafico
   const chartData = {
     labels: filteredBudgets.map((budget) => budget.category),
     datasets: [
@@ -19,12 +24,14 @@ export const useBudgetsData = (budgets) => {
     ],
   };
 
-  const totalSpent = validBudgets.reduce(
+  // Calcola i totali
+  const totalSpent = filteredBudgets.reduce(
     (acc, budget) => acc + budget.spentAmount,
     0
   );
-  const totalLimit = validBudgets.reduce(
-    (acc, budget) => acc + budget.maximum,
+
+  const totalLimit = filteredBudgets.reduce(
+    (acc, budget) => acc + (budget.maximum || 0),
     0
   );
 

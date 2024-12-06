@@ -4,12 +4,15 @@ import { Box, Typography } from "@mui/material";
 import { pxToRem } from "@utils/pxToRem";
 import { hexToRgba } from "@utils/hexToRgba";
 import { useTheme } from "@mui/material/styles";
+import { format } from "date-fns";
 import SectionHeaderCard from "@components/card/SectionHeaderCard";
 import { useMenu } from "@context/MenuContext";
 
-const BudgetDetails = ({ spentAmount, remaining, color }) => {
+const BudgetDetails = ({ spentAmount, remaining, transactions, color }) => {
   const theme = useTheme();
   const { setActiveMenu } = useMenu();
+
+  const latestTransactions = transactions.slice(0, 3);
 
   return (
     <>
@@ -101,81 +104,93 @@ const BudgetDetails = ({ spentAmount, remaining, color }) => {
           buttonLabel="See All"
           onButtonClick={() => setActiveMenu(2)}
         />
-        {[...Array(3)].map((_, index) => (
-          <Box
-            key={index}
-            sx={{
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              padding: `${pxToRem(16)} 0`,
-              borderBottom: `1px solid ${hexToRgba(
-                theme.palette.grey[500],
-                0.15
-              )}`,
-              ...(index === 0 && {
-                paddingTop: 0,
-              }),
-              "&:last-child": {
-                borderBottom: "none",
-                paddingBottom: 0,
-              },
-            }}>
+        {latestTransactions.length > 0 ? (
+          latestTransactions.map((transaction, index) => (
             <Box
+              key={transaction._id}
               sx={{
+                width: "100%",
                 display: "flex",
                 alignItems: "center",
-                gap: pxToRem(16),
+                justifyContent: "space-between",
+                padding: `${pxToRem(16)} 0`,
+                borderBottom: `1px solid ${hexToRgba(
+                  theme.palette.grey[500],
+                  0.15
+                )}`,
+                ...(index === 0 && {
+                  paddingTop: 0,
+                }),
+                "&:last-child": {
+                  borderBottom: "none",
+                  paddingBottom: 0,
+                },
               }}>
               <Box
-                className="avatar-company"
                 sx={{
-                  width: pxToRem(32),
-                  height: pxToRem(32),
-                  borderRadius: "50%",
-                  backgroundColor: theme.palette.grey[900],
-                  overflow: "hidden",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: pxToRem(16),
                 }}>
-                <img
-                  width="32"
-                  height="32"
-                  src="https://picsum.photos/200/300"
-                  alt="picusm"
-                />
+                <Box
+                  className="avatar-company"
+                  sx={{
+                    width: pxToRem(32),
+                    height: pxToRem(32),
+                    borderRadius: "50%",
+                    backgroundColor: theme.palette.grey[900],
+                    overflow: "hidden",
+                  }}>
+                  <img
+                    width="32"
+                    height="32"
+                    src="https://picsum.photos/200/300"
+                    alt="picusm"
+                  />
+                </Box>
+                <Typography
+                  className="company"
+                  sx={{
+                    typography: "textPreset5Bold",
+                    color: theme.palette.grey[900],
+                  }}>
+                  {transaction.name || "Unknown Company"}
+                </Typography>
               </Box>
-              <Typography
-                className="company"
-                sx={{
-                  typography: "textPreset5Bold",
-                  color: theme.palette.grey[900],
-                }}>
-                Company {index + 1}
-              </Typography>
+              <Box>
+                <Typography
+                  className="amount"
+                  sx={{
+                    typography: "textPreset5Bold",
+                    color: theme.palette.grey[900],
+                    marginBottom: pxToRem(4),
+                    textAlign: "right",
+                  }}>
+                  ${transaction.amount.toFixed(2)}
+                </Typography>
+                <Typography
+                  className="date"
+                  sx={{
+                    typography: "textPreset5",
+                    color: theme.palette.grey[500],
+                    textAlign: "right",
+                  }}>
+                  {format(new Date(transaction.date), "dd MMM yyyy")}
+                </Typography>
+              </Box>
             </Box>
-            <Box>
-              <Typography
-                className="amount"
-                sx={{
-                  typography: "textPreset5Bold",
-                  color: theme.palette.grey[900],
-                  marginBottom: pxToRem(4),
-                  textAlign: "right",
-                }}>
-                -$23.99
-              </Typography>
-              <Typography
-                className="date"
-                sx={{
-                  typography: "textPreset5",
-                  color: theme.palette.grey[500],
-                  textAlign: "right",
-                }}>
-                12th August
-              </Typography>
-            </Box>
-          </Box>
-        ))}
+          ))
+        ) : (
+          <Typography
+            sx={{
+              typography: "textPreset4",
+              color: theme.palette.grey[500],
+              textAlign: "center",
+              marginTop: pxToRem(20),
+            }}>
+            No transactions available.
+          </Typography>
+        )}
       </Box>
     </>
   );
@@ -184,6 +199,14 @@ const BudgetDetails = ({ spentAmount, remaining, color }) => {
 BudgetDetails.propTypes = {
   spentAmount: PropTypes.number.isRequired,
   remaining: PropTypes.number.isRequired,
+  transactions: PropTypes.arrayOf(
+    PropTypes.shape({
+      _id: PropTypes.string.isRequired,
+      name: PropTypes.string,
+      amount: PropTypes.number.isRequired,
+      date: PropTypes.string.isRequired,
+    })
+  ).isRequired,
   color: PropTypes.string.isRequired,
 };
 

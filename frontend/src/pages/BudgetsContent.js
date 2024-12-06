@@ -15,30 +15,38 @@ import {
   deleteBudget,
   createBudget,
 } from "@components/budget/apiBudgets";
+import { fetchTransactions } from "@components/transactions/apiTransactions";
 import ModalCrud from "@components/modals/ModalCrud";
 
 const BudgetsContent = () => {
   const theme = useTheme();
 
   const [budgets, setBudgets] = React.useState([]);
+  const [transactions, setTransactions] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const [modalType, setModalType] = React.useState(null);
   const [selectedBudget, setSelectedBudget] = React.useState(null);
-  const { chartData, totalSpent, totalLimit } = useBudgetsData(budgets);
+  const { chartData, totalSpent, totalLimit } = useBudgetsData(
+    budgets,
+    transactions
+  );
 
   React.useEffect(() => {
-    const fetchBudgets = async () => {
+    const fetchData = async () => {
       try {
-        const data = await getBudgets();
-        // console.log("Fetched budgets data:", data);
-        setBudgets(data || []);
+        const [budgetsData, transactionsData] = await Promise.all([
+          getBudgets(),
+          fetchTransactions(),
+        ]);
+        setBudgets(budgetsData || []);
+        setTransactions(transactionsData || []);
       } catch (error) {
-        console.error("Error loading budgets:", error);
+        console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
     };
-    fetchBudgets();
+    fetchData();
   }, []);
 
   const handleAddBudget = async (newBudgetData) => {
@@ -163,8 +171,8 @@ const BudgetsContent = () => {
             }}>
             <ChartBudget
               chartData={chartData}
-              totalSpent={totalSpent}
-              totalLimit={totalLimit}
+              totalSpent={Math.abs(totalSpent)}
+              totalLimit={Math.abs(totalLimit)}
             />
             {/* Budget details list */}
             <Box
@@ -185,18 +193,22 @@ const BudgetsContent = () => {
                     paddingTop: pxToRem(4),
                   },
                 }}>
-                {budgets.map(
-                  (budget) =>
-                    budget && (
-                      <BudgetCard
-                        key={budget._id}
-                        category={budget.category}
-                        spentAmount={budget.spentAmount}
-                        maximum={budget.maximum}
-                        color={budget.color || "#E0E0E0"}
-                      />
+                {budgets.map((budget) => {
+                  const spentAmount = transactions
+                    .filter(
+                      (transaction) => transaction.category === budget.category
                     )
-                )}
+                    .reduce((sum, transaction) => sum + transaction.amount, 0);
+                  return (
+                    <BudgetCard
+                      key={budget._id}
+                      category={budget.category}
+                      spentAmount={Math.abs(spentAmount)}
+                      maximum={budget.maximum}
+                      color={budget.color || "#E0E0E0"}
+                    />
+                  );
+                })}
               </Box>
             </Box>
           </Box>

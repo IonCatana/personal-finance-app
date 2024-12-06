@@ -8,27 +8,37 @@ import ChartBudget from "@components/budget/ChartBudget";
 import { useBudgetsData } from "@hooks/useBudgetsData";
 import { useMenu } from "@context/MenuContext";
 import { getBudgets } from "@components/budget/apiBudgets";
+import { fetchTransactions } from "@components/transactions/apiTransactions";
 
 const BudgetsOverview = () => {
   const theme = useTheme();
   const { setActiveMenu } = useMenu();
   const [budgets, setBudgets] = useState([]);
+  const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { chartData, totalSpent, totalLimit } = useBudgetsData(budgets);
+  const { chartData, totalSpent, totalLimit } = useBudgetsData(
+    budgets,
+    transactions
+  );
 
   useEffect(() => {
-    const fetchBudgets = async () => {
+    const fetchData = async () => {
       try {
-        const data = await getBudgets();
-        setBudgets(data);
+        // Ottieni budgets e transazioni in parallelo
+        const [budgetsData, transactionsData] = await Promise.all([
+          getBudgets(),
+          fetchTransactions(),
+        ]);
+        setBudgets(budgetsData || []);
+        setTransactions(transactionsData || []);
       } catch (error) {
-        console.error("Error fetching budgets:", error);
+        console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchBudgets();
+    fetchData();
   }, []);
 
   if (loading) {
@@ -83,8 +93,8 @@ const BudgetsOverview = () => {
         }}>
         <ChartBudget
           chartData={chartData}
-          totalSpent={totalSpent}
-          totalLimit={totalLimit}
+          totalSpent={Math.abs(totalSpent)}
+          totalLimit={Math.abs(totalLimit)}
         />
 
         {/* Lista dettagli dei budget */}
