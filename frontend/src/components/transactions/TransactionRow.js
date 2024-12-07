@@ -4,7 +4,7 @@ import { format } from "date-fns";
 import { pxToRem } from "@utils/pxToRem";
 import { useTheme } from "@mui/material/styles";
 
-const TransactionRow = ({ transaction }) => {
+const TransactionRow = ({ transaction, sx = {} }) => {
   const theme = useTheme();
 
   return (
