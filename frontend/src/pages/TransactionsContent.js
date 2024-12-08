@@ -123,7 +123,7 @@ const TransactionsContent = () => {
       <SectionHeaderContent title="Transactions" />
       <Box
         sx={{
-          padding: { xs: pxToRem(16), sm: pxToRem(32) },
+          padding: { xs: `${pxToRem(24)} ${pxToRem(20)}`, sm: pxToRem(32) },
           backgroundColor: theme.palette.otherColors.white,
           borderRadius: `${pxToRem(12)}`,
           width: "100%",
@@ -135,6 +135,7 @@ const TransactionsContent = () => {
             alignItems: "center",
             gap: pxToRem(24),
             width: "100%",
+            marginBottom: pxToRem(24),
           }}>
           {/* Campo di ricerca */}
           <BasicInput

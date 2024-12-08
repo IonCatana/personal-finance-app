@@ -11,6 +11,7 @@ import {
   Button,
 } from "@mui/material";
 import { pxToRem } from "@utils/pxToRem";
+import { useMediaQuery } from "@mui/material";
 import TransactionRow from "./TransactionRow";
 import { useTheme } from "@mui/material/styles";
 
@@ -23,7 +24,26 @@ const TransactionTable = ({
 }) => {
   const theme = useTheme();
 
+  const smallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const totalPages = Math.ceil(transactions.length / rowsPerPage);
+
+  let pagesToRender;
+  const lastPage = totalPages - 1;
+
+  if (!smallScreen || totalPages <= 3) {
+    pagesToRender = Array.from({ length: totalPages }, (_, index) => index);
+  } else {
+    if (page <= 1) {
+      // Inizio
+      pagesToRender = [0, 1, "...", lastPage];
+    } else if (page >= lastPage - 1) {
+      // Fine
+      pagesToRender = [0, "...", lastPage - 1, lastPage];
+    } else {
+      // Mezzo
+      pagesToRender = [0, "...", page, "...", lastPage];
+    }
+  }
 
   return (
     <>
@@ -149,7 +169,7 @@ const TransactionTable = ({
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          padding: `${pxToRem(16)} 0`,
+          marginTop: pxToRem(48),
           backgroundColor: theme.palette.background.paper,
         }}>
         {/* Pulsante "Prev" */}
@@ -162,6 +182,8 @@ const TransactionTable = ({
             color: theme.palette.grey[900],
             border: `1px solid ${theme.palette.beige[500]}`,
             padding: `${pxToRem(9.5)} ${pxToRem(16)}`,
+            minWidth: "unset",
+            width: { xs: pxToRem(48), sm: "auto" },
             borderRadius: pxToRem(8),
             transition: "all ease-in-out 0.3s",
             cursor: "pointer",
@@ -207,44 +229,50 @@ const TransactionTable = ({
             <Typography
               sx={{
                 typography: "textPreset4",
+                display: { xs: "none", sm: "block" },
               }}>
               Prev
             </Typography>
           </Box>
         </Button>
         {/* Numeri di pagina */}
-        <Box sx={{ display: "flex", gap: pxToRem(8) }}>
-          {Array.from({ length: totalPages }, (_, index) => (
+        <Box
+          sx={{
+            display: "flex",
+            gap: pxToRem(8),
+          }}>
+          {pagesToRender.map((p, index) => (
             <Box
               key={index}
-              onClick={() => handleChangePage(null, index)}
+              onClick={() => p !== "..." && handleChangePage(null, p)} // Nessun cambio pagina se è ellissi
               sx={{
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                cursor: "pointer",
+                cursor: p === "..." ? "default" : "pointer",
                 minWidth: pxToRem(40),
                 height: pxToRem(40),
                 borderRadius: pxToRem(8),
                 typography: "textPreset4",
                 backgroundColor:
-                  index === page ? theme.palette.grey[900] : "transparent",
-                color: index === page ? theme.palette.common.white : "inherit",
+                  p === page ? theme.palette.grey[900] : "transparent",
+                color: p === page ? theme.palette.common.white : "inherit",
                 border: `1px solid ${theme.palette.beige[500]}`,
                 transition: "all ease-in-out 0.3s",
                 "&:hover": {
                   backgroundColor:
-                    index === page
+                    p === page || p === "..."
                       ? theme.palette.grey[900]
                       : theme.palette.beige[500],
-                  color: theme.palette.otherColors.white,
+                  color:
+                    p === "..." ? "inherit" : theme.palette.otherColors.white,
                 },
                 borderColor:
-                  index === page
+                  p === page
                     ? theme.palette.grey[900]
                     : theme.palette.beige[500],
               }}>
-              {index + 1}
+              {p === "..." ? "..." : p + 1}
             </Box>
           ))}
         </Box>
@@ -259,6 +287,8 @@ const TransactionTable = ({
             border: `1px solid ${theme.palette.beige[500]}`,
             padding: `${pxToRem(9.5)} ${pxToRem(16)}`,
             borderRadius: pxToRem(8),
+            minWidth: "unset",
+            width: { xs: pxToRem(48), sm: "auto" },
             transition: "all ease-in-out 0.3s",
             cursor: "pointer",
             "&:hover": {
@@ -271,9 +301,11 @@ const TransactionTable = ({
             },
           }}>
           <Box
+            width="100%"
             sx={{
               display: "flex",
               alignItems: "center",
+              justifyContent: "center",
               gap: pxToRem(16),
             }}>
             <Typography
