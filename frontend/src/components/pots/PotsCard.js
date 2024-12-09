@@ -138,7 +138,7 @@ const PotsCard = ({
                 typography: "textPreset1",
                 color: theme.palette.grey[900],
               }}>
-              {`$${total}`}
+              {`$${total.toFixed(2)}`}
             </Typography>
           </Box>
           {/* Barra di progresso */}

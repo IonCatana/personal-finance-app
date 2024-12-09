@@ -118,7 +118,7 @@ const PotsOverview = () => {
                 typography: "textPreset1",
                 color: theme.palette.grey[900],
               }}>
-              ${totalSaved}
+              ${totalSaved.toFixed(2)}
             </Typography>
           </Box>
         </Box>
@@ -135,7 +135,7 @@ const PotsOverview = () => {
             <PotsInfoCard
               key={index}
               name={pot.name}
-              total={`$${pot.total}`}
+              total={`$${pot.total.toFixed(2)}`}
               color={pot.color}
             />
           ))}
