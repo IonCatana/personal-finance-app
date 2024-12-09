@@ -67,7 +67,7 @@ const BudgetDetails = ({
                 typography: "textPreset4Bold",
                 color: theme.palette.grey[900],
               }}>
-              ${spentAmount}
+              ${spentAmount.toFixed(2)}
             </Typography>
           </Box>
           <Box
@@ -100,7 +100,7 @@ const BudgetDetails = ({
                 typography: "textPreset4Bold",
                 color: theme.palette.grey[900],
               }}>
-              ${remaining}
+              ${remaining.toFixed(2)}
             </Typography>
           </Box>
         </Box>
