@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import { pxToRem } from "@utils/pxToRem";
 import { useTheme } from "@mui/material/styles";
 import StatCard from "@components/card/StatCard";
@@ -54,7 +54,9 @@ const OverviewContent = (
           alignItems: "center",
           height: "100%",
         }}>
-        <Typography>Loading...</Typography>
+        <CircularProgress
+          style={{ color: theme.palette.secondaryColors.green }}
+        />
       </Box>
     );
   }
