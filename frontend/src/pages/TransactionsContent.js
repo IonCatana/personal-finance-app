@@ -17,6 +17,8 @@ import { useTheme } from "@mui/material/styles";
 import SearchIcon from "@assets/images/icon-search.svg";
 import SortIcon from "@assets/images/icon-sort-mobile.svg";
 import CategoryIcon from "@assets/images/icon-filter-mobile.svg";
+import { sortOptions } from "@components/sort/sortOptions";
+import { categoryOptions } from "@components/category/categoryOptions";
 
 const TransactionsContent = () => {
   const theme = useTheme();
@@ -156,7 +158,7 @@ const TransactionsContent = () => {
                 <IconButton onClick={handleSearchSubmit}>
                   <img
                     src={SearchIcon}
-                    alt={SearchIcon}
+                    alt="Search Icon"
                     style={{ width: pxToRem(16), height: pxToRem(16) }}
                   />
                 </IconButton>
@@ -190,14 +192,7 @@ const TransactionsContent = () => {
                   width: "100%",
                   marginBottom: pxToRem(0),
                 }}
-                options={[
-                  { value: "latest", label: "Latest" },
-                  { value: "oldest", label: "Oldest" },
-                  { value: "AtoZ", label: "A to Z" },
-                  { value: "ZtoA", label: "Z to A" },
-                  { value: "highest", label: "Highest" },
-                  { value: "lowest", label: "Lowest" },
-                ]}
+                options={sortOptions}
                 value={sort}
                 onChange={(selected) => setSort(selected.value)}
               />
@@ -224,19 +219,7 @@ const TransactionsContent = () => {
                   width: "100%",
                   marginBottom: pxToRem(0),
                 }}
-                options={[
-                  { value: "All Transactions", label: "All Transactions" },
-                  { value: "Entertainment", label: "Entertainment" },
-                  { value: "Bills", label: "Bills" },
-                  { value: "Groceries", label: "Groceries" },
-                  { value: "Dining Out", label: "Dining Out" },
-                  { value: "Transportation", label: "Transportation" },
-                  { value: "Personal Care", label: "Personal Care" },
-                  { value: "Education", label: "Education" },
-                  { value: "Lifestyle", label: "Lifestyle" },
-                  { value: "Shopping", label: "Shopping" },
-                  { value: "General", label: "General" },
-                ]}
+                options={categoryOptions}
                 value={category}
                 onChange={(selected) => setCategory(selected.value)}
               />
@@ -247,7 +230,6 @@ const TransactionsContent = () => {
             sx={{
               display: { xs: "flex", sm: "none" },
               alignItems: "center",
-
               justifyContent: "space-between",
               maxWidth: pxToRem(64),
               width: "100%",
@@ -255,7 +237,7 @@ const TransactionsContent = () => {
             <Box onClick={handleSortClick}>
               <img
                 src={SortIcon}
-                alt={SortIcon}
+                alt="Sort Icon"
                 style={{
                   width: pxToRem(15),
                   height: pxToRem(15),
@@ -266,7 +248,7 @@ const TransactionsContent = () => {
             <Box onClick={handleCategoryClick}>
               <img
                 src={CategoryIcon}
-                alt={CategoryIcon}
+                alt="Category Icon"
                 style={{
                   width: pxToRem(15),
                   height: pxToRem(15),
@@ -283,14 +265,7 @@ const TransactionsContent = () => {
           anchorEl={sortAnchor}
           open={openSortMenu}
           onClose={() => setSortAnchor(null)}>
-          {[
-            { value: "latest", label: "Latest" },
-            { value: "oldest", label: "Oldest" },
-            { value: "AtoZ", label: "A to Z" },
-            { value: "ZtoA", label: "Z to A" },
-            { value: "highest", label: "Highest" },
-            { value: "lowest", label: "Lowest" },
-          ].map((option) => (
+          {sortOptions.map((option) => (
             <MenuItem
               key={option.value}
               onClick={() => handleSortSelect(option.value)}>
@@ -305,19 +280,7 @@ const TransactionsContent = () => {
           anchorEl={categoryAnchor}
           open={openCategoryMenu}
           onClose={() => setCategoryAnchor(null)}>
-          {[
-            { value: "All Transactions", label: "All Transactions" },
-            { value: "Entertainment", label: "Entertainment" },
-            { value: "Bills", label: "Bills" },
-            { value: "Groceries", label: "Groceries" },
-            { value: "Dining Out", label: "Dining Out" },
-            { value: "Transportation", label: "Transportation" },
-            { value: "Personal Care", label: "Personal Care" },
-            { value: "Education", label: "Education" },
-            { value: "Lifestyle", label: "Lifestyle" },
-            { value: "Shopping", label: "Shopping" },
-            { value: "General", label: "General" },
-          ].map((option) => (
+          {categoryOptions.map((option) => (
             <MenuItem
               key={option.value}
               onClick={() => handleCategorySelect(option.value)}>
