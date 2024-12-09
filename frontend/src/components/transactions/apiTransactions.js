@@ -1,8 +1,77 @@
 import apiClient from "@utils/apiClient";
+
 /**
- * **Funzioni API Transactions**
- * - Centralizza tutte le chiamate relative alle transazioni.
- * - Utilizza l'istanza `apiClient` preconfigurata per includere automaticamente il token.
+ * **API Transactions**
+ *
+ * Questo modulo contiene funzioni per gestire le chiamate API relative alle transazioni.
+ * Utilizza l'istanza `apiClient` preconfigurata per includere automaticamente il token di autenticazione e configurazioni comuni.
+ *
+ * Funzioni:
+ *
+ * 1. **fetchTransactions**
+ *    - Recupera un elenco di transazioni con supporto per la paginazione e il filtraggio.
+ *    - Parametri:
+ *      - `page` (number, opzionale): Pagina corrente (default: 0).
+ *      - `rowsPerPage` (number, opzionale): Numero di righe per pagina (default: 10).
+ *      - `search` (string, opzionale): Testo da cercare nelle transazioni.
+ *      - `category` (string, opzionale): Categoria da filtrare (default: "All Transactions").
+ *      - `sort` (string, opzionale): Ordine di ordinamento (default: "latest").
+ *    - Ritorna:
+ *      - Oggetto contenente le transazioni recuperate.
+ *    - Esempio:
+ *      ```js
+ *      const transactions = await fetchTransactions(0, 10, "", "Dining Out", "latest");
+ *      ```
+ *
+ * 2. **fetchTransactionsByCategory**
+ *    - Recupera transazioni filtrate per una categoria specifica.
+ *    - Parametri:
+ *      - `category` (string, obbligatorio): Nome della categoria.
+ *    - Ritorna:
+ *      - Elenco di transazioni per la categoria specificata.
+ *    - Esempio:
+ *      ```js
+ *      const diningTransactions = await fetchTransactionsByCategory("Dining Out");
+ *      ```
+ *
+ * 3. **createTransaction**
+ *    - Crea una nuova transazione.
+ *    - Parametri:
+ *      - `transactionData` (object, obbligatorio): Oggetto contenente i dati della nuova transazione.
+ *    - Ritorna:
+ *      - La transazione creata.
+ *    - Esempio:
+ *      ```js
+ *      const newTransaction = await createTransaction({ name: "Lunch", amount: -15, category: "Dining Out" });
+ *      ```
+ *
+ * 4. **updateTransaction**
+ *    - Aggiorna una transazione esistente.
+ *    - Parametri:
+ *      - `transactionId` (string, obbligatorio): ID della transazione da aggiornare.
+ *      - `updatedData` (object, obbligatorio): Dati aggiornati della transazione.
+ *    - Ritorna:
+ *      - La transazione aggiornata.
+ *    - Esempio:
+ *      ```js
+ *      const updatedTransaction = await updateTransaction("transaction123", { amount: -20 });
+ *      ```
+ *
+ * 5. **deleteTransaction**
+ *    - Elimina una transazione.
+ *    - Parametri:
+ *      - `transactionId` (string, obbligatorio): ID della transazione da eliminare.
+ *    - Ritorna:
+ *      - Risultato dell'eliminazione.
+ *    - Esempio:
+ *      ```js
+ *      await deleteTransaction("transaction123");
+ *      ```
+ *
+ * Note:
+ * - Gestione degli errori: Ogni funzione cattura gli errori e li rilancia per la gestione a livello superiore.
+ * - I parametri opzionali consentono una configurazione flessibile delle chiamate API.
+ * - Le funzioni possono essere estese per supportare ulteriori operazioni.
  */
 
 // Recupera tutte le transazioni con parametri opzionali

@@ -30,11 +30,9 @@ const TransactionsContent = () => {
   const [sort, setSort] = useState("latest");
   const [searchInput, setSearchInput] = useState("");
 
-  // Stato per il menu Sort
   const [sortAnchor, setSortAnchor] = useState(null);
   const openSortMenu = Boolean(sortAnchor);
 
-  // Stato per il menu Category
   const [categoryAnchor, setCategoryAnchor] = useState(null);
   const openCategoryMenu = Boolean(categoryAnchor);
 
@@ -247,7 +245,7 @@ const TransactionsContent = () => {
           {/* Icone mobile per filtri */}
           <Box
             sx={{
-              display: { xs: "flex", sm: "none" }, // Visibile su xs, nascondi su sm+
+              display: { xs: "flex", sm: "none" },
               alignItems: "center",
 
               justifyContent: "space-between",

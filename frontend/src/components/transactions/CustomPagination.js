@@ -3,6 +3,16 @@ import { Box, Button, Typography, useMediaQuery } from "@mui/material";
 import { pxToRem } from "@utils/pxToRem";
 import { useTheme } from "@mui/material/styles";
 
+/**
+ * CustomPagination
+ * Questo componente gestisce la navigazione tra le pagine.
+ * È ottimizzato per dispositivi desktop e mobili, mostrando un numero dinamico di pulsanti.
+ *
+ * @param {number} page - Indice della pagina corrente (da 0).
+ * @param {number} totalPages - Numero totale di pagine.
+ * @param {function} handleChangePage - Callback per cambiare pagina.
+ */
+
 const CustomPagination = ({ page, totalPages, handleChangePage }) => {
   const theme = useTheme();
 
