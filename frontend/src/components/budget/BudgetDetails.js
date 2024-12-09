@@ -8,100 +8,114 @@ import { format } from "date-fns";
 import SectionHeaderCard from "@components/card/SectionHeaderCard";
 import { useMenu } from "@context/MenuContext";
 
-const BudgetDetails = ({ spentAmount, remaining, transactions, color }) => {
+const BudgetDetails = ({
+  spentAmount,
+  remaining,
+  transactions,
+  color,
+  showSpentSection = true,
+  backgroundColor,
+  maxTransactionsToShow = 3,
+  headerTitle = "Latest Spending",
+  headerButtonLabel = "See All",
+  sx = {},
+}) => {
   const theme = useTheme();
   const { setActiveMenu } = useMenu();
 
-  const latestTransactions = transactions.slice(0, 3);
+  const latestTransactions = transactions.slice(0, maxTransactionsToShow);
 
   return (
     <>
-      <Box
-        sx={{
-          display: { xs: "grid", sm: "flex" },
-          gridTemplateColumns: "repeat(2 ,1fr)",
-          justifyContent: "space-between",
-          gap: pxToRem(12),
-          width: "100%",
-          marginBottom: pxToRem(20),
-        }}>
+      {showSpentSection && (
         <Box
           sx={{
-            flex: 1,
-            paddingLeft: pxToRem(20),
-            position: "relative",
-            "&:after": {
-              content: '""',
-              display: "block",
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: pxToRem(4),
-              borderRadius: `${pxToRem(8)}`,
-              height: "100%",
-              backgroundColor: color,
-            },
+            display: { xs: "grid", sm: "flex" },
+            gridTemplateColumns: "repeat(2 ,1fr)",
+            justifyContent: "space-between",
+            gap: pxToRem(12),
+            width: "100%",
+            marginBottom: pxToRem(20),
           }}>
-          <Typography
+          <Box
             sx={{
-              typography: "textPreset5",
-              color: theme.palette.grey[500],
-              marginBottom: pxToRem(4),
+              flex: 1,
+              paddingLeft: pxToRem(20),
+              position: "relative",
+              "&:after": {
+                content: '""',
+                display: "block",
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: pxToRem(4),
+                borderRadius: `${pxToRem(8)}`,
+                height: "100%",
+                backgroundColor: color,
+              },
             }}>
-            Spent
-          </Typography>
-          <Typography
+            <Typography
+              sx={{
+                typography: "textPreset5",
+                color: theme.palette.grey[500],
+                marginBottom: pxToRem(4),
+              }}>
+              Spent
+            </Typography>
+            <Typography
+              sx={{
+                typography: "textPreset4Bold",
+                color: theme.palette.grey[900],
+              }}>
+              ${spentAmount}
+            </Typography>
+          </Box>
+          <Box
             sx={{
-              typography: "textPreset4Bold",
-              color: theme.palette.grey[900],
+              flex: 1,
+              paddingLeft: pxToRem(20),
+              position: "relative",
+              "&:after": {
+                content: '""',
+                display: "block",
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: pxToRem(4),
+                borderRadius: `${pxToRem(8)}`,
+                height: "100%",
+                backgroundColor: theme.palette.beige[100],
+              },
             }}>
-            ${spentAmount.toFixed(2)}
-          </Typography>
+            <Typography
+              sx={{
+                typography: "textPreset5",
+                color: theme.palette.grey[500],
+                marginBottom: pxToRem(4),
+              }}>
+              Remaining
+            </Typography>
+            <Typography
+              sx={{
+                typography: "textPreset4Bold",
+                color: theme.palette.grey[900],
+              }}>
+              ${remaining}
+            </Typography>
+          </Box>
         </Box>
-        <Box
-          sx={{
-            flex: 1,
-            paddingLeft: pxToRem(20),
-            position: "relative",
-            "&:after": {
-              content: '""',
-              display: "block",
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: pxToRem(4),
-              borderRadius: `${pxToRem(8)}`,
-              height: "100%",
-              backgroundColor: theme.palette.beige[100],
-            },
-          }}>
-          <Typography
-            sx={{
-              typography: "textPreset5",
-              color: theme.palette.grey[500],
-              marginBottom: pxToRem(4),
-            }}>
-            Remaining
-          </Typography>
-          <Typography
-            sx={{
-              typography: "textPreset4Bold",
-              color: theme.palette.grey[900],
-            }}>
-            ${remaining.toFixed(2)}
-          </Typography>
-        </Box>
-      </Box>
+      )}
       <Box
         sx={{
-          backgroundColor: theme.palette.beige[100],
+          backgroundColor: backgroundColor || theme.palette.beige[100],
           borderRadius: pxToRem(12),
           padding: { xs: pxToRem(16), sm: pxToRem(20) },
+          ...sx,
         }}>
         <SectionHeaderCard
-          title="Latest Spending"
+          title={headerTitle}
           titleTypography="textPreset3"
-          buttonLabel="See All"
+          buttonLabel={headerButtonLabel}
           onButtonClick={() => setActiveMenu(2)}
         />
         {latestTransactions.length > 0 ? (
@@ -162,7 +176,10 @@ const BudgetDetails = ({ spentAmount, remaining, transactions, color }) => {
                   className="amount"
                   sx={{
                     typography: "textPreset5Bold",
-                    color: theme.palette.grey[900],
+                    color:
+                      transaction.amount >= 0
+                        ? theme.palette.secondaryColors.green
+                        : theme.palette.secondaryColors.red,
                     marginBottom: pxToRem(4),
                     textAlign: "right",
                   }}>
@@ -197,8 +214,8 @@ const BudgetDetails = ({ spentAmount, remaining, transactions, color }) => {
 };
 
 BudgetDetails.propTypes = {
-  spentAmount: PropTypes.number.isRequired,
-  remaining: PropTypes.number.isRequired,
+  spentAmount: PropTypes.number,
+  remaining: PropTypes.number,
   transactions: PropTypes.arrayOf(
     PropTypes.shape({
       _id: PropTypes.string.isRequired,
@@ -208,6 +225,11 @@ BudgetDetails.propTypes = {
     })
   ).isRequired,
   color: PropTypes.string.isRequired,
+  showSpentSection: PropTypes.bool,
+  backgroundColor: PropTypes.string,
+  headerTitle: PropTypes.string,
+  headerButtonLabel: PropTypes.string,
+  sx: PropTypes.object,
 };
 
 export default BudgetDetails;

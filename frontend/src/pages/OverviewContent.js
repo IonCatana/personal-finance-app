@@ -1,16 +1,64 @@
-import React from "react";
-import { Box } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Box, Typography } from "@mui/material";
 import { pxToRem } from "@utils/pxToRem";
 import { useTheme } from "@mui/material/styles";
 import StatCard from "@components/card/StatCard";
 import PotsOverview from "@components/pots/PotsOverview";
 import BudgetsOverview from "@components/budget/BudgetsOverview";
 import SectionHeaderContent from "@components/headers/SectionHeaderContent";
+import BudgetDetails from "@components/budget/BudgetDetails";
+import { getBudgets } from "@components/budget/apiBudgets";
+import { fetchTransactionsByCategory } from "@components/transactions/apiTransactions";
 
-const OverviewContent = () => {
+const OverviewContent = (
+  showSpentSection = false,
+  backgroundColor,
+  maxTransactionsToShow,
+  sx = {}
+) => {
   const theme = useTheme();
 
-  const userToken = localStorage.getItem("token");
+  const [budget, setBudget] = useState(null);
+  const [transactions, setTransactions] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const budgets = await getBudgets();
+        if (budgets.length > 0) {
+          const selectedBudget = budgets[0];
+          setBudget(selectedBudget);
+
+          const categoryTransactions = await fetchTransactionsByCategory(
+            selectedBudget.category
+          );
+          setTransactions(categoryTransactions);
+        }
+      } catch (error) {
+        console.error("Error fetching budgets or transactions:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100%",
+        }}>
+        <Typography>Loading...</Typography>
+      </Box>
+    );
+  }
+
   return (
     <Box>
       <SectionHeaderContent title="Overview" />
@@ -52,7 +100,24 @@ const OverviewContent = () => {
             flexDirection: "column",
             gap: { xs: pxToRem(16), sm: pxToRem(24), md: pxToRem(24) },
           }}>
-          <PotsOverview token={userToken} />
+          <PotsOverview />
+          {budget && (
+            <BudgetDetails
+              sx={{
+                padding: {
+                  xs: `${pxToRem(24)} ${pxToRem(20)}`,
+                  sm: pxToRem(32),
+                },
+              }}
+              showSpentSection={false}
+              transactions={transactions}
+              color={budget.color || theme.palette.grey[300]}
+              backgroundColor={theme.palette.otherColors.white}
+              maxTransactionsToShow={5}
+              headerTitle="Transactions"
+              headerButtonLabel="View All"
+            />
+          )}
         </Box>
         <Box
           className="column-right"
@@ -60,7 +125,7 @@ const OverviewContent = () => {
             maxWidth: { xs: "100%", sm: "100%", md: "100%", lg: pxToRem(428) },
             width: "100%",
           }}>
-          <BudgetsOverview token={userToken} />
+          <BudgetsOverview />
         </Box>
       </Box>
     </Box>
