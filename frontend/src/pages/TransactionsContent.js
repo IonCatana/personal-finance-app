@@ -1,24 +1,13 @@
 import React, { useState, useEffect } from "react";
-import {
-  Box,
-  CircularProgress,
-  Typography,
-  InputAdornment,
-  IconButton,
-  Menu,
-  MenuItem,
-} from "@mui/material";
-import BasicInput from "@components/inputFields/BasicInput";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import SectionHeaderContent from "@components/headers/SectionHeaderContent";
 import TransactionTable from "@components/transactions/TransactionTable";
 import { fetchTransactions } from "@components/transactions/apiTransactions";
 import { pxToRem } from "@utils/pxToRem";
 import { useTheme } from "@mui/material/styles";
-import SearchIcon from "@assets/images/icon-search.svg";
-import SortIcon from "@assets/images/icon-sort-mobile.svg";
-import CategoryIcon from "@assets/images/icon-filter-mobile.svg";
 import { sortOptions } from "@components/sort/sortOptions";
 import { categoryOptions } from "@components/category/categoryOptions";
+import SearchBarFilters from "@components/transactions/SearchBarFilters";
 
 const TransactionsContent = () => {
   const theme = useTheme();
@@ -80,18 +69,8 @@ const TransactionsContent = () => {
     setSortAnchor(event.currentTarget);
   };
 
-  const handleSortSelect = (value) => {
-    setSort(value);
-    setSortAnchor(null);
-  };
-
   const handleCategoryClick = (event) => {
     setCategoryAnchor(event.currentTarget);
-  };
-
-  const handleCategorySelect = (value) => {
-    setCategory(value);
-    setCategoryAnchor(null);
   };
 
   if (loading) {
@@ -128,166 +107,27 @@ const TransactionsContent = () => {
           borderRadius: `${pxToRem(12)}`,
           width: "100%",
         }}>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            gap: pxToRem(24),
-            width: "100%",
-            marginBottom: pxToRem(24),
-          }}>
-          {/* Campo di ricerca */}
-          <BasicInput
-            sx={{
-              marginBottom: pxToRem(0),
-              maxWidth: { xs: "unset", sm: pxToRem(300) },
-              width: "100%",
-            }}
-            value={searchInput}
-            placeholder="Search transaction"
-            onChange={(e) => setSearchInput(e.target.value)}
-            onKeyPress={handleKeyPress}
-            endIcon={
-              <InputAdornment
-                position="end"
-                sx={{
-                  marginRight: pxToRem(0),
-                  cursor: "pointer",
-                }}>
-                <IconButton onClick={handleSearchSubmit}>
-                  <img
-                    src={SearchIcon}
-                    alt="Search Icon"
-                    style={{ width: pxToRem(16), height: pxToRem(16) }}
-                  />
-                </IconButton>
-              </InputAdornment>
-            }
-          />
-          <Box
-            sx={{
-              display: { xs: "none", sm: "flex" },
-              alignItems: "center",
-              gap: pxToRem(24),
-            }}>
-            {/* Filtro ordinamento */}
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: pxToRem(8),
-              }}>
-              <Typography
-                sx={{
-                  typography: "textPreset4",
-                  color: theme.palette.grey[500],
-                  whiteSpace: "nowrap",
-                }}>
-                Sort by
-              </Typography>
-              <BasicInput
-                sx={{
-                  maxWidth: pxToRem(113),
-                  width: "100%",
-                  marginBottom: pxToRem(0),
-                }}
-                options={sortOptions}
-                value={sort}
-                onChange={(selected) => setSort(selected.value)}
-              />
-            </Box>
+        <SearchBarFilters
+          searchInput={searchInput}
+          setSearchInput={setSearchInput}
+          handleSearchSubmit={handleSearchSubmit}
+          handleKeyPress={handleKeyPress}
+          sort={sort}
+          setSort={setSort}
+          category={category}
+          setCategory={setCategory}
+          sortOptions={sortOptions}
+          categoryOptions={categoryOptions}
+          handleSortClick={handleSortClick}
+          handleCategoryClick={handleCategoryClick}
+          sortAnchor={sortAnchor}
+          openSortMenu={openSortMenu}
+          setSortAnchor={setSortAnchor}
+          categoryAnchor={categoryAnchor}
+          openCategoryMenu={openCategoryMenu}
+          setCategoryAnchor={setCategoryAnchor}
+        />
 
-            {/* Filtro categoria */}
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: pxToRem(8),
-              }}>
-              <Typography
-                sx={{
-                  typography: "textPreset4",
-                  color: theme.palette.grey[500],
-                  whiteSpace: "nowrap",
-                }}>
-                Category
-              </Typography>
-              <BasicInput
-                sx={{
-                  maxWidth: pxToRem(177),
-                  width: "100%",
-                  marginBottom: pxToRem(0),
-                }}
-                options={categoryOptions}
-                value={category}
-                onChange={(selected) => setCategory(selected.value)}
-              />
-            </Box>
-          </Box>
-          {/* Icone mobile per filtri */}
-          <Box
-            sx={{
-              display: { xs: "flex", sm: "none" },
-              alignItems: "center",
-              justifyContent: "space-between",
-              maxWidth: pxToRem(64),
-              width: "100%",
-            }}>
-            <Box onClick={handleSortClick}>
-              <img
-                src={SortIcon}
-                alt="Sort Icon"
-                style={{
-                  width: pxToRem(15),
-                  height: pxToRem(15),
-                  cursor: "pointer",
-                }}
-              />
-            </Box>
-            <Box onClick={handleCategoryClick}>
-              <img
-                src={CategoryIcon}
-                alt="Category Icon"
-                style={{
-                  width: pxToRem(15),
-                  height: pxToRem(15),
-                  cursor: "pointer",
-                }}
-              />
-            </Box>
-          </Box>
-        </Box>
-
-        {/* Menu per Sort */}
-        <Menu
-          sx={{ marginTop: pxToRem(16) }}
-          anchorEl={sortAnchor}
-          open={openSortMenu}
-          onClose={() => setSortAnchor(null)}>
-          {sortOptions.map((option) => (
-            <MenuItem
-              key={option.value}
-              onClick={() => handleSortSelect(option.value)}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </Menu>
-
-        {/* Menu per Category */}
-        <Menu
-          sx={{ marginTop: pxToRem(16) }}
-          anchorEl={categoryAnchor}
-          open={openCategoryMenu}
-          onClose={() => setCategoryAnchor(null)}>
-          {categoryOptions.map((option) => (
-            <MenuItem
-              key={option.value}
-              onClick={() => handleCategorySelect(option.value)}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </Menu>
         <TransactionTable
           transactions={transactions}
           page={page}
