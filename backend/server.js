@@ -41,6 +41,14 @@ app.use("/api/pots", authMiddleware, potRoutes);
 app.use("/api/budgets", authMiddleware, budgetRoutes);
 app.use("/api/transactions", authMiddleware, transactionRoutes);
 
+// Server il frontend
+app.use(express.static(path.join(__dirname, "../FrontEnd/build")));
+
+// Server qualsiasi altra rotta con l'app React
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../FrontEnd/build", "index.html"));
+});
+
 // Porta di ascolto
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
