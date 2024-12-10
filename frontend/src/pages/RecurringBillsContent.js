@@ -293,6 +293,7 @@ const RecurringBillsContent = () => {
           }}>
           {/* Aggiunta della SearchBarFilters */}
           <SearchBarFilters
+            placeholder="Search bills"
             searchInput={searchInput}
             setSearchInput={setSearchInput}
             handleSearchSubmit={handleSearchSubmit}

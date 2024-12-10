@@ -108,6 +108,7 @@ const TransactionsContent = () => {
           width: "100%",
         }}>
         <SearchBarFilters
+          placeholder="Search transactions"
           searchInput={searchInput}
           setSearchInput={setSearchInput}
           handleSearchSubmit={handleSearchSubmit}

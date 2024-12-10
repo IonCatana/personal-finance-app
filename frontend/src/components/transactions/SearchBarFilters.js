@@ -36,6 +36,7 @@ const SearchBarFilters = ({
   categoryAnchor,
   openCategoryMenu,
   setCategoryAnchor,
+  placeholder,
 }) => {
   const theme = useTheme();
 
@@ -68,7 +69,7 @@ const SearchBarFilters = ({
             width: "100%",
           }}
           value={searchInput}
-          placeholder="Search transaction"
+          placeholder={placeholder}
           onChange={(e) => setSearchInput(e.target.value)}
           onKeyPress={handleKeyPress}
           endIcon={
