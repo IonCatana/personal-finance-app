@@ -30,25 +30,25 @@ router.get("/", async (req, res) => {
     let sortOption;
     switch (sort) {
       case "latest":
-        sortOption = "-date"; // Data decrescente
+        sortOption = { date: -1 }; // Data decrescente
         break;
       case "oldest":
-        sortOption = "date"; // Data crescente
+        sortOption = { date: 1 }; // Data crescente
         break;
       case "AtoZ":
-        sortOption = "name"; // Nome alfabetico crescente
+        sortOption = { name: 1 }; // Nome alfabetico crescente
         break;
       case "ZtoA":
-        sortOption = "-name"; // Nome alfabetico decrescente
+        sortOption = { name: -1 }; // Nome alfabetico decrescente
         break;
       case "highest":
-        sortOption = "-amount"; // Importo decrescente
+        sortOption = { amount: -1 }; // Importo decrescente
         break;
       case "lowest":
-        sortOption = "amount"; // Importo crescente
+        sortOption = { amount: 1 }; // Importo crescente
         break;
       default:
-        sortOption = "-date"; // Default: data decrescente
+        sortOption = { date: -1 }; // Default: data decrescente
     }
 
     // Recupera le transactions con i filtri applicati
