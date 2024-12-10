@@ -14,6 +14,8 @@ const TransactionTable = ({
   return (
     <>
       <TransactionsTableContainer
+        titleRecipientSender={" Recipient / Sender"}
+        transactionDate={"Transaction Date"}
         transactions={transactions}
         page={page}
         rowsPerPage={rowsPerPage}
@@ -23,6 +25,7 @@ const TransactionTable = ({
         hideCategory={false}
         hideDate={false}
         hideAmount={false}
+        hideTransactionDueDate={true}
       />
       <CustomPagination
         page={page}

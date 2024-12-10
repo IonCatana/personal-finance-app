@@ -129,6 +129,7 @@ const TransactionsContent = () => {
         />
 
         <TransactionTable
+          hideTransactionDueDate={true}
           transactions={transactions}
           page={page}
           rowsPerPage={rowsPerPage}

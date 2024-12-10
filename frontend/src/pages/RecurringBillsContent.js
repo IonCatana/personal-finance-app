@@ -1,12 +1,137 @@
-import React from "react";
-import { Box, Typography } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Box, Typography, CircularProgress } from "@mui/material";
+import { fetchTransactions } from "@components/transactions/apiTransactions";
 import { pxToRem } from "@utils/pxToRem";
 import { useTheme } from "@mui/material/styles";
+import { sortOptions } from "@components/sort/sortOptions";
+import { categoryOptions } from "@components/category/categoryOptions";
 import SectionHeaderCard from "@components/card/SectionHeaderCard";
 import SectionHeaderContent from "@components/headers/SectionHeaderContent";
+import SearchBarFilters from "@components/transactions/SearchBarFilters";
+import TransactionsTableContainer from "@components/transactions/TransactionsTableContainer";
 
 const RecurringBillsContent = () => {
   const theme = useTheme();
+  const [transactions, setTransactions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(8);
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("All Transactions");
+  const [sort, setSort] = useState("latest");
+  const [searchInput, setSearchInput] = useState("");
+
+  const [sortAnchor, setSortAnchor] = useState(null);
+  const openSortMenu = Boolean(sortAnchor);
+
+  const [categoryAnchor, setCategoryAnchor] = useState(null);
+  const openCategoryMenu = Boolean(categoryAnchor);
+
+  useEffect(() => {
+    const getTransactions = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchTransactions(
+          page,
+          rowsPerPage,
+          search,
+          category,
+          sort
+        );
+        setTransactions(data);
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getTransactions();
+  }, [page, rowsPerPage, search, category, sort]);
+
+  const handleSearchSubmit = () => {
+    setSearch(searchInput);
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleSearchSubmit();
+    }
+  };
+
+  const handleChangePage = (event, newPage) => setPage(newPage);
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const handleSortClick = (event) => {
+    setSortAnchor(event.currentTarget);
+  };
+
+  const handleCategoryClick = (event) => {
+    setCategoryAnchor(event.currentTarget);
+  };
+
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100%",
+        }}>
+        <CircularProgress
+          style={{ color: theme.palette.secondaryColors.green }}
+        />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box textAlign="center" mt={4}>
+        <Typography color="error">Errore: {error.error || error}</Typography>
+      </Box>
+    );
+  }
+
+  const today = new Date();
+
+  // Calcolo del totale delle bollette
+  const totalBillsAmount = transactions.reduce((sum, t) => sum + t.amount, 0);
+
+  // Filtri
+  const paidTransactions = transactions.filter(
+    (t) => t.recurring === true && new Date(t.date) < today
+  );
+  const totalUpcomingTransactions = transactions.filter(
+    (t) => t.recurring === false && new Date(t.date) > today
+  );
+  const dueSoonTransactions = transactions.filter(
+    (t) => t.recurring === false && new Date(t.date) < today
+  );
+
+  // Calcolo dei totali
+  const paidCount = paidTransactions.length;
+  const paidAmount = paidTransactions.reduce(
+    (sum, t) => sum + Math.abs(t.amount),
+    0
+  );
+
+  const upcomingCount = totalUpcomingTransactions.length;
+  const upcomingAmount = totalUpcomingTransactions.reduce(
+    (sum, t) => sum + Math.abs(t.amount),
+    0
+  );
+
+  const dueSoonCount = dueSoonTransactions.length;
+  const dueSoonAmount = dueSoonTransactions.reduce(
+    (sum, t) => sum + t.amount,
+    0
+  );
 
   return (
     <>
@@ -73,7 +198,7 @@ const RecurringBillsContent = () => {
                 sx={{
                   typography: "textPreset1",
                 }}>
-                $384.98
+                {totalBillsAmount.toFixed(2)}
               </Typography>
             </Box>
           </Box>
@@ -112,7 +237,7 @@ const RecurringBillsContent = () => {
                   Paid Bills
                 </Typography>
                 <Typography sx={{ typography: "textPreset5Bold" }}>
-                  4 ($190.00)
+                  {paidCount} (${paidAmount.toFixed(2)})
                 </Typography>
               </Box>
               <Box
@@ -131,7 +256,7 @@ const RecurringBillsContent = () => {
                   Total Upcoming
                 </Typography>
                 <Typography sx={{ typography: "textPreset5Bold" }}>
-                  4 ($194.98)
+                  {upcomingCount} (${upcomingAmount.toFixed(2)})
                 </Typography>
               </Box>
               <Box
@@ -152,7 +277,7 @@ const RecurringBillsContent = () => {
                     typography: "textPreset5Bold",
                     color: theme.palette.secondaryColors.red,
                   }}>
-                  2 ($59.98)
+                  {dueSoonCount} (${dueSoonAmount.toFixed(2)})
                 </Typography>
               </Box>
             </Box>
@@ -166,7 +291,44 @@ const RecurringBillsContent = () => {
             padding: pxToRem(32),
             backgroundColor: theme.palette.otherColors.white,
           }}>
-          Content right here
+          {/* Aggiunta della SearchBarFilters */}
+          <SearchBarFilters
+            searchInput={searchInput}
+            setSearchInput={setSearchInput}
+            handleSearchSubmit={handleSearchSubmit}
+            handleKeyPress={handleKeyPress}
+            sort={sort}
+            setSort={setSort}
+            category={category}
+            setCategory={setCategory}
+            sortOptions={sortOptions}
+            categoryOptions={categoryOptions}
+            handleSortClick={handleSortClick}
+            handleCategoryClick={handleCategoryClick}
+            sortAnchor={sortAnchor}
+            openSortMenu={openSortMenu}
+            setSortAnchor={setSortAnchor}
+            categoryAnchor={categoryAnchor}
+            openCategoryMenu={openCategoryMenu}
+            setCategoryAnchor={setCategoryAnchor}
+            hideCategory={true}
+          />
+
+          {/* Aggiunta della TransactionsTableContainer */}
+          <TransactionsTableContainer
+            titleRecipientSender={"Bill Title"}
+            transactionDueDate={"Due Date"}
+            transactions={transactions}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            handleChangePage={handleChangePage}
+            handleChangeRowsPerPage={handleChangeRowsPerPage}
+            // hideRecipient={false}
+            hideCategory={true}
+            hideTransactionDate={true}
+            hideDate={true}
+            // hideAmount={false}
+          />
         </Box>
       </Box>
     </>

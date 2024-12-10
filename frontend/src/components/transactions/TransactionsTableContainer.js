@@ -48,17 +48,19 @@ const TransactionsTableContainer = ({
   handleChangeRowsPerPage,
   hideRecipient = false,
   hideCategory = false,
+  hideTransactionDate = false,
   hideDate = false,
   hideAmount = false,
+  titleRecipientSender,
+  hideTransactionDueDate = false,
+  transactionDate,
+  transactionDueDate,
 }) => {
   const theme = useTheme();
 
   return (
     <>
-      <TableContainer
-        sx={{
-          marginBottom: pxToRem(32),
-        }}>
+      <TableContainer>
         <Table>
           <TableHead>
             <TableRow>
@@ -82,7 +84,7 @@ const TransactionsTableContainer = ({
                         md: `${pxToRem(21)} ${pxToRem(16)}`,
                       },
                     }}>
-                    Recipient / Sender
+                    {titleRecipientSender}
                   </Typography>
                 </TableCell>
               )}
@@ -126,7 +128,29 @@ const TransactionsTableContainer = ({
                         md: `${pxToRem(21)} ${pxToRem(16)}`,
                       },
                     }}>
-                    Transaction Date
+                    {transactionDate}
+                  </Typography>
+                </TableCell>
+              )}
+              {!hideTransactionDueDate && (
+                <TableCell
+                  sx={{
+                    padding: 0,
+                    display: { xs: "none", sm: "table-cell" },
+                  }}>
+                  <Typography
+                    sx={{
+                      fontSize: pxToRem(12),
+                      color: theme.palette.grey[500],
+                      padding: {
+                        xs: `${pxToRem(16)} ${pxToRem(16)} ${pxToRem(
+                          16
+                        )} ${pxToRem(0)}`,
+                        sm: `${pxToRem(21)} ${pxToRem(16)}`,
+                        md: `${pxToRem(21)} ${pxToRem(16)}`,
+                      },
+                    }}>
+                    {transactionDueDate}
                   </Typography>
                 </TableCell>
               )}
@@ -169,6 +193,8 @@ const TransactionsTableContainer = ({
                     transaction={transaction}
                     hideRecipient={hideRecipient}
                     hideCategory={hideCategory}
+                    hideTransactionDate={hideTransactionDate}
+                    hideTransactionDueDate={hideTransactionDueDate}
                     hideDate={hideDate}
                     hideAmount={hideAmount}
                   />
