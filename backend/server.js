@@ -1,6 +1,8 @@
 // backend/server.js
 require("module-alias/register");
-require("dotenv").config();
+require("dotenv").config({
+  path: process.env.NODE_ENV === "production" ? ".env.production" : ".env",
+});
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -14,7 +16,7 @@ const budgetRoutes = require("@routes/budget");
 const transactionRoutes = require("@routes/transactions");
 
 const corsOptions = {
-  origin: ["http://localhost:3000"],
+  origin: [process.env.FRONTEND_URL],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Aggiungi i metodi permessi
 };
 
