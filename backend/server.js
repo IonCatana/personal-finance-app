@@ -1,8 +1,6 @@
 // backend/server.js
 require("module-alias/register");
-require("dotenv").config({
-  path: process.env.NODE_ENV === "production" ? ".env.production" : ".env",
-});
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -16,7 +14,7 @@ const budgetRoutes = require("@routes/budget");
 const transactionRoutes = require("@routes/transactions");
 
 const corsOptions = {
-  origin: [process.env.FRONTEND_URL],
+  origin: ["http://localhost:3000"],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Aggiungi i metodi permessi
 };
 
@@ -40,14 +38,6 @@ app.use("/api/auth/signin", authSignIn);
 app.use("/api/pots", authMiddleware, potRoutes);
 app.use("/api/budgets", authMiddleware, budgetRoutes);
 app.use("/api/transactions", authMiddleware, transactionRoutes);
-
-// Server il frontend
-app.use(express.static(path.join(__dirname, "../FrontEnd/build")));
-
-// Server qualsiasi altra rotta con l'app React
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../FrontEnd/build", "index.html"));
-});
 
 // Porta di ascolto
 const PORT = process.env.PORT || 5000;

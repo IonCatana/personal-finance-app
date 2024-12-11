@@ -57,11 +57,6 @@ import { useToken } from "@context/TokenContext";
  * - `error`: Messaggio di errore in caso di autenticazione fallita.
  */
 
-const API_BASE_URL =
-  process.env.NODE_ENV === "production"
-    ? process.env.REACT_APP_API_URL_PROD
-    : process.env.REACT_APP_API_URL_DEV;
-
 const SignInForm = () => {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -78,10 +73,13 @@ const SignInForm = () => {
     event.preventDefault();
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/auth/signin`, {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/signin",
+        {
+          email,
+          password,
+        }
+      );
 
       // console.log("Login successful, token received:", response.data.token);
       saveToken(response.data.token);
