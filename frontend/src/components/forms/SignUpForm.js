@@ -81,10 +81,6 @@ import hidePasswordIcon from "@assets/images/icon-hide-password.svg";
  *   - Errore durante la registrazione (es. email già registrata).
  */
 
-const API_BASE_URL =
-  process.env.NODE_ENV === "production"
-    ? process.env.REACT_APP_API_URL_PROD
-    : process.env.REACT_APP_API_URL_DEV;
 
 const SignUpForm = () => {
   const theme = useTheme();
@@ -106,11 +102,14 @@ const SignUpForm = () => {
     event.preventDefault();
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/auth/signup`, {
-        username,
-        email,
-        password,
-      });
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/signup",
+        {
+          username,
+          email,
+          password,
+        }
+      );
 
       console.log("SignUp successful:", response.data.message);
 

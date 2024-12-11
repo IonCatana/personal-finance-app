@@ -16,7 +16,8 @@ const budgetRoutes = require("@routes/budget");
 const transactionRoutes = require("@routes/transactions");
 
 const corsOptions = {
-  origin: [process.env.FRONTEND_URL],
+  // TODO configurare l'origine per il deploy in produzione (es. dominio del frontend)
+  origin: ["http://localhost:3000"],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Aggiungi i metodi permessi
 };
 
