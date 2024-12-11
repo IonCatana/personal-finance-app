@@ -68,18 +68,16 @@ const SignInForm = () => {
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event) => event.preventDefault();
+  const apiUrl = `${process.env.REACT_APP_BACKEND_URL}/api/auth/signin`;
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/auth/signin",
-        {
-          email,
-          password,
-        }
-      );
+      const response = await axios.post(apiUrl, {
+        email,
+        password,
+      });
 
       // console.log("Login successful, token received:", response.data.token);
       saveToken(response.data.token);

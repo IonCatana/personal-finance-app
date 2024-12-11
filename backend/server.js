@@ -14,7 +14,10 @@ const budgetRoutes = require("@routes/budget");
 const transactionRoutes = require("@routes/transactions");
 
 const corsOptions = {
-  origin: ["http://localhost:3000"],
+  origin:
+    process.env.NODE_ENV === "production"
+      ? "https://personal-finance-app-production.up.railway.app" // Origine frontend in produzione
+      : "http://localhost:3000", // Origine frontend in sviluppo
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Aggiungi i metodi permessi
 };
 

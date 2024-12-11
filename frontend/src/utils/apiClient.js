@@ -5,7 +5,7 @@ import axios from "axios";
  *
  * Questo modulo fornisce un'istanza preconfigurata di Axios per gestire le richieste HTTP verso il backend.
  *
- * - **baseURL**: Definisce l'URL di base per tutte le richieste HTTP, in questo caso `http://localhost:5000/api`.
+ * - **baseURL**: Definisce l'URL di base per tutte le richieste HTTP, in questo caso `${process.env.REACT_APP_BACKEND_URL}/api`.
  * - **Interceptors di richiesta**:
  *   - Aggiunge automaticamente un token di autenticazione (Bearer Token) preso dal `localStorage` nell'header `Authorization` di tutte le richieste.
  *   - Gestisce eventuali errori nella configurazione delle richieste.
@@ -25,9 +25,8 @@ import axios from "axios";
  *     .catch(error => console.error(error));
  *   ```
  */
-
 const apiClient = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: `${process.env.REACT_APP_BACKEND_URL}/api`,
 });
 
 // Interceptor delle richieste per aggiungere il token di autenticazione
