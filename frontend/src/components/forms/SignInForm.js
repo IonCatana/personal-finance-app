@@ -127,7 +127,7 @@ const SignInForm = () => {
               <img
                 src={showPassword ? hidePasswordIcon : showPasswordIcon}
                 alt={showPassword ? "Nascondi password" : "Mostra password"}
-                style={{ width: pxToRem(16), height: pxToRem(16) }}
+                style={{ width: pxToRem(16), height: pxToRem(16) }} 
               />
             </IconButton>
           </InputAdornment>
@@ -138,7 +138,7 @@ const SignInForm = () => {
       {/* Messaggio di errore */}
       {error && (
         <Typography
-          sx={{ color: theme.palette.error.main, marginBottom: pxToRem(16) }}>
+          sx={{ color: theme.palette.error.main, marginBottom: pxToRem(16)  }}>
           {error}
         </Typography>
       )}
