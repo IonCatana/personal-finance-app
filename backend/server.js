@@ -44,7 +44,9 @@ mongoose
   .then(() => console.log(`MongoDB connesso all'URI: ${process.env.MONGO_URI}`))
   .catch((err) => {
     console.error("Errore di connessione a MongoDB:", err);
-    console.error("Assicurati che il server MongoDB sia in esecuzione e che l'URI sia corretto.");
+    console.error(
+      "Assicurati che il server MongoDB sia in esecuzione e che l'URI sia corretto."
+    );
     process.exit(1); // Termina il processo in caso di errore di connessione
   });
 
