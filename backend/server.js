@@ -19,12 +19,14 @@ const corsOptions = {
       ? "https://ioncatana.github.io" // Origine frontend in produzione
       : "http://localhost:3000", // Origine frontend in sviluppo
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Aggiungi i metodi permessi
+  credentials: true,
 };
 
 const app = express();
 
 // Middleware globali
 app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); // Gestisce le richieste preflight
 app.use(express.json());
 
 // Connessione a MongoDB
