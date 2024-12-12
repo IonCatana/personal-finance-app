@@ -16,7 +16,7 @@ const transactionRoutes = require("@routes/transactions");
 const corsOptions = {
   origin:
     process.env.NODE_ENV === "production"
-      ? "https://ioncatana.github.io/personal-finance-app/" // Origine frontend in produzione
+      ? "https://ioncatana.github.io" // Origine frontend in produzione
       : "http://localhost:3000", // Origine frontend in sviluppo
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Aggiungi i metodi permessi
 };
