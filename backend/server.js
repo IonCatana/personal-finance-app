@@ -14,11 +14,20 @@ const budgetRoutes = require("@routes/budget");
 const transactionRoutes = require("@routes/transactions");
 
 const corsOptions = {
-  origin:
-    process.env.NODE_ENV === "production"
-      ? "https://ioncatana.github.io" // Origine frontend in produzione
-      : "http://localhost:3000", // Origine frontend in sviluppo
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Aggiungi i metodi permessi
+  origin: (origin, callback) => {
+    const allowedOrigins = [
+      "http://localhost:3000", // Sviluppo locale
+      "https://ioncatana.github.io", // Produzione
+    ];
+
+    // Consentire richieste senza origine (per strumenti come Postman)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Origin non consentita dalla policy CORS."));
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true,
 };
 
