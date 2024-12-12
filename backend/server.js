@@ -17,7 +17,7 @@ const corsOptions = {
   origin: (origin, callback) => {
     const allowedOrigins = [
       "http://localhost:3000", // Sviluppo locale
-      "https://ioncatana.github.io/personal-finance-app", // Produzione
+      "https://ioncatana.github.io", // Produzione
     ];
 
     // Consentire richieste senza origine (per strumenti come Postman)

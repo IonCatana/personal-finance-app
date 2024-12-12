@@ -40,6 +40,7 @@ function App() {
       <TokenProvider>
         <MenuProvider>
           <BrowserRouter
+            basename="/personal-finance-app"
             future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
             <AppRoutes />
           </BrowserRouter>
