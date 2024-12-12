@@ -1,0 +1,36 @@
+{
+  "files": {
+    "main.css": "/personal-finance-app/static/css/main.2163dd21.css",
+    "main.js": "/personal-finance-app/static/js/main.cc5846e0.js",
+    "static/js/453.8ab44547.chunk.js": "/personal-finance-app/static/js/453.8ab44547.chunk.js",
+    "static/media/PublicSans-Italic-VariableFont_wght.ttf": "/personal-finance-app/static/media/PublicSans-Italic-VariableFont_wght.cafd24d15f9fdb2400a8.ttf",
+    "static/media/PublicSans-VariableFont_wght.ttf": "/personal-finance-app/static/media/PublicSans-VariableFont_wght.a67b5635effc003912f6.ttf",
+    "static/media/PublicSans-Bold.ttf": "/personal-finance-app/static/media/PublicSans-Bold.14c3d2eca28d59b9f2b9.ttf",
+    "static/media/PublicSans-Regular.ttf": "/personal-finance-app/static/media/PublicSans-Regular.8821edffdd9065a7b6dd.ttf",
+    "static/media/illustration-authentication.svg": "/personal-finance-app/static/media/illustration-authentication.60f4a94f4382d6824928da44f3d036f9.svg",
+    "static/media/icon-pot.svg": "/personal-finance-app/static/media/icon-pot.c0c1248d6b5ef78c4497956667404470.svg",
+    "static/media/icon-nav-budgets.svg": "/personal-finance-app/static/media/icon-nav-budgets.15f58bd6123bb279f82c88a0d0888b7d.svg",
+    "static/media/logo-large.svg": "/personal-finance-app/static/media/logo-large.591fc2cc2aa0fcc5920b5d60ee6de502.svg",
+    "static/media/icon-sort-mobile.svg": "/personal-finance-app/static/media/icon-sort-mobile.1208e5ab6e03975c90fc1e33543ca33d.svg",
+    "static/media/icon-nav-pots.svg": "/personal-finance-app/static/media/icon-nav-pots.d6e1aba41281e001ac61511f168dbaa2.svg",
+    "static/media/icon-hide-password.svg": "/personal-finance-app/static/media/icon-hide-password.affb4b38d25c8f39bb0d11a1d6ae831d.svg",
+    "static/media/icon-close-modal.svg": "/personal-finance-app/static/media/icon-close-modal.01c7b417bad05d4cc7679090050361fa.svg",
+    "static/media/icon-ellipsis.svg": "/personal-finance-app/static/media/icon-ellipsis.88fc456bf637c741e7f77c6a923b4dc4.svg",
+    "static/media/icon-nav-transactions.svg": "/personal-finance-app/static/media/icon-nav-transactions.f315fa06c1cb1b06a5beb3f67e014024.svg",
+    "static/media/icon-nav-recurring-bills.svg": "/personal-finance-app/static/media/icon-nav-recurring-bills.f9c7277a3d3f5f08ae269df95370b4f2.svg",
+    "static/media/icon-search.svg": "/personal-finance-app/static/media/icon-search.2666d39b2737e3d002db6cfa8e4b48ec.svg",
+    "index.html": "/personal-finance-app/index.html",
+    "static/media/icon-show-password.svg": "/personal-finance-app/static/media/icon-show-password.6659be36408dfa28d77b68135194b756.svg",
+    "static/media/icon-nav-overview.svg": "/personal-finance-app/static/media/icon-nav-overview.9f8d42e4def43b5e84eedf638885af93.svg",
+    "static/media/icon-filter-mobile.svg": "/personal-finance-app/static/media/icon-filter-mobile.d3908d1c4012bce5c7736732c811cbea.svg",
+    "static/media/icon-caret-down.svg": "/personal-finance-app/static/media/icon-caret-down.32cb7aae29acc2ac4da16590340cb2f5.svg",
+    "static/media/logo-small.svg": "/personal-finance-app/static/media/logo-small.f4e94d5e96823f6a2de8b906be42badb.svg",
+    "main.2163dd21.css.map": "/personal-finance-app/static/css/main.2163dd21.css.map",
+    "main.cc5846e0.js.map": "/personal-finance-app/static/js/main.cc5846e0.js.map",
+    "453.8ab44547.chunk.js.map": "/personal-finance-app/static/js/453.8ab44547.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.2163dd21.css",
+    "static/js/main.cc5846e0.js"
+  ]
+}
