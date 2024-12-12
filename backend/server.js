@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 
 // Import delle rotte e del middleware
-const authMiddleware = require("./middleware/authMiddleware");
+const authMiddleware = require("@middleWare/authMiddleware");
 const authSignUp = require("@routes/authSignUp");
 const authSignIn = require("@routes/authSignIn");
 const potRoutes = require("@routes/pots");
