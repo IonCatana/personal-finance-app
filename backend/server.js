@@ -40,9 +40,22 @@ app.use(express.json());
 
 // Connessione a MongoDB
 mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => console.log(`MongoDB connesso all'URI: ${process.env.MONGO_URI}`))
-  .catch((err) => console.error("Errore di connessione a MongoDB:", err));
+  .connect(process.env.MONGO_URI, {})
+  .then(() => {
+    console.log("MongoDB connesso con successo!");
+  })
+  .catch((err) => {
+    console.error("Errore durante la connessione a MongoDB:", err.message);
+    process.exit(1); // Termina il processo se la connessione fallisce
+  });
+
+mongoose.connection.on("error", (err) => {
+  console.error("Errore nella connessione Mongoose:", err.message);
+});
+
+mongoose.connection.on("connected", () => {
+  console.log("Mongoose è connesso al database.");
+});
 
 // Rotte pubbliche (SignUp e SignIn)
 app.use("/api/auth/signup", authSignUp);
