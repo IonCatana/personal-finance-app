@@ -81,7 +81,7 @@ import hidePasswordIcon from "@assets/images/icon-hide-password.svg";
  *   - Errore durante la registrazione (es. email già registrata).
  */
 
-const SignUpForm = () => {
+const SignUpForm = () => { 
   const theme = useTheme();
   const navigate = useNavigate();
   const [username, setUserName] = useState("");
