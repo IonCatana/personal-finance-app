@@ -4,6 +4,9 @@ import PropTypes from "prop-types";
 import { pxToRem } from "@utils/pxToRem";
 import { useTheme } from "@mui/material/styles";
 import ModalCrud from "@components/modals/ModalCrud";
+import ButtonTertiary from "@components/buttons/ButtonTertiary";
+import { useNavigate } from "react-router-dom";
+import { useToken } from "@context/TokenContext";
 
 const SectionHeaderContent = ({
   title,
@@ -12,8 +15,13 @@ const SectionHeaderContent = ({
   buttonComponent: ButtonComponent,
   onAddItem,
   modalType,
+  showLogout,
+  onLogout,
 }) => {
   const theme = useTheme();
+
+  const navigate = useNavigate();
+  const { saveToken } = useToken();
 
   // Stato per gestire la visibilità della modale
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -21,6 +29,11 @@ const SectionHeaderContent = ({
   // Funzioni per aprire e chiudere la modale
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
+
+  const handleLogout = () => {
+    saveToken(null); // Rimuove il token
+    navigate("/signin"); // Reindirizza alla pagina di login
+  };
 
   return (
     <>
@@ -54,6 +67,13 @@ const SectionHeaderContent = ({
               {buttonLabel}
             </ButtonComponent>
           </Box>
+        )}
+
+        {/* Pulsante di logout */}
+        {showLogout && (
+          <ButtonTertiary withIcon onClick={handleLogout}>
+            Logout
+          </ButtonTertiary>
         )}
       </Box>
       {/* Modale CRUD per "Add" */}

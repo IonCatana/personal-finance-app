@@ -63,7 +63,11 @@ const OverviewContent = (
 
   return (
     <Box>
-      <SectionHeaderContent title="Overview" />
+      <SectionHeaderContent
+        title="Overview"
+        showLogout
+        onLogout={() => console.log("Logout eseguito")}
+      />
       {/* StatCards */}
       <Box
         sx={{
