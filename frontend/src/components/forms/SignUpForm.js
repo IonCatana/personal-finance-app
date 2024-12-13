@@ -96,7 +96,7 @@ const SignUpForm = () => {
 
   // Evita il comportamento predefinito quando si clicca sull'icona.
   const handleMouseDownPassword = (event) => event.preventDefault();
-  const apiUrl = `${process.env.REACT_APP_BACKEND_URL}/api/auth/signin`;
+  const apiUrl = `${process.env.REACT_APP_BACKEND_URL}/api/auth/signup`;
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -210,17 +210,27 @@ const SignUpForm = () => {
       </ButtonPrimary>
 
       <Dialog
+        sx={{
+          "& .MuiDialog-paper": {
+            borderRadius: pxToRem(12),
+            padding: `${pxToRem(0)} ${pxToRem(0)} ${pxToRem(8)} ${pxToRem(0)}`,
+          },
+        }}
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         aria-labelledby="modal-title"
         aria-describedby="modal-description">
-        <DialogTitle id="modal-title">Registrazione completata</DialogTitle>
+        <DialogTitle id="modal-title">Registration completed</DialogTitle>
         <DialogContent>
           <Typography id="modal-description">
-            Account creato con successo!
+            Account successfully created!
           </Typography>
         </DialogContent>
-        <DialogActions>
+        <DialogActions
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+          }}>
           <ButtonPrimary
             onClick={() => navigate("/signin")}
             color="primary"
