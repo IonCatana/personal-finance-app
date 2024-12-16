@@ -12,13 +12,13 @@ router.post("/", async (req, res) => {
     // Validazione dei campi
     if (!username || !email || !password) {
       console.log("Campi richiesti:", req.body);
-      return res.status(400).json({ error: "Tutti i campi sono obbligatori" });
+      return res.status(400).json({ error: "All fields are required" });
     }
 
     // Controlla se l'utente esiste già
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ error: "L'email è già registrata" });
+      return res.status(400).json({ error: "Email is already registered" });
     }
 
     // Genera un hash della password
@@ -35,11 +35,11 @@ router.post("/", async (req, res) => {
 
     // Risponde con i dati dell'utente senza il token
     res.status(201).json({
-      message: "Utente creato con successo. Ora puoi effettuare il login.",
+      message: "User successfully created. You can now log in.",
     });
   } catch (err) {
-    console.error("Errore nella registrazione:", err);
-    res.status(500).json({ error: "Errore nella creazione dell’utente" });
+    console.error("Registration error:", err);
+    res.status(500).json({ error: "Error in creating the user" });
   }
 });
 

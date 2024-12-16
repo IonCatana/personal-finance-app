@@ -73,7 +73,7 @@ const SignInForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    try {  
+    try {
       const response = await axios.post(apiUrl, {
         email,
         password,
@@ -84,9 +84,7 @@ const SignInForm = () => {
 
       navigate("/");
     } catch (error) {
-      setError(
-        error.response?.data?.error || "Errore durante l'autenticazione."
-      );
+      setError(error.response?.data?.error || "Error during authentication.");
     }
   };
 
@@ -107,7 +105,7 @@ const SignInForm = () => {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         autoComplete="email"
-        errorText="Inserisci un'email valida"
+        errorText="Please enter a valid email"
         sx={{ marginBottom: pxToRem(16) }}
       />
 
