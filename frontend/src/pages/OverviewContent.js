@@ -94,7 +94,13 @@ const OverviewContent = () => {
           gap: pxToRem(24),
           flexDirection: { xs: "column", lg: "row" },
         }}>
-        <Box sx={{ flex: 1, gap: pxToRem(24) }}>
+        <Box
+          sx={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            gap: pxToRem(24),
+          }}>
           <PotsOverview />
           {budget && (
             <BudgetDetails
