@@ -8,33 +8,45 @@ import BudgetsOverview from "@components/budget/BudgetsOverview";
 import SectionHeaderContent from "@components/headers/SectionHeaderContent";
 import BudgetDetails from "@components/budget/BudgetDetails";
 import { getBudgets } from "@components/budget/apiBudgets";
-import { fetchTransactionsByCategory } from "@components/transactions/apiTransactions";
+import {
+  fetchTransactions,
+  fetchTransactionsByCategory,
+} from "@components/transactions/apiTransactions";
+import { calculateBillsSummary } from "@components/bills/apiBills";
+import BillsOverview from "@components/bills/BillsOverview";
 
-const OverviewContent = (
-  showSpentSection = false,
-  backgroundColor,
-  maxTransactionsToShow,
-  sx = {}
-) => {
+const OverviewContent = () => {
   const theme = useTheme();
 
+  // Stati
   const [budget, setBudget] = useState(null);
   const [transactions, setTransactions] = useState([]);
+  const [billsSummary, setBillsSummary] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Effetto per fetching dei dati
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true);
+
+        // Recupera i Budget
         const budgets = await getBudgets();
         if (budgets.length > 0) {
           const selectedBudget = budgets[0];
           setBudget(selectedBudget);
 
+          // Recupera le transazioni per la categoria selezionata
           const categoryTransactions = await fetchTransactionsByCategory(
             selectedBudget.category
           );
           setTransactions(categoryTransactions);
         }
+
+        // Recupera tutte le transazioni per le Bills
+        const allTransactions = await fetchTransactions();
+        const summary = calculateBillsSummary(allTransactions);
+        setBillsSummary(summary);
       } catch (error) {
         console.error("Error fetching budgets or transactions:", error);
       } finally {
@@ -63,49 +75,26 @@ const OverviewContent = (
 
   return (
     <Box>
-      <SectionHeaderContent
-        title="Overview"
-        showLogout
-        onLogout={() => console.log("Logout eseguito")}
-      />
-      {/* StatCards */}
+      <SectionHeaderContent title="Overview" showLogout />
       <Box
         sx={{
           display: "flex",
-          gap: { xs: pxToRem(12), sm: pxToRem(24), md: pxToRem(24) },
-          flexWrap: { xs: "wrap", sm: "nowrap", md: "nowrap" },
+          gap: { xs: pxToRem(12), sm: pxToRem(24) },
+          flexWrap: "wrap",
           marginBottom: pxToRem(32),
         }}>
-        <StatCard
-          backgroundColor={theme.palette.grey[900]}
-          title="Current Balance"
-          value="$4,836.00"
-          color={theme.palette.otherColors.white}
-        />
+        <StatCard title="Current Balance" value="$4,836.00" />
         <StatCard title="Income" value="$3,814.25" />
         <StatCard title="Expenses" value="$1,700.50" />
       </Box>
-      {/* PotsOverview */}
+
       <Box
-        className="columns"
         sx={{
           display: "flex",
           gap: pxToRem(24),
-          flexDirection: {
-            xs: "column",
-            sm: "column",
-            md: "column",
-            lg: "row",
-          },
+          flexDirection: { xs: "column", lg: "row" },
         }}>
-        <Box
-          className="column-left"
-          sx={{
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            gap: { xs: pxToRem(16), sm: pxToRem(24), md: pxToRem(24) },
-          }}>
+        <Box sx={{ flex: 1, gap: pxToRem(24) }}>
           <PotsOverview />
           {budget && (
             <BudgetDetails
@@ -130,8 +119,18 @@ const OverviewContent = (
           sx={{
             maxWidth: { xs: "100%", sm: "100%", md: "100%", lg: pxToRem(428) },
             width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            gap: pxToRem(24),
           }}>
           <BudgetsOverview />
+          {billsSummary && (
+            <BillsOverview
+              paidAmount={billsSummary.paidAmount}
+              upcomingAmount={billsSummary.upcomingAmount}
+              dueSoonAmount={billsSummary.dueSoonAmount}
+            />
+          )}
         </Box>
       </Box>
     </Box>

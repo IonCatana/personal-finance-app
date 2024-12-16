@@ -5,10 +5,11 @@ import { pxToRem } from "@utils/pxToRem";
 import { useTheme } from "@mui/material/styles";
 import { sortOptions } from "@components/sort/sortOptions";
 import { categoryOptions } from "@components/category/categoryOptions";
-import SectionHeaderCard from "@components/card/SectionHeaderCard";
 import SectionHeaderContent from "@components/headers/SectionHeaderContent";
 import SearchBarFilters from "@components/transactions/SearchBarFilters";
 import TransactionsTableContainer from "@components/transactions/TransactionsTableContainer";
+import BillsSummary from "@components/bills/BillsSummary";
+import { calculateBillsSummary } from "@components/bills/apiBills";
 
 const RecurringBillsContent = () => {
   const theme = useTheme();
@@ -98,40 +99,15 @@ const RecurringBillsContent = () => {
     );
   }
 
-  const today = new Date();
-
-  // Calcolo del totale delle bollette
-  const totalBillsAmount = transactions.reduce((sum, t) => sum + t.amount, 0);
-
-  // Filtri
-  const paidTransactions = transactions.filter(
-    (t) => t.recurring === true && new Date(t.date) < today
-  );
-  const totalUpcomingTransactions = transactions.filter(
-    (t) => t.recurring === false && new Date(t.date) > today
-  );
-  const dueSoonTransactions = transactions.filter(
-    (t) => t.recurring === false && new Date(t.date) < today
-  );
-
-  // Calcolo dei totali
-  const paidCount = paidTransactions.length;
-  const paidAmount = paidTransactions.reduce(
-    (sum, t) => sum + Math.abs(t.amount),
-    0
-  );
-
-  const upcomingCount = totalUpcomingTransactions.length;
-  const upcomingAmount = totalUpcomingTransactions.reduce(
-    (sum, t) => sum + Math.abs(t.amount),
-    0
-  );
-
-  const dueSoonCount = dueSoonTransactions.length;
-  const dueSoonAmount = dueSoonTransactions.reduce(
-    (sum, t) => sum + t.amount,
-    0
-  );
+  const {
+    totalBillsAmount,
+    paidCount,
+    paidAmount,
+    upcomingCount,
+    upcomingAmount,
+    dueSoonCount,
+    dueSoonAmount,
+  } = calculateBillsSummary(transactions);
 
   return (
     <>
@@ -202,86 +178,14 @@ const RecurringBillsContent = () => {
               </Typography>
             </Box>
           </Box>
-          <Box
-            className="Summary-bills"
-            sx={{
-              width: "100%",
-              borderRadius: pxToRem(12),
-              padding: pxToRem(20),
-              backgroundColor: theme.palette.otherColors.white,
-            }}>
-            <SectionHeaderCard
-              fullWidth
-              title="Summary"
-              titleTypography="textPreset3"
-            />
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                gap: pxToRem(16),
-              }}>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  paddingBottom: pxToRem(16),
-                  borderBottom: `1px solid rgba(105, 104, 104, 0.15)`,
-                }}>
-                <Typography
-                  sx={{
-                    typography: "textPreset5",
-                    color: theme.palette.text.secondary,
-                  }}>
-                  Paid Bills
-                </Typography>
-                <Typography sx={{ typography: "textPreset5Bold" }}>
-                  {paidCount} (${paidAmount.toFixed(2)})
-                </Typography>
-              </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  paddingBottom: pxToRem(16),
-                  borderBottom: `1px solid rgba(105, 104, 104, 0.15)`,
-                }}>
-                <Typography
-                  sx={{
-                    typography: "textPreset5",
-                    color: theme.palette.text.secondary,
-                  }}>
-                  Total Upcoming
-                </Typography>
-                <Typography sx={{ typography: "textPreset5Bold" }}>
-                  {upcomingCount} (${upcomingAmount.toFixed(2)})
-                </Typography>
-              </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}>
-                <Typography
-                  sx={{
-                    typography: "textPreset5",
-                    color: theme.palette.secondaryColors.red,
-                  }}>
-                  Due Soon
-                </Typography>
-                <Typography
-                  sx={{
-                    typography: "textPreset5Bold",
-                    color: theme.palette.secondaryColors.red,
-                  }}>
-                  {dueSoonCount} (${dueSoonAmount.toFixed(2)})
-                </Typography>
-              </Box>
-            </Box>
-          </Box>
+          <BillsSummary
+            paidCount={paidCount}
+            paidAmount={paidAmount}
+            upcomingCount={upcomingCount}
+            upcomingAmount={upcomingAmount}
+            dueSoonCount={dueSoonCount}
+            dueSoonAmount={dueSoonAmount}
+          />
         </Box>
         <Box
           className="content-right"

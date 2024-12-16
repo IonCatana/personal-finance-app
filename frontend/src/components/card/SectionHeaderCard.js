@@ -32,6 +32,7 @@ const SectionHeaderCard = ({
   buttonLabel,
   onButtonClick,
   titleTypography,
+  sx = {},
 }) => {
   const theme = useTheme(); // Permette di accedere ai colori e agli stili definiti nel tema
 
@@ -42,6 +43,7 @@ const SectionHeaderCard = ({
         justifyContent: "space-between",
         alignItems: "center",
         marginBottom: pxToRem(20),
+        ...sx,
       }}>
       {/* Titolo della sezione */}
       <Typography
@@ -67,6 +69,7 @@ SectionHeaderCard.propTypes = {
   buttonLabel: PropTypes.string, // Testo del pulsante (opzionale)
   onButtonClick: PropTypes.func, // Funzione chiamata al clic del pulsante (opzionale)
   titleTypography: PropTypes.string, // Stile tipografico personalizzabile per il titolo
+  sx: PropTypes.object, // Stili personalizzati
 };
 
 export default SectionHeaderCard;
