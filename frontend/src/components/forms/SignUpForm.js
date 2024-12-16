@@ -101,6 +101,11 @@ const SignUpForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    if (password.length < 8) {
+      setError("The password must contain at least 8 characters.");
+      return;
+    }
+
     try {
       const response = await axios.post(apiUrl, {
         username,
@@ -113,9 +118,7 @@ const SignUpForm = () => {
       // Mostra la modale
       setIsModalOpen(true);
     } catch (error) {
-      setError(
-        error.response?.data?.error || "Errore durante la registrazione."
-      );
+      setError(error.response?.data?.error || "Error during registration.");
     }
   };
 
@@ -127,7 +130,7 @@ const SignUpForm = () => {
 
     // Aggiungi una validazione istantanea
     if (!validateEmail(value)) {
-      setError("Inserisci un'email valida.");
+      setError("Enter a valid email.");
     } else {
       setError("");
     }
@@ -150,7 +153,7 @@ const SignUpForm = () => {
         value={username}
         onChange={(e) => setUserName(e.target.value)}
         autoComplete="name"
-        errorText="Inserisci un nome valido"
+        errorText="Enter a valid name"
         sx={{ marginBottom: pxToRem(16) }}
       />
 
@@ -161,7 +164,7 @@ const SignUpForm = () => {
         type="email"
         onChange={handleEmailChange}
         autoComplete="email"
-        errorText="Inserisci un'email valida"
+        errorText="Please enter a valid email"
         sx={{ marginBottom: pxToRem(16) }}
       />
 
