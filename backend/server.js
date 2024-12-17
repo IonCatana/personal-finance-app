@@ -12,6 +12,7 @@ const authSignIn = require("@routes/authSignIn");
 const potRoutes = require("@routes/pots");
 const budgetRoutes = require("@routes/budget");
 const transactionRoutes = require("@routes/transactions");
+const balanceRoutes = require("@routes/balance");
 
 const corsOptions = {
   origin: (origin, callback) => {
@@ -51,12 +52,13 @@ mongoose
   });
 
 // Rotte pubbliche (SignUp e SignIn)
-app.use("/api/auth/signup", authSignUp);
 app.use("/api/auth/signin", authSignIn);
+app.use("/api/auth/signup", authSignUp);
 
 // Rotte protette (gestione dei pots)
-app.use("/api/pots", authMiddleware, potRoutes);
+app.use("/api/balance", authMiddleware, balanceRoutes);
 app.use("/api/budgets", authMiddleware, budgetRoutes);
+app.use("/api/pots", authMiddleware, potRoutes);
 app.use("/api/transactions", authMiddleware, transactionRoutes);
 
 if (process.env.NODE_ENV === "production") {

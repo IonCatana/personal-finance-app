@@ -14,6 +14,7 @@ import {
 } from "@components/transactions/apiTransactions";
 import { calculateBillsSummary } from "@components/bills/apiBills";
 import BillsOverview from "@components/bills/BillsOverview";
+import { getBalance } from "@components/balance/apiBalance";
 
 const OverviewContent = () => {
   const theme = useTheme();
@@ -22,6 +23,7 @@ const OverviewContent = () => {
   const [budget, setBudget] = useState(null);
   const [transactions, setTransactions] = useState([]);
   const [billsSummary, setBillsSummary] = useState(null);
+  const [balance, setBalance] = useState(null);
   const [loading, setLoading] = useState(true);
 
   // Effetto per fetching dei dati
@@ -29,6 +31,10 @@ const OverviewContent = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
+
+        // Recupera il bilancio
+        const balanceData = await getBalance();
+        setBalance(balanceData);
 
         // Recupera i Budget
         const budgets = await getBudgets();
@@ -48,7 +54,7 @@ const OverviewContent = () => {
         const summary = calculateBillsSummary(allTransactions);
         setBillsSummary(summary);
       } catch (error) {
-        console.error("Error fetching budgets or transactions:", error);
+        console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
@@ -87,10 +93,37 @@ const OverviewContent = () => {
           backgroundColor={theme.palette.grey[900]}
           color={theme.palette.otherColors.white}
           title="Current Balance"
-          value="$4,836.00"
+          value={`$${
+            balance?.current
+              ? new Intl.NumberFormat("en-US", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                }).format(balance.current)
+              : "0.00"
+          }`}
         />
-        <StatCard title="Income" value="$3,814.25" />
-        <StatCard title="Expenses" value="$1,700.50" />
+        <StatCard
+          title="Income"
+          value={`$${
+            balance?.income
+              ? new Intl.NumberFormat("en-US", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                }).format(balance.income)
+              : "0.00"
+          }`}
+        />
+        <StatCard
+          title="Expenses"
+          value={`$${
+            balance?.expenses
+              ? new Intl.NumberFormat("en-US", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                }).format(balance.expenses)
+              : "0.00"
+          }`}
+        />
       </Box>
 
       <Box
