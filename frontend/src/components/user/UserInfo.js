@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography, CircularProgress } from "@mui/material";
+import {
+  Box,
+  Typography,
+  CircularProgress,
+  InputAdornment,
+  IconButton,
+} from "@mui/material";
 import {
   fetchUserInfo,
   updateUserInfo,
@@ -12,6 +18,8 @@ import BasicInput from "@components/inputFields/BasicInput";
 import ButtonDestroy from "@components/buttons/ButtonDestroy";
 import ButtonPrimary from "@components/buttons/ButtonPrimary";
 import Snackbar from "@components/snackbar/SnackBar";
+import showPasswordIcon from "@assets/images/icon-show-password.svg";
+import hidePasswordIcon from "@assets/images/icon-hide-password.svg";
 
 const UserInfo = ({ token }) => {
   const theme = useTheme();
@@ -19,12 +27,19 @@ const UserInfo = ({ token }) => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
   const [updates, setUpdates] = useState({ username: "", email: "" });
   const [passwords, setPasswords] = useState({
     oldPassword: "",
     newPassword: "",
     confirmPassword: "",
   });
+
+  // Mostra o nasconde la password al clic sull'icona.
+  const handleClickShowPassword = () => setShowPassword((prev) => !prev);
+
+  // Evita il comportamento predefinito quando si clicca sull'icona.
+  const handleMouseDownPassword = (event) => event.preventDefault();
 
   // Stato per controllare lo Snackbar
   const [snackbar, setSnackbar] = useState({
@@ -71,12 +86,23 @@ const UserInfo = ({ token }) => {
   };
 
   const handleChangePassword = async () => {
+    // Validazione della lunghezza della nuova password
+    if (passwords.newPassword.length < 8) {
+      return showSnackbar(
+        "Password must be at least 8 characters long!",
+        "warning"
+      );
+    }
+
+    // Validazione della corrispondenza delle password
     if (passwords.newPassword !== passwords.confirmPassword) {
       return showSnackbar("New passwords do not match!", "warning");
     }
+
     try {
       await changePassword(token, passwords);
       showSnackbar("Password changed successfully!", "success");
+      setPasswords({ oldPassword: "", newPassword: "", confirmPassword: "" }); // Resetta i campi
     } catch (err) {
       console.error(err);
       showSnackbar("Failed to change password.", "error");
@@ -183,24 +209,68 @@ const UserInfo = ({ token }) => {
           </Typography>
           <BasicInput
             label="Old Password"
-            type="password"
+            type={showPassword ? "text" : "password"}
             value={passwords.oldPassword}
+            endIcon={
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                  edge="end">
+                  <img
+                    src={showPassword ? hidePasswordIcon : showPasswordIcon}
+                    alt={showPassword ? "Nascondi password" : "Mostra password"}
+                    style={{ width: pxToRem(16), height: pxToRem(16) }}
+                  />
+                </IconButton>
+              </InputAdornment>
+            }
             onChange={(e) =>
               setPasswords({ ...passwords, oldPassword: e.target.value })
             }
           />
           <BasicInput
             label="New Password"
-            type="password"
+            type={showPassword ? "text" : "password"}
             value={passwords.newPassword}
+            // infoText="Passwords must be at least 8 characters"
+            endIcon={
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                  edge="end">
+                  <img
+                    src={showPassword ? hidePasswordIcon : showPasswordIcon}
+                    alt={showPassword ? "Nascondi password" : "Mostra password"}
+                    style={{ width: pxToRem(16), height: pxToRem(16) }}
+                  />
+                </IconButton>
+              </InputAdornment>
+            }
             onChange={(e) =>
               setPasswords({ ...passwords, newPassword: e.target.value })
             }
           />
           <BasicInput
             label="Confirm New Password"
-            type="password"
+            type={showPassword ? "text" : "password"}
             value={passwords.confirmPassword}
+            infoText="Passwords must be at least 8 characters"
+            endIcon={
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                  edge="end">
+                  <img
+                    src={showPassword ? hidePasswordIcon : showPasswordIcon}
+                    alt={showPassword ? "Nascondi password" : "Mostra password"}
+                    style={{ width: pxToRem(16), height: pxToRem(16) }}
+                  />
+                </IconButton>
+              </InputAdornment>
+            }
             onChange={(e) =>
               setPasswords({ ...passwords, confirmPassword: e.target.value })
             }
