@@ -25,7 +25,7 @@ const UserInfo = ({ token }) => {
   const theme = useTheme();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const [originalData, setOriginalData] = useState({ username: "", email: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [updates, setUpdates] = useState({ username: "", email: "" });
   const [passwords, setPasswords] = useState({
@@ -53,6 +53,7 @@ const UserInfo = ({ token }) => {
       try {
         const data = await fetchUserInfo(token);
         setUpdates({ username: data.username, email: data.email });
+        setOriginalData({ username: data.username, email: data.email });
       } catch (err) {
         setError(err);
         showSnackbar("Failed to fetch user data.", "error");
@@ -64,9 +65,35 @@ const UserInfo = ({ token }) => {
   }, [token]);
 
   const handleUpdate = async () => {
+    const cleanedUsername = updates.username.trim().replace(/\s+/g, " ");
+    const cleanedEmail = updates.email.trim();
+
+    if (
+      cleanedUsername === originalData.username &&
+      cleanedEmail === originalData.email
+    ) {
+      return showSnackbar("No changes detected. Nothing to update.", "info");
+    }
+
     try {
-      await updateUserInfo(token, updates);
-      showSnackbar("User info updated successfully!", "success");
+      await updateUserInfo(token, {
+        username: cleanedUsername,
+        email: cleanedEmail,
+      });
+
+      let message = "User info updated successfully!";
+
+      if (cleanedUsername !== originalData.username) {
+        message = `Name changed from ${originalData.username} to ${cleanedUsername}.`;
+      }
+      if (cleanedEmail !== originalData.email) {
+        message += ` Email changed from ${originalData.email} to ${cleanedEmail}.`;
+      }
+
+      showSnackbar(message, "success");
+
+      setOriginalData({ username: cleanedUsername, email: cleanedEmail });
+      setUpdates({ username: cleanedUsername, email: cleanedEmail });
     } catch {
       showSnackbar("Failed to update user info.", "error");
     }
@@ -86,8 +113,14 @@ const UserInfo = ({ token }) => {
       await changePassword(token, passwords);
       showSnackbar("Password changed successfully!", "success");
       setPasswords({ oldPassword: "", newPassword: "", confirmPassword: "" });
-    } catch {
-      showSnackbar("Failed to change password.", "error");
+    } catch (err) {
+      console.error(err);
+      // Controlla se l'errore riguarda la vecchia password non corretta
+      if (err.response?.data?.error === "Old password is incorrect") {
+        showSnackbar("Old password is incorrect.", "error");
+      } else {
+        showSnackbar("Failed to change password.", "error");
+      }
     }
   };
 
