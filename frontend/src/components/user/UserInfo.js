@@ -23,10 +23,9 @@ import hidePasswordIcon from "@assets/images/icon-hide-password.svg";
 
 const UserInfo = ({ token }) => {
   const theme = useTheme();
-  // eslint-disable-next-line
-  const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
   const [showPassword, setShowPassword] = useState(false);
   const [updates, setUpdates] = useState({ username: "", email: "" });
   const [passwords, setPasswords] = useState({
@@ -35,38 +34,27 @@ const UserInfo = ({ token }) => {
     confirmPassword: "",
   });
 
-  // Mostra o nasconde la password al clic sull'icona.
-  const handleClickShowPassword = () => setShowPassword((prev) => !prev);
-
-  // Evita il comportamento predefinito quando si clicca sull'icona.
-  const handleMouseDownPassword = (event) => event.preventDefault();
-
-  // Stato per controllare lo Snackbar
   const [snackbar, setSnackbar] = useState({
     open: false,
     label: "",
     severity: "info",
   });
 
-  // Funzione per aprire lo Snackbar
-  const showSnackbar = (label, severity) => {
+  const showSnackbar = (label, severity) =>
     setSnackbar({ open: true, label, severity });
-  };
-
-  const closeSnackbar = () => {
+  const closeSnackbar = () =>
     setSnackbar({ open: false, label: "", severity: "info" });
-  };
+
+  const handleClickShowPassword = () => setShowPassword((prev) => !prev);
+  const handleMouseDownPassword = (e) => e.preventDefault();
 
   useEffect(() => {
     const getUserData = async () => {
-      setLoading(true);
       try {
         const data = await fetchUserInfo(token);
-        setUserData(data);
         setUpdates({ username: data.username, email: data.email });
-      } catch (error) {
-        console.error("Failed to fetch user data");
-        setError(error);
+      } catch (err) {
+        setError(err);
         showSnackbar("Failed to fetch user data.", "error");
       } finally {
         setLoading(false);
@@ -79,32 +67,26 @@ const UserInfo = ({ token }) => {
     try {
       await updateUserInfo(token, updates);
       showSnackbar("User info updated successfully!", "success");
-    } catch (err) {
-      console.error(err);
+    } catch {
       showSnackbar("Failed to update user info.", "error");
     }
   };
 
   const handleChangePassword = async () => {
-    // Validazione della lunghezza della nuova password
     if (passwords.newPassword.length < 8) {
       return showSnackbar(
         "Password must be at least 8 characters long!",
         "warning"
       );
     }
-
-    // Validazione della corrispondenza delle password
     if (passwords.newPassword !== passwords.confirmPassword) {
       return showSnackbar("New passwords do not match!", "warning");
     }
-
     try {
       await changePassword(token, passwords);
       showSnackbar("Password changed successfully!", "success");
-      setPasswords({ oldPassword: "", newPassword: "", confirmPassword: "" }); // Resetta i campi
-    } catch (err) {
-      console.error(err);
+      setPasswords({ oldPassword: "", newPassword: "", confirmPassword: "" });
+    } catch {
       showSnackbar("Failed to change password.", "error");
     }
   };
@@ -115,9 +97,8 @@ const UserInfo = ({ token }) => {
     try {
       await deleteUser(token);
       showSnackbar("Account deleted successfully!", "success");
-      // Esegui logout o redirezione qui se necessario
-    } catch (err) {
-      console.error(err);
+      // Perform logout or redirect as needed
+    } catch {
       showSnackbar("Failed to delete account.", "error");
     }
   };
@@ -141,34 +122,27 @@ const UserInfo = ({ token }) => {
   if (error) {
     return (
       <Box textAlign="center" mt={4}>
-        <Typography color="error">Errore: {error.error || error}</Typography>
+        <Typography color="error">
+          Error: {error.error || error.toString()}
+        </Typography>
       </Box>
     );
   }
 
-  if (loading) {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100%",
-        }}>
-        <CircularProgress
-          style={{ color: theme.palette.secondaryColors.green }}
+  const passwordAdornment = (
+    <InputAdornment position="end">
+      <IconButton
+        onClick={handleClickShowPassword}
+        onMouseDown={handleMouseDownPassword}
+        edge="end">
+        <img
+          src={showPassword ? hidePasswordIcon : showPasswordIcon}
+          alt={showPassword ? "Hide password" : "Show password"}
+          style={{ width: pxToRem(16), height: pxToRem(16) }}
         />
-      </Box>
-    );
-  }
-
-  if (error) {
-    return (
-      <Box textAlign="center" mt={4}>
-        <Typography color="error">Errore: {error.error || error}</Typography>
-      </Box>
-    );
-  }
+      </IconButton>
+    </InputAdornment>
+  );
 
   return (
     <>
@@ -179,10 +153,8 @@ const UserInfo = ({ token }) => {
           flexDirection: { xs: "column", md: "row" },
           gap: { xs: pxToRem(32), md: pxToRem(24) },
         }}>
-        <Box
-          sx={{
-            flex: 1,
-          }}>
+        {/* Change Info */}
+        <Box sx={{ flex: 1 }}>
           <Typography variant="h5" gutterBottom>
             Change Info
           </Typography>
@@ -200,10 +172,9 @@ const UserInfo = ({ token }) => {
           />
           <ButtonPrimary onClick={handleUpdate}>Update Info</ButtonPrimary>
         </Box>
-        <Box
-          sx={{
-            flex: 1,
-          }}>
+
+        {/* Change Password */}
+        <Box sx={{ flex: 1 }}>
           <Typography variant="h5" gutterBottom>
             Change Password
           </Typography>
@@ -211,20 +182,7 @@ const UserInfo = ({ token }) => {
             label="Old Password"
             type={showPassword ? "text" : "password"}
             value={passwords.oldPassword}
-            endIcon={
-              <InputAdornment position="end">
-                <IconButton
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                  edge="end">
-                  <img
-                    src={showPassword ? hidePasswordIcon : showPasswordIcon}
-                    alt={showPassword ? "Nascondi password" : "Mostra password"}
-                    style={{ width: pxToRem(16), height: pxToRem(16) }}
-                  />
-                </IconButton>
-              </InputAdornment>
-            }
+            endIcon={passwordAdornment}
             onChange={(e) =>
               setPasswords({ ...passwords, oldPassword: e.target.value })
             }
@@ -233,21 +191,7 @@ const UserInfo = ({ token }) => {
             label="New Password"
             type={showPassword ? "text" : "password"}
             value={passwords.newPassword}
-            // infoText="Passwords must be at least 8 characters"
-            endIcon={
-              <InputAdornment position="end">
-                <IconButton
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                  edge="end">
-                  <img
-                    src={showPassword ? hidePasswordIcon : showPasswordIcon}
-                    alt={showPassword ? "Nascondi password" : "Mostra password"}
-                    style={{ width: pxToRem(16), height: pxToRem(16) }}
-                  />
-                </IconButton>
-              </InputAdornment>
-            }
+            endIcon={passwordAdornment}
             onChange={(e) =>
               setPasswords({ ...passwords, newPassword: e.target.value })
             }
@@ -257,20 +201,7 @@ const UserInfo = ({ token }) => {
             type={showPassword ? "text" : "password"}
             value={passwords.confirmPassword}
             infoText="Passwords must be at least 8 characters"
-            endIcon={
-              <InputAdornment position="end">
-                <IconButton
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                  edge="end">
-                  <img
-                    src={showPassword ? hidePasswordIcon : showPasswordIcon}
-                    alt={showPassword ? "Nascondi password" : "Mostra password"}
-                    style={{ width: pxToRem(16), height: pxToRem(16) }}
-                  />
-                </IconButton>
-              </InputAdornment>
-            }
+            endIcon={passwordAdornment}
             onChange={(e) =>
               setPasswords({ ...passwords, confirmPassword: e.target.value })
             }
@@ -279,15 +210,10 @@ const UserInfo = ({ token }) => {
             Change Password
           </ButtonPrimary>
         </Box>
-        <Box
-          sx={{
-            flex: 1,
-          }}>
-          <Typography
-            variant="h5"
-            sx={{
-              marginBottom: pxToRem(22),
-            }}>
+
+        {/* Delete Account */}
+        <Box sx={{ flex: 1 }}>
+          <Typography variant="h5" sx={{ marginBottom: pxToRem(22) }}>
             Delete Account
           </Typography>
           <ButtonDestroy onClick={handleDeleteUser}>
@@ -295,7 +221,7 @@ const UserInfo = ({ token }) => {
           </ButtonDestroy>
         </Box>
       </Box>
-      {/* Snackbar per notifiche */}
+
       <Snackbar
         open={snackbar.open}
         onClose={closeSnackbar}
