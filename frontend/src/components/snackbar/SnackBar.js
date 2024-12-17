@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Snackbar as MuiSnackbar, Alert } from "@mui/material";
 
-const Snackbar = ({
+const SnackBar = ({
   open,
   onClose,
   label,
@@ -23,7 +23,7 @@ const Snackbar = ({
   );
 };
 
-Snackbar.propTypes = {
+SnackBar.propTypes = {
   open: PropTypes.bool.isRequired, // Determina se lo snackbar è visibile
   onClose: PropTypes.func.isRequired, // Funzione chiamata alla chiusura
   label: PropTypes.string.isRequired, // Messaggio da mostrare
@@ -31,4 +31,4 @@ Snackbar.propTypes = {
   duration: PropTypes.number, // Durata in millisecondi
 };
 
-export default Snackbar;
+export default SnackBar;
