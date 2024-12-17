@@ -80,10 +80,15 @@ const OverviewContent = () => {
         sx={{
           display: "flex",
           gap: { xs: pxToRem(12), sm: pxToRem(24) },
-          flexWrap: "wrap",
+          flexWrap: { xs: "wrap", sm: "nowrap" },
           marginBottom: pxToRem(32),
         }}>
-        <StatCard title="Current Balance" value="$4,836.00" />
+        <StatCard
+          backgroundColor={theme.palette.grey[900]}
+          color={theme.palette.otherColors.white}
+          title="Current Balance"
+          value="$4,836.00"
+        />
         <StatCard title="Income" value="$3,814.25" />
         <StatCard title="Expenses" value="$1,700.50" />
       </Box>
