@@ -11,13 +11,13 @@ import {
 } from "@mui/material";
 
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { pxToRem } from "@utils/pxToRem";
 import ButtonPrimary from "@components/buttons/ButtonPrimary";
 import BasicInput from "@components/inputFields/BasicInput";
 import { useTheme } from "@mui/material/styles";
 import showPasswordIcon from "@assets/images/icon-show-password.svg";
 import hidePasswordIcon from "@assets/images/icon-hide-password.svg";
+import apiClient from "@utils/apiClient";
 
 /**
  * **SignUpForm Component**
@@ -109,7 +109,7 @@ const SignUpForm = () => {
     }
 
     try {
-      const response = await axios.post(apiUrl, {
+      const response = await apiClient.post(apiUrl, {
         username,
         email,
         password,

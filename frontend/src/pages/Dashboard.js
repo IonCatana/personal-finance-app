@@ -9,6 +9,7 @@ import TransactionsContent from "@pages/TransactionsContent";
 import BudgetsContent from "@pages/BudgetsContent";
 import PotsContent from "@pages/PotsContent";
 import RecurringBillsContent from "@pages/RecurringBillsContent";
+import UserInfoContent from "@pages/UserInfoContent";
 import { useMenu } from "@context/MenuContext";
 
 /**
@@ -217,6 +218,7 @@ const Dashboard = () => {
         {activeMenu === 3 && <BudgetsContent token={userToken} />}
         {activeMenu === 4 && <PotsContent token={userToken} />}
         {activeMenu === 5 && <RecurringBillsContent token={userToken} />}
+        {activeMenu === 6 && <UserInfoContent token={userToken} />}
       </Box>
     </Box>
   );

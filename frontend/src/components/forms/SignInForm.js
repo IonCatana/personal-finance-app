@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Box, InputAdornment, IconButton, Typography } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import BasicInput from "@components/inputFields/BasicInput";
 import ButtonPrimary from "@components/buttons/ButtonPrimary";
 import showPasswordIcon from "@assets/images/icon-show-password.svg";
@@ -9,6 +8,7 @@ import hidePasswordIcon from "@assets/images/icon-hide-password.svg";
 import { pxToRem } from "@utils/pxToRem";
 import { useTheme } from "@mui/material/styles";
 import { useToken } from "@context/TokenContext";
+import apiClient from "@utils/apiClient";
 
 /**
  * **SignInForm Component**
@@ -74,7 +74,7 @@ const SignInForm = () => {
     event.preventDefault();
 
     try {
-      const response = await axios.post(apiUrl, {
+      const response = await apiClient.post(apiUrl, {
         email,
         password,
       });
@@ -160,13 +160,13 @@ const SignInForm = () => {
           <Link
             to="/signup"
             style={{
-              marginLeft: "8px",
+              marginLeft: pxToRem(8),
               typography: "textPreset4Bold",
               fontWeight: "bold",
               lineHeight: 1.5,
               color: theme.palette.grey[900],
               textDecoration: "underline",
-              textUnderlineOffset: "3px",
+              textUnderlineOffset: pxToRem(3),
             }}>
             Sign Up
           </Link>

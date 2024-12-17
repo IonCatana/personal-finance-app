@@ -7,6 +7,7 @@ import { ReactComponent as TransactionsIcon } from "@assets/images/icon-nav-tran
 import { ReactComponent as BudgetsIcon } from "@assets/images/icon-nav-budgets.svg";
 import { ReactComponent as PotsIcon } from "@assets/images/icon-nav-pots.svg";
 import { ReactComponent as RecurringBillsIcon } from "@assets/images/icon-nav-recurring-bills.svg";
+import { ReactComponent as UserIcon } from "@assets/images/user-icon.svg";
 
 /**
  * **Componente SideBarMenuList**
@@ -89,6 +90,7 @@ const menuItems = [
   { id: 3, label: "Budgets", icon: BudgetsIcon },
   { id: 4, label: "Pots", icon: PotsIcon },
   { id: 5, label: "Recurring Bills", icon: RecurringBillsIcon },
+  { id: 6, label: "User Info", icon: UserIcon },
 ];
 
 const SideBarMenuList = ({ activeMenu, setActiveMenu, isSidebarMinimized }) => {

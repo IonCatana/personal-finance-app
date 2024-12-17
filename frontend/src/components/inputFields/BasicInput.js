@@ -57,6 +57,7 @@ const BasicInput = ({
         });
       }
     }
+    // eslint-disable-next-line
   }, [value, options]);
 
   const borderColor = error
