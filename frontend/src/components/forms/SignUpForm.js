@@ -90,6 +90,8 @@ const SignUpForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState("");
+  const [passwordStrengthColor, setPasswordStrengthColor] = useState("");
 
   // Mostra o nasconde la password al clic sull'icona.
   const handleClickShowPassword = () => setShowPassword((prev) => !prev);
@@ -136,6 +138,35 @@ const SignUpForm = () => {
     }
   };
 
+  const evaluatePasswordStrength = (password) => {
+    if (!password) {
+      setPasswordStrength("");
+      setPasswordStrengthColor("");
+      return;
+    }
+
+    let strength = 0;
+
+    // Aggiungiamo punti per lunghezza, numeri, lettere maiuscole e simboli
+    if (password.length >= 8) strength += 1;
+    if (/[A-Z]/.test(password)) strength += 1;
+    if (/[a-z]/.test(password)) strength += 1;
+    if (/\d/.test(password)) strength += 1;
+    if (/[@$!%*?&#]/.test(password)) strength += 1;
+
+    // Determina il livello di forza in base al punteggio
+    if (strength <= 2) {
+      setPasswordStrength("Weak");
+      setPasswordStrengthColor(theme.palette.secondaryColors.red);
+    } else if (strength === 3) {
+      setPasswordStrength("Medium");
+      setPasswordStrengthColor(theme.palette.warning.main);
+    } else if (strength >= 4) {
+      setPasswordStrength("Strong");
+      setPasswordStrengthColor(theme.palette.success.main);
+    }
+  };
+
   return (
     <Box
       id="signup-form"
@@ -172,7 +203,11 @@ const SignUpForm = () => {
       <BasicInput
         label="Create Password"
         value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        onChange={(e) => {
+          const value = e.target.value;
+          setPassword(value);
+          evaluatePasswordStrength(value);
+        }}
         autoComplete="new-password"
         type={showPassword ? "text" : "password"}
         infoText="Passwords must be at least 8 characters"
@@ -192,6 +227,17 @@ const SignUpForm = () => {
         }
         sx={{ marginBottom: pxToRem(32) }}
       />
+
+      {passwordStrength && (
+        <Typography
+          sx={{
+            color: passwordStrengthColor,
+            typography: "textPreset4",
+            marginBottom: pxToRem(16),
+          }}>
+          Password strength: {passwordStrength}
+        </Typography>
+      )}
 
       {/* Error Message */}
       {error && (
