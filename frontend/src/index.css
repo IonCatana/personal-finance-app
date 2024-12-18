@@ -68,6 +68,13 @@ input:-webkit-autofill:active {
   -webkit-box-shadow: 0 0 0 30px #f8f4f0 inset;
 }
 
+.signin input:-webkit-autofill,
+.signin input:-webkit-autofill:hover,
+.signin input:-webkit-autofill:focus,
+.signin input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #ffff inset;
+}
+
 button {
   background: none;
   border: none;

@@ -55,6 +55,7 @@ const SignIn = () => {
     <>
       <HeaderLogo />
       <Box
+      className="signin"
         sx={{
           ...commonBoxStyles,
           minHeight: "100vh",
