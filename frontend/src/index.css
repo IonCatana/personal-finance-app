@@ -65,12 +65,7 @@ input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 30px white inset;
-}
-
-a {
-  text-decoration: none;
-  color: inherit;
+  -webkit-box-shadow: 0 0 0 30px #f8f4f0 inset;
 }
 
 button {
