@@ -101,6 +101,7 @@ const SignInForm = () => {
       }}>
       {/* Campo di input per l'email */}
       <BasicInput
+        id="email"
         label="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
@@ -111,6 +112,7 @@ const SignInForm = () => {
 
       {/* Campo di input per la password */}
       <BasicInput
+        id="password"
         label="Password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
@@ -145,6 +147,7 @@ const SignInForm = () => {
       <Box sx={{ width: "100%" }}>
         <ButtonPrimary
           type="submit"
+          disabled={!email || !password}
           sx={{ width: "100%", marginBottom: pxToRem(32) }}>
           Login
         </ButtonPrimary>

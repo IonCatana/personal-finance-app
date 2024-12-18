@@ -180,6 +180,7 @@ const SignUpForm = () => {
       }}>
       {/* Campo di input per il nome */}
       <BasicInput
+        id="name"
         label="Name"
         value={username}
         onChange={(e) => setUserName(e.target.value)}
@@ -190,6 +191,7 @@ const SignUpForm = () => {
 
       {/* Campo di input per l'email */}
       <BasicInput
+        id="email"
         label="Email"
         value={email}
         type="email"
@@ -201,6 +203,7 @@ const SignUpForm = () => {
 
       {/* Campo di input per la password */}
       <BasicInput
+        id="password"
         label="Create Password"
         value={password}
         onChange={(e) => {
@@ -216,7 +219,8 @@ const SignUpForm = () => {
             <IconButton
               onClick={handleClickShowPassword}
               onMouseDown={handleMouseDownPassword}
-              edge="end">
+              edge="end"
+              aria-label={showPassword ? "Hide password" : "Show password"}>
               <img
                 src={showPassword ? hidePasswordIcon : showPasswordIcon}
                 alt={showPassword ? "Nascondi password" : "Mostra password"}
@@ -254,6 +258,7 @@ const SignUpForm = () => {
       {/* Pulsante per inviare il modulo */}
       <ButtonPrimary
         type="submit"
+        disabled={!email || !password || !username}
         sx={{ width: "100%", marginBottom: pxToRem(32) }}>
         Create Account
       </ButtonPrimary>
