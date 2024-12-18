@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/personal-finance-app/static/css/main.2163dd21.css",
-    "main.js": "/personal-finance-app/static/js/main.247ae4ae.js",
+    "main.css": "/personal-finance-app/static/css/main.ef0ca4d3.css",
+    "main.js": "/personal-finance-app/static/js/main.682121cc.js",
     "static/js/453.8ab44547.chunk.js": "/personal-finance-app/static/js/453.8ab44547.chunk.js",
     "static/media/PublicSans-Italic-VariableFont_wght.ttf": "/personal-finance-app/static/media/PublicSans-Italic-VariableFont_wght.cafd24d15f9fdb2400a8.ttf",
     "static/media/PublicSans-VariableFont_wght.ttf": "/personal-finance-app/static/media/PublicSans-VariableFont_wght.a67b5635effc003912f6.ttf",
@@ -24,14 +24,14 @@
     "static/media/icon-nav-overview.svg": "/personal-finance-app/static/media/icon-nav-overview.9f8d42e4def43b5e84eedf638885af93.svg",
     "static/media/icon-filter-mobile.svg": "/personal-finance-app/static/media/icon-filter-mobile.d3908d1c4012bce5c7736732c811cbea.svg",
     "static/media/icon-caret-down.svg": "/personal-finance-app/static/media/icon-caret-down.32cb7aae29acc2ac4da16590340cb2f5.svg",
-    "static/media/user-icon.svg": "/personal-finance-app/static/media/user-icon.d2f77513cd1459c66b16b8399622501b.svg",
+    "static/media/user-icon.svg": "/personal-finance-app/static/media/user-icon.b8c605e037f5a635b24d49f38dfac461.svg",
     "static/media/logo-small.svg": "/personal-finance-app/static/media/logo-small.f4e94d5e96823f6a2de8b906be42badb.svg",
-    "main.2163dd21.css.map": "/personal-finance-app/static/css/main.2163dd21.css.map",
-    "main.247ae4ae.js.map": "/personal-finance-app/static/js/main.247ae4ae.js.map",
+    "main.ef0ca4d3.css.map": "/personal-finance-app/static/css/main.ef0ca4d3.css.map",
+    "main.682121cc.js.map": "/personal-finance-app/static/js/main.682121cc.js.map",
     "453.8ab44547.chunk.js.map": "/personal-finance-app/static/js/453.8ab44547.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.2163dd21.css",
-    "static/js/main.247ae4ae.js"
+    "static/css/main.ef0ca4d3.css",
+    "static/js/main.682121cc.js"
   ]
 }
