@@ -22,18 +22,26 @@ const SideBarMenuList = ({ activeMenu, setActiveMenu, isSidebarMinimized }) => {
   const [currentActive, setCurrentActive] = useState(activeMenu);
 
   const handleMenuClick = (targetId) => {
-    let step = currentActive < targetId ? 1 : -1;
-    let tempActive = currentActive;
+    const totalDuration = 100;
+    const startTime = performance.now();
+    const startMenu = currentActive;
+    const distance = targetId - startMenu;
 
-    const transition = setInterval(() => {
-      tempActive += step;
-      setCurrentActive(tempActive);
+    const animate = (currentTime) => {
+      const elapsedTime = currentTime - startTime;
+      const progress = Math.min(elapsedTime / totalDuration, 1);
 
-      if (tempActive === targetId) {
-        clearInterval(transition);
+      const currentMenu = Math.round(startMenu + progress * distance);
+      setCurrentActive(currentMenu);
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      } else {
         setActiveMenu(targetId);
       }
-    }, 50);
+    };
+
+    requestAnimationFrame(animate);
   };
 
   return (
