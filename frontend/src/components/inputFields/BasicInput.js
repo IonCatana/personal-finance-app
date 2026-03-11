@@ -27,6 +27,8 @@ const BasicInput = ({
   ...props
 }) => {
   const theme = useTheme();
+  const mobileInputScale = 0.75; // 12 / 16
+  const mobileScaledWidth = `${100 / mobileInputScale}%`; // 133.3333%
   const [currentSelection, setCurrentSelection] = useState({
     value: "",
     label: "",
@@ -167,6 +169,12 @@ const BasicInput = ({
                 alignItems: "center",
                 width: "100%",
                 padding: 0,
+                transformOrigin: "left center",
+                [theme.breakpoints.down("md")]: {
+                  fontSize: pxToRem(16),
+                  transform: `scale(${mobileInputScale})`,
+                  width: mobileScaledWidth,
+                },
               },
             }}
             IconComponent={() => (
@@ -209,14 +217,23 @@ const BasicInput = ({
             placeholder={props.placeHolder}
             value={value}
             onChange={onChange}
-            sx={{
-              typography: "textPreset4",
-              color: theme.palette.grey[900],
-              "&::placeholder": {
-                color: theme.palette.beige[500],
-                opacity: 1,
-              },
-            }}
+              sx={{
+                typography: "textPreset4",
+                color: theme.palette.grey[900],
+                "& .MuiInputBase-input": {
+                  display: "block",
+                  transformOrigin: "left center",
+                  [theme.breakpoints.down("md")]: {
+                    fontSize: pxToRem(16),
+                    transform: `scale(${mobileInputScale})`,
+                    width: mobileScaledWidth,
+                  },
+                  "&::placeholder": {
+                    color: theme.palette.beige[500],
+                    opacity: 1,
+                  },
+                },
+              }}
             {...props}
           />
         )}
