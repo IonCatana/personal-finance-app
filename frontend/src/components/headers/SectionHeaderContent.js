@@ -15,6 +15,7 @@ const SectionHeaderContent = ({
   buttonComponent: ButtonComponent,
   onAddItem,
   modalType,
+  balanceSummary,
   showLogout,
   onLogout,
 }) => {
@@ -82,8 +83,9 @@ const SectionHeaderContent = ({
         onClose={handleCloseModal}
         type={modalType}
         data={null}
-        onSubmit={(newPotData) => {
-          onAddItem(newPotData);
+        balanceSummary={balanceSummary}
+        onSubmit={async (newPotData) => {
+          await onAddItem(newPotData);
           handleCloseModal();
         }}
       />
@@ -98,6 +100,7 @@ SectionHeaderContent.propTypes = {
   buttonComponent: PropTypes.elementType,
   onAddItem: PropTypes.func,
   modalType: PropTypes.oneOf(["add", "addBudget"]),
+  balanceSummary: PropTypes.object,
 };
 
 export default SectionHeaderContent;

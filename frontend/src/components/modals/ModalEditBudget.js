@@ -10,6 +10,7 @@ import { categoryOptions } from "@components/category/categoryOptions";
 
 const ModalEditBudget = ({
   data = {},
+  balanceSummary,
   onColorChange,
   onCategoryChange,
   onSubmit,
@@ -19,6 +20,13 @@ const ModalEditBudget = ({
   const [maximum, setMaximum] = useState(data?.maximum?.toString() || "");
   const [categoryValue, setCategoryValue] = useState(data?.category || "");
   const [colorValue, setColorValue] = useState(data?.color || "");
+  const currentMaximum = Number(data?.maximum) || 0;
+  const maximumValue = parseFloat(maximum) || 0;
+  const availableToAllocate = Math.max(
+    (Number(balanceSummary?.current) || 0) + currentMaximum,
+    0
+  );
+  const exceedsAvailableBalance = maximumValue > availableToAllocate;
 
   const handleColorChange = (selectedOption) => {
     setColorValue(selectedOption.value); // Imposta il valore del colore selezionato
@@ -35,10 +43,25 @@ const ModalEditBudget = ({
       alert("All fields are required.");
       return;
     }
+
+    if (maximumValue <= 0) {
+      alert("Maximum spend must be greater than 0.");
+      return;
+    }
+
+    if (maximumValue > availableToAllocate) {
+      alert(
+        `This budget can be set up to $${availableToAllocate.toFixed(
+          2
+        )} based on the available current balance.`
+      );
+      return;
+    }
+
     onSubmit({
       ...data,
       category: categoryValue,
-      maximum: parseFloat(maximum),
+      maximum: maximumValue,
       color: colorValue,
     });
   };
@@ -70,6 +93,13 @@ const ModalEditBudget = ({
         placeholder="e.g. 2000"
         value={maximum}
         onChange={(e) => setMaximum(e.target.value)}
+        error={exceedsAvailableBalance}
+        errorText={`Available for this budget: $${availableToAllocate.toFixed(
+          2
+        )}`}
+        infoText={`Available for this budget: $${availableToAllocate.toFixed(
+          2
+        )}`}
         sx={{
           marginBottom: pxToRem(16),
           "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":
@@ -100,6 +130,7 @@ const ModalEditBudget = ({
 
 ModalEditBudget.propTypes = {
   data: PropTypes.object.isRequired,
+  balanceSummary: PropTypes.object,
   onColorChange: PropTypes.func.isRequired,
   onCategoryChange: PropTypes.func.isRequired,
   buttonLabel: PropTypes.string,

@@ -17,12 +17,14 @@ import {
 } from "@components/budget/apiBudgets";
 import { fetchTransactions } from "@components/transactions/apiTransactions";
 import ModalCrud from "@components/modals/ModalCrud";
+import { getBalance } from "@components/balance/apiBalance";
 
 const BudgetsContent = () => {
   const theme = useTheme();
 
   const [budgets, setBudgets] = React.useState([]);
   const [transactions, setTransactions] = React.useState([]);
+  const [balanceSummary, setBalanceSummary] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
   const [modalType, setModalType] = React.useState(null);
   const [selectedBudget, setSelectedBudget] = React.useState(null);
@@ -34,12 +36,14 @@ const BudgetsContent = () => {
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const [budgetsData, transactionsData] = await Promise.all([
+        const [budgetsData, transactionsData, balanceData] = await Promise.all([
           getBudgets(),
           fetchTransactions(),
+          getBalance(),
         ]);
         setBudgets(budgetsData || []);
         setTransactions(transactionsData || []);
+        setBalanceSummary(balanceData);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -49,42 +53,56 @@ const BudgetsContent = () => {
     fetchData();
   }, []);
 
+  const refreshBalance = async () => {
+    const balanceData = await getBalance();
+    setBalanceSummary(balanceData);
+    return balanceData;
+  };
+
   const handleAddBudget = async (newBudgetData) => {
+    const newBudget = await createBudget(newBudgetData);
+    setBudgets((prev) => [...prev, newBudget]);
+
     try {
-      const newBudget = await createBudget(newBudgetData);
-      setBudgets((prev) => [...prev, newBudget]);
+      await refreshBalance();
     } catch (error) {
-      console.error("Error creating budget:", error);
+      console.error("Error refreshing balance:", error);
     }
+
+    return newBudget;
   };
 
   const handleUpdate = async (updatedBudget) => {
+    const updatedBudgetData = await updateBudget(updatedBudget._id, updatedBudget);
+    setBudgets((prev) =>
+      prev.map((budget) =>
+        budget._id === updatedBudget._id ? updatedBudgetData : budget
+      )
+    );
+
     try {
-      const updatedBudgetData = await updateBudget(
-        updatedBudget._id,
-        updatedBudget
-      );
-      setBudgets((prev) =>
-        prev.map((budget) =>
-          budget._id === updatedBudget._id ? updatedBudgetData : budget
-        )
-      );
-      setModalType(null);
-      setSelectedBudget(null);
+      await refreshBalance();
     } catch (error) {
-      console.error("Error updating budget:", error);
+      console.error("Error refreshing balance:", error);
     }
+
+    setModalType(null);
+    setSelectedBudget(null);
+    return updatedBudgetData;
   };
 
   const handleDelete = async (id) => {
+    await deleteBudget(id);
+    setBudgets((prev) => prev.filter((budget) => budget._id !== id));
+
     try {
-      await deleteBudget(id);
-      setBudgets((prev) => prev.filter((budget) => budget._id !== id));
-      setModalType(null);
-      setSelectedBudget(null);
+      await refreshBalance();
     } catch (error) {
-      console.error("Error deleting budget:", error);
+      console.error("Error refreshing balance:", error);
     }
+
+    setModalType(null);
+    setSelectedBudget(null);
   };
 
   const handleEditModalOpen = (budget) => {
@@ -128,6 +146,7 @@ const BudgetsContent = () => {
         buttonComponent={ButtonPrimary}
         modalType="addBudget"
         onAddItem={handleAddBudget}
+        balanceSummary={balanceSummary}
       />
       <Box
         className="budgets-content"
@@ -244,6 +263,7 @@ const BudgetsContent = () => {
         onClose={handleModalClose}
         type={modalType}
         data={selectedBudget}
+        balanceSummary={balanceSummary}
         onSubmit={
           modalType === "editBudget"
             ? handleUpdate

@@ -6,33 +6,49 @@ import ButtonPrimary from "@components/buttons/ButtonPrimary";
 import BasicInput from "@components/inputFields/BasicInput";
 import { useTheme } from "@mui/material/styles";
 
-const ModalAddMoney = ({ data, onSubmit, onCancel }) => {
+const ModalAddMoney = ({ data, balanceSummary, onSubmit, onCancel }) => {
   const theme = useTheme();
   const [amount, setAmount] = useState("");
 
   const { total, target } = data;
   const currentPercentage = (total / target) * 100;
-  const addedPercentage = ((parseFloat(amount) || 0) / target) * 100; // Percentuale dell'importo aggiunto
+  const addedPercentage = ((parseFloat(amount) || 0) / target) * 100;
   const newTotal = total + (parseFloat(amount) || 0);
-  // const newPercentage = Math.min((newTotal / target) * 100, 100);
-
-  // Calcola l'importo massimo che può essere aggiunto senza superare il 100%
-  const maxAmount = target - total;
+  const availableToAllocate = Math.max(Number(balanceSummary?.current) || 0, 0);
+  const maxAmount = Math.max(
+    Math.min(target - total, availableToAllocate),
+    0
+  );
 
   const handleAmountChange = (e) => {
     let value = parseFloat(e.target.value) || 0;
+
     if (value > maxAmount) {
-      value = maxAmount; // Imposta automaticamente al massimo aggiungibile
+      value = maxAmount;
     }
+
     setAmount(value.toString());
   };
 
   const handleSubmit = () => {
-    if (!amount || isNaN(amount) || amount <= 0) {
+    const parsedAmount = parseFloat(amount);
+
+    if (!amount || isNaN(parsedAmount) || parsedAmount <= 0) {
       alert("Please enter a valid amount to add.");
       return;
     }
-    onSubmit({ ...data, total: total + parseFloat(amount) });
+
+    if (maxAmount <= 0) {
+      alert("There is no available current balance to add money right now.");
+      return;
+    }
+
+    if (parsedAmount > maxAmount) {
+      alert(`You can add up to $${maxAmount.toFixed(2)}.`);
+      return;
+    }
+
+    onSubmit({ ...data, total: total + parsedAmount });
   };
 
   return (
@@ -45,7 +61,6 @@ const ModalAddMoney = ({ data, onSubmit, onCancel }) => {
         }}>
         Add money to this pot to achieve your saving goals.
       </Typography>
-      {/* Progress Section */}
       <Box sx={{ marginBottom: pxToRem(24) }}>
         <Box
           sx={{
@@ -75,10 +90,9 @@ const ModalAddMoney = ({ data, onSubmit, onCancel }) => {
             height: pxToRem(8),
             borderRadius: pxToRem(4),
           }}>
-          {/* Barra del totale attuale (nero) */}
           <LinearProgress
             variant="determinate"
-            value={currentPercentage} // Percentuale attuale
+            value={currentPercentage}
             sx={{
               height: pxToRem(8),
               borderRadius: `${pxToRem(4)} ${pxToRem(4)} ${pxToRem(
@@ -86,14 +100,13 @@ const ModalAddMoney = ({ data, onSubmit, onCancel }) => {
               )} ${pxToRem(4)}`,
               backgroundColor: theme.palette.beige[100],
               "& .MuiLinearProgress-bar": {
-                backgroundColor: "black", // Colore del totale attuale
+                backgroundColor: "black",
                 borderRadius: `${pxToRem(4)} ${pxToRem(0)} ${pxToRem(
                   0
                 )} ${pxToRem(4)}`,
               },
             }}
           />
-          {/* Barra dell'incremento (verde o colore del tema) */}
           <Box
             sx={{
               position: "absolute",
@@ -112,7 +125,6 @@ const ModalAddMoney = ({ data, onSubmit, onCancel }) => {
             }}
           />
         </Box>
-        {/* Percentuale e Target */}
         <Box
           sx={{
             display: "flex",
@@ -137,7 +149,6 @@ const ModalAddMoney = ({ data, onSubmit, onCancel }) => {
           </Typography>
         </Box>
       </Box>
-      {/* Amount Input */}
       <BasicInput
         fullWidth
         label="Amount to Add"
@@ -146,6 +157,9 @@ const ModalAddMoney = ({ data, onSubmit, onCancel }) => {
         value={amount}
         onChange={handleAmountChange}
         placeholder="e.g. 100"
+        error={maxAmount === 0}
+        errorText="No available current balance to allocate."
+        infoText={`Available to move: $${maxAmount.toFixed(2)}`}
         sx={{
           marginBottom: pxToRem(20),
           "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":
@@ -154,7 +168,7 @@ const ModalAddMoney = ({ data, onSubmit, onCancel }) => {
               margin: 0,
             },
           "& input[type=number]": {
-            MozAppearance: "textfield", // Per Firefox
+            MozAppearance: "textfield",
           },
         }}
       />
@@ -167,6 +181,7 @@ const ModalAddMoney = ({ data, onSubmit, onCancel }) => {
 
 ModalAddMoney.propTypes = {
   data: PropTypes.object.isRequired,
+  balanceSummary: PropTypes.object,
   onSubmit: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
 };

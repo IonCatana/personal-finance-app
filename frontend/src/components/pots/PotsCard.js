@@ -16,6 +16,7 @@ const PotsCard = ({
   target,
   percentage,
   color,
+  balanceSummary,
   token,
   onAddMoney,
   onWithdraw,
@@ -208,36 +209,23 @@ const PotsCard = ({
         onClose={handleCloseModal}
         type={modalType || undefined}
         data={modalData} // Passa i dati del pot
+        balanceSummary={balanceSummary}
         onSubmit={async (updatedData) => {
-          try {
-            if (modalType === "edit") {
-              const updatedPot = await updatePot(
-                modalData._id,
-                updatedData,
-                token
-              );
-              onUpdatePot(updatedPot); // Notifica il genitore
-            } else if (modalType === "delete") {
-              await deletePot(modalData._id, token);
-              onDeletePot(modalData._id); // Notifica il genitore
-            } else if (modalType === "addMoney") {
-              const updatedPot = await updatePot(
-                modalData._id,
-                updatedData,
-                token
-              );
-              onUpdatePot(updatedPot); // Aggiorna il totale
-            } else if (modalType === "withdraw") {
-              const updatedPot = await updatePot(
-                modalData._id,
-                updatedData,
-                token
-              );
-              onUpdatePot(updatedPot); // Aggiorna il totale sottratto
-            }
-          } catch (error) {
-            console.error("Error in CRUD operation:", error);
-          } finally {
+          if (modalType === "edit") {
+            const updatedPot = await updatePot(modalData._id, updatedData, token);
+            await onUpdatePot(updatedPot);
+            handleCloseModal();
+          } else if (modalType === "delete") {
+            await deletePot(modalData._id, token);
+            await onDeletePot(modalData._id);
+            handleCloseModal();
+          } else if (modalType === "addMoney") {
+            const updatedPot = await updatePot(modalData._id, updatedData, token);
+            await onUpdatePot(updatedPot);
+            handleCloseModal();
+          } else if (modalType === "withdraw") {
+            const updatedPot = await updatePot(modalData._id, updatedData, token);
+            await onUpdatePot(updatedPot);
             handleCloseModal();
           }
         }}
@@ -252,6 +240,7 @@ PotsCard.propTypes = {
   target: PropTypes.number.isRequired,
   percentage: PropTypes.number.isRequired,
   color: PropTypes.string.isRequired,
+  balanceSummary: PropTypes.object,
   token: PropTypes.string.isRequired,
   onUpdatePot: PropTypes.func.isRequired,
   onDeletePot: PropTypes.func.isRequired,

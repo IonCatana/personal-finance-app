@@ -10,6 +10,7 @@ import { categoryOptions } from "@components/category/categoryOptions";
 
 const ModalAdd = ({
   data,
+  balanceSummary,
   onColorChange,
   onCategoryChange,
   onSubmit,
@@ -23,6 +24,9 @@ const ModalAdd = ({
   const [colorValue, setColorValue] = useState(
     data?.color || colorOptions[0]?.value
   );
+  const availableToAllocate = Math.max(Number(balanceSummary?.current) || 0, 0);
+  const maximumValue = parseFloat(maximum) || 0;
+  const exceedsAvailableBalance = maximumValue > availableToAllocate;
 
   const handleColorChange = (selectedOption) => {
     setColorValue(selectedOption.value); // Imposta il valore del colore selezionato
@@ -39,9 +43,24 @@ const ModalAdd = ({
       alert("All fields are required.");
       return;
     }
+
+    if (maximumValue <= 0) {
+      alert("Maximum spend must be greater than 0.");
+      return;
+    }
+
+    if (maximumValue > availableToAllocate) {
+      alert(
+        `You can allocate up to $${availableToAllocate.toFixed(
+          2
+        )} with the current balance available.`
+      );
+      return;
+    }
+
     onSubmit({
       category: categoryValue,
-      maximum: parseFloat(maximum),
+      maximum: maximumValue,
       color: colorValue,
     });
   };
@@ -73,6 +92,9 @@ const ModalAdd = ({
         placeholder="e.g. 2000"
         value={maximum}
         onChange={(e) => setMaximum(e.target.value)}
+        error={exceedsAvailableBalance}
+        errorText={`Available to allocate: $${availableToAllocate.toFixed(2)}`}
+        infoText={`Remaining available: $${availableToAllocate.toFixed(2)}`}
         sx={{
           marginBottom: pxToRem(16),
           "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":
@@ -103,6 +125,7 @@ const ModalAdd = ({
 
 ModalAdd.propTypes = {
   data: PropTypes.object,
+  balanceSummary: PropTypes.object,
   onColorChange: PropTypes.func.isRequired,
   onCategoryChange: PropTypes.func.isRequired,
   buttonLabel: PropTypes.string,

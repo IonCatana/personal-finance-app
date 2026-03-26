@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { Modal, Box, Typography } from "@mui/material";
 import { pxToRem } from "@utils/pxToRem";
@@ -20,18 +20,19 @@ const ModalCrud = ({
   options,
   type = "add",
   data,
+  balanceSummary,
   onSubmit,
 }) => {
   const theme = useTheme();
 
-  const isDelete = useMemo(() => type === "delete", [type]);
-  const isEdit = useMemo(() => type === "edit", [type]);
-  const isAdd = useMemo(() => type === "add", [type]);
-  const isAddMoney = useMemo(() => type === "addMoney", [type]);
-  const isWithdraw = useMemo(() => type === "withdraw", [type]);
-  const isAddBudget = useMemo(() => type === "addBudget", [type]);
-  const isEditBudget = useMemo(() => type === "editBudget", [type]);
-  const isDeleteBudget = useMemo(() => type === "deleteBudget", [type]);
+  const isDelete = type === "delete";
+  const isEdit = type === "edit";
+  const isAdd = type === "add";
+  const isAddMoney = type === "addMoney";
+  const isWithdraw = type === "withdraw";
+  const isAddBudget = type === "addBudget";
+  const isEditBudget = type === "editBudget";
+  const isDeleteBudget = type === "deleteBudget";
 
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -58,7 +59,24 @@ const ModalCrud = ({
     setSnackbar({ ...snackbar, open: false });
   };
 
-  const renderTitle = useMemo(() => {
+  const getApiErrorMessage = (error, fallbackMessage) =>
+    error?.response?.data?.error || error?.message || fallbackMessage;
+
+  const submitWithFeedback = (action, successMessage, fallbackErrorMessage) => {
+    Promise.resolve()
+      .then(action)
+      .then(() => {
+        handleSnackbarOpen(successMessage, "success");
+      })
+      .catch((error) => {
+        handleSnackbarOpen(
+          getApiErrorMessage(error, fallbackErrorMessage),
+          "error"
+        );
+      });
+  };
+
+  const renderTitle = () => {
     if (isAdd) return "Add New Pot";
     if (isEdit) return `Edit '${data?.name}' Pot`;
     if (isDelete) return `Delete '${data?.name}?'?`;
@@ -67,19 +85,10 @@ const ModalCrud = ({
     if (isAddBudget) return "Add Budget";
     if (isEditBudget) return `Edit Budget '${data?.category}'`;
     if (isDeleteBudget) return `Delete Budget '${data?.category}'?`;
-  }, [
-    isAdd,
-    isEdit,
-    isDelete,
-    isAddMoney,
-    isWithdraw,
-    isAddBudget,
-    isEditBudget,
-    isDeleteBudget,
-    data,
-  ]);
+    return "Manage Item";
+  };
 
-  const renderContent = useMemo(() => {
+  const renderContent = () => {
     if (!type) {
       return (
         <Typography>
@@ -93,13 +102,17 @@ const ModalCrud = ({
         <ModalAddBudget
           data={data || {}}
           options={options || []}
+          balanceSummary={balanceSummary}
           selectedColor={selectedColor}
           selectedCategory={selectedCategory}
           onColorChange={handleColorChange}
           onCategoryChange={handleCategoryChange}
           onSubmit={(newData) => {
-            onSubmit(newData);
-            handleSnackbarOpen("Budget added successfully!", "success");
+            submitWithFeedback(
+              () => onSubmit(newData),
+              "Budget added successfully!",
+              "Unable to add the budget."
+            );
           }}
           buttonLabel="Add Budget"
         />
@@ -114,8 +127,11 @@ const ModalCrud = ({
           selectedColor={selectedColor} // Colore scelto
           onColorChange={handleColorChange} // Callback per aggiornare il colore
           onSubmit={(newData) => {
-            onSubmit(newData);
-            handleSnackbarOpen("Pot added successfully!", "success");
+            submitWithFeedback(
+              () => onSubmit(newData),
+              "Pot added successfully!",
+              "Unable to add the pot."
+            );
           }} // Passa i dati raccolti al genitore
           buttonLabel="Add Pot"
         />
@@ -126,13 +142,17 @@ const ModalCrud = ({
       return (
         <ModalEditBudget
           data={data}
+          balanceSummary={balanceSummary}
           selectedColor={selectedColor}
           selectedCategory={selectedCategory}
           onColorChange={handleColorChange}
           onCategoryChange={handleCategoryChange}
           onSubmit={(updatedData) => {
-            onSubmit({ ...updatedData, _id: data._id });
-            handleSnackbarOpen("Budget updated successfully!", "success");
+            submitWithFeedback(
+              () => onSubmit({ ...updatedData, _id: data._id }),
+              "Budget updated successfully!",
+              "Unable to update the budget."
+            );
           }}
           buttonLabel="Save Changes"
         />
@@ -146,8 +166,11 @@ const ModalCrud = ({
           selectedColor={selectedColor}
           onColorChange={handleColorChange}
           onSubmit={(updatedData) => {
-            onSubmit({ ...updatedData, _id: data._id });
-            handleSnackbarOpen("Pot updated successfully!", "success");
+            submitWithFeedback(
+              () => onSubmit({ ...updatedData, _id: data._id }),
+              "Pot updated successfully!",
+              "Unable to update the pot."
+            );
           }}
           buttonLabel="Save Changes"
         />
@@ -159,12 +182,14 @@ const ModalCrud = ({
         <ModalDelete
           data={data}
           onSubmit={() => {
-            handleSnackbarOpen("Pot deleted successfully!", "success");
-            // Ritarda la chiusura della modale per permettere allo Snackbar di mostrarsi
-            setTimeout(() => {
-              onSubmit(data);
-              onClose();
-            }, 3000); // Mostra lo Snackbar per 3 secondi
+            submitWithFeedback(
+              async () => {
+                await onSubmit(data);
+                onClose();
+              },
+              "Pot deleted successfully!",
+              "Unable to delete the pot."
+            );
           }}
           onCancel={onClose}
         />
@@ -176,12 +201,14 @@ const ModalCrud = ({
         <ModalDeleteBudget
           data={data}
           onSubmit={() => {
-            handleSnackbarOpen("Budget deleted successfully!", "success");
-            // Ritarda la chiusura della modale per permettere allo Snackbar di mostrarsi
-            setTimeout(() => {
-              onSubmit(data);
-              onClose();
-            }, 3000); // Mostra lo Snackbar per 3 secondi
+            submitWithFeedback(
+              async () => {
+                await onSubmit(data);
+                onClose();
+              },
+              "Budget deleted successfully!",
+              "Unable to delete the budget."
+            );
           }}
           onCancel={onClose}
         />
@@ -192,9 +219,13 @@ const ModalCrud = ({
       return (
         <ModalAddMoney
           data={data}
+          balanceSummary={balanceSummary}
           onSubmit={(updatedData) => {
-            onSubmit(updatedData);
-            handleSnackbarOpen("Money added successfully!", "success");
+            submitWithFeedback(
+              () => onSubmit(updatedData),
+              "Money added successfully!",
+              "Unable to move money into the pot."
+            );
           }}
           onCancel={onClose} // Chiudi la modale senza modifiche
         />
@@ -206,31 +237,18 @@ const ModalCrud = ({
         <ModalWithdraw
           data={data}
           onSubmit={(updatedData) => {
-            onSubmit({ ...updatedData, _id: data._id });
-            handleSnackbarOpen("Money withdrawn successfully!", "success");
+            submitWithFeedback(
+              () => onSubmit({ ...updatedData, _id: data._id }),
+              "Money withdrawn successfully!",
+              "Unable to withdraw money from the pot."
+            );
           }}
         />
       );
     }
 
     return <Typography>Invalid modal type provided</Typography>;
-  }, [
-    type,
-    data,
-    options,
-    onClose,
-    selectedColor,
-    selectedCategory,
-    isAdd,
-    isEdit,
-    isDelete,
-    isAddMoney,
-    isWithdraw,
-    isAddBudget,
-    isEditBudget,
-    isDeleteBudget,
-    onSubmit,
-  ]);
+  };
 
   return (
     <>
@@ -278,7 +296,7 @@ const ModalCrud = ({
                 lineHeight: theme.typography.textPreset1.lineHeight,
                 color: theme.palette.grey[900], // Colore dinamico
               }}>
-              {renderTitle}
+              {renderTitle()}
             </Typography>
             <Box
               sx={{
@@ -293,7 +311,7 @@ const ModalCrud = ({
           </Box>
 
           {/* Contenuto dinamico */}
-          {renderContent}
+          {renderContent()}
         </Box>
       </Modal>
       {/* Snackbar */}
@@ -321,6 +339,7 @@ ModalCrud.propTypes = {
     "deleteBudget",
   ]),
   data: PropTypes.object,
+  balanceSummary: PropTypes.object,
   onSubmit: PropTypes.func.isRequired,
   options: PropTypes.array,
 };
