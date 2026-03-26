@@ -10,6 +10,25 @@ const Balance = require("@models/Balance");
 
 const data = require("./data.json");
 
+const roundCurrency = (value) => Math.round((Number(value) + Number.EPSILON) * 100) / 100;
+
+const balanceFromTransactions = data.transactions.reduce(
+  (summary, transaction) => {
+    const amount = Number(transaction.amount) || 0;
+
+    if (amount > 0) {
+      summary.income += amount;
+    }
+
+    if (amount < 0) {
+      summary.expenses += Math.abs(amount);
+    }
+
+    return summary;
+  },
+  { income: 0, expenses: 0 }
+);
+
 mongoose
   .connect(process.env.MONGO_URI, {
     // useNewUrlParser: true,
@@ -39,8 +58,8 @@ const seedDatabase = async () => {
     await Balance.create({
       userId: user._id,
       current: data.balance.current,
-      income: data.balance.income,
-      expenses: data.balance.expenses,
+      income: roundCurrency(balanceFromTransactions.income),
+      expenses: roundCurrency(balanceFromTransactions.expenses),
     });
 
     // Inserimento delle transazioni

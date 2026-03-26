@@ -37,14 +37,26 @@ function App() {
   useEffect(() => {
     const rootElement = document.documentElement;
     const viewportMeta = document.querySelector('meta[name="viewport"]');
+    let lastWindowScrollY = 0;
+    let lastContainerScrollTop = 0;
+    let activeScrollContainer = null;
+
     const defaultViewportContent =
-      "width=device-width, initial-scale=1, viewport-fit=cover";
+      "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover";
     const iosViewportContent =
-      "width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover";
+      "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover";
     const isIOSDevice =
       /iPad|iPhone|iPod/.test(window.navigator.userAgent) ||
       (window.navigator.platform === "MacIntel" &&
         window.navigator.maxTouchPoints > 1);
+    const isFocusableField = (element) =>
+      element instanceof HTMLElement &&
+      ["INPUT", "TEXTAREA", "SELECT"].includes(element.tagName) &&
+      !element.hasAttribute("readonly") &&
+      !element.hasAttribute("disabled");
+    const getScrollContainer = (element) =>
+      element?.closest?.(".main-content, .signin") ||
+      document.querySelector(".main-content, .signin");
 
     const setAppHeight = () => {
       const viewportHeight =
@@ -55,6 +67,43 @@ function App() {
     const restoreViewportHeight = () => {
       window.setTimeout(setAppHeight, 50);
       window.setTimeout(setAppHeight, 250);
+    };
+
+    const handleFocusIn = (event) => {
+      if (!isFocusableField(event.target)) {
+        return;
+      }
+
+      lastWindowScrollY = window.scrollY;
+      activeScrollContainer = getScrollContainer(event.target);
+      lastContainerScrollTop = activeScrollContainer?.scrollTop || 0;
+
+      window.setTimeout(setAppHeight, 150);
+      window.setTimeout(setAppHeight, 300);
+    };
+
+    const handleFocusOut = (event) => {
+      if (!isFocusableField(event.target)) {
+        return;
+      }
+
+      restoreViewportHeight();
+
+      window.setTimeout(() => {
+        if (activeScrollContainer) {
+          activeScrollContainer.scrollTop = lastContainerScrollTop;
+        }
+
+        window.scrollTo(0, lastWindowScrollY);
+      }, 120);
+
+      window.setTimeout(() => {
+        if (activeScrollContainer) {
+          activeScrollContainer.scrollTop = lastContainerScrollTop;
+        }
+
+        window.scrollTo(0, lastWindowScrollY);
+      }, 320);
     };
 
     if (viewportMeta) {
@@ -69,13 +118,15 @@ function App() {
     window.addEventListener("resize", setAppHeight);
     window.addEventListener("orientationchange", setAppHeight);
     window.visualViewport?.addEventListener("resize", setAppHeight);
-    document.addEventListener("focusout", restoreViewportHeight);
+    document.addEventListener("focusin", handleFocusIn);
+    document.addEventListener("focusout", handleFocusOut);
 
     return () => {
       window.removeEventListener("resize", setAppHeight);
       window.removeEventListener("orientationchange", setAppHeight);
       window.visualViewport?.removeEventListener("resize", setAppHeight);
-      document.removeEventListener("focusout", restoreViewportHeight);
+      document.removeEventListener("focusin", handleFocusIn);
+      document.removeEventListener("focusout", handleFocusOut);
 
       if (viewportMeta) {
         viewportMeta.setAttribute("content", defaultViewportContent);
