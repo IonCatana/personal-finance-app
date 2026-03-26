@@ -95,7 +95,7 @@ const Dashboard = () => {
       className="dashboard"
       sx={{
         width: "100%",
-        height: "100vh",
+        height: "var(--app-height, 100dvh)",
         display: "flex",
         flexDirection: { xs: "column", md: "row" },
         position: "relative",
@@ -204,7 +204,10 @@ const Dashboard = () => {
           display: "flex",
           flexDirection: "column",
           flex: 1,
-          height: { xs: "calc(100% - 74px)", md: "100%" },
+          height: {
+            xs: `calc(var(--app-height, 100dvh) - ${pxToRem(74)})`,
+            md: "100%",
+          },
           marginBottom: { xs: pxToRem(74), sm: pxToRem(74), md: pxToRem(0) },
           padding: {
             xs: `${pxToRem(24)} ${pxToRem(16)}`,

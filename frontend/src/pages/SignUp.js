@@ -60,7 +60,7 @@ const SignIn = () => {
       className="signin"
         sx={{
           ...commonBoxStyles,
-          minHeight: "100vh",
+          minHeight: "var(--app-height, 100dvh)",
           padding: {
             xs: `${pxToRem(20)} ${pxToRem(16)}`,
             md: `${pxToRem(0)} ${pxToRem(20)}`,

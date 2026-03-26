@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter } from "react-router-dom";
 import {
   ThemeProvider,
@@ -34,6 +34,55 @@ import AppRoutes from "./routes/Routes";
  */
 
 function App() {
+  useEffect(() => {
+    const rootElement = document.documentElement;
+    const viewportMeta = document.querySelector('meta[name="viewport"]');
+    const defaultViewportContent =
+      "width=device-width, initial-scale=1, viewport-fit=cover";
+    const iosViewportContent =
+      "width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover";
+    const isIOSDevice =
+      /iPad|iPhone|iPod/.test(window.navigator.userAgent) ||
+      (window.navigator.platform === "MacIntel" &&
+        window.navigator.maxTouchPoints > 1);
+
+    const setAppHeight = () => {
+      const viewportHeight =
+        window.visualViewport?.height || window.innerHeight;
+      rootElement.style.setProperty("--app-height", `${viewportHeight}px`);
+    };
+
+    const restoreViewportHeight = () => {
+      window.setTimeout(setAppHeight, 50);
+      window.setTimeout(setAppHeight, 250);
+    };
+
+    if (viewportMeta) {
+      viewportMeta.setAttribute(
+        "content",
+        isIOSDevice ? iosViewportContent : defaultViewportContent
+      );
+    }
+
+    setAppHeight();
+
+    window.addEventListener("resize", setAppHeight);
+    window.addEventListener("orientationchange", setAppHeight);
+    window.visualViewport?.addEventListener("resize", setAppHeight);
+    document.addEventListener("focusout", restoreViewportHeight);
+
+    return () => {
+      window.removeEventListener("resize", setAppHeight);
+      window.removeEventListener("orientationchange", setAppHeight);
+      window.visualViewport?.removeEventListener("resize", setAppHeight);
+      document.removeEventListener("focusout", restoreViewportHeight);
+
+      if (viewportMeta) {
+        viewportMeta.setAttribute("content", defaultViewportContent);
+      }
+    };
+  }, []);
+
   return (
     <ThemeProvider theme={theme}>
       {/* <CssBaseline /> */}
