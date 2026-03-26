@@ -35,6 +35,7 @@ const BudgetsContent = () => {
 
   React.useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
         const [budgetsData, transactionsData, balanceData] = await Promise.all([
           getBudgets(),

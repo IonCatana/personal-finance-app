@@ -23,6 +23,7 @@ const BudgetsOverview = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
         // Ottieni budgets e transazioni in parallelo
         const [budgetsData, transactionsData] = await Promise.all([

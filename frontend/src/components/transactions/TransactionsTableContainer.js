@@ -44,6 +44,7 @@ const TransactionsTableContainer = ({
   transactions,
   page,
   rowsPerPage,
+  useServerPagination = false,
   handleChangePage,
   handleChangeRowsPerPage,
   hideRecipient = false,
@@ -57,6 +58,9 @@ const TransactionsTableContainer = ({
   transactionDueDate,
 }) => {
   const theme = useTheme();
+  const visibleTransactions = useServerPagination
+    ? transactions
+    : transactions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   return (
     <>
@@ -185,20 +189,18 @@ const TransactionsTableContainer = ({
           </TableHead>
           <TableBody>
             {Array.isArray(transactions) && transactions.length > 0 ? (
-              transactions
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((transaction) => (
-                  <TransactionRow
-                    key={transaction._id}
-                    transaction={transaction}
-                    hideRecipient={hideRecipient}
-                    hideCategory={hideCategory}
-                    hideTransactionDate={hideTransactionDate}
-                    hideTransactionDueDate={hideTransactionDueDate}
-                    hideDate={hideDate}
-                    hideAmount={hideAmount}
-                  />
-                ))
+              visibleTransactions.map((transaction) => (
+                <TransactionRow
+                  key={transaction._id}
+                  transaction={transaction}
+                  hideRecipient={hideRecipient}
+                  hideCategory={hideCategory}
+                  hideTransactionDate={hideTransactionDate}
+                  hideTransactionDueDate={hideTransactionDueDate}
+                  hideDate={hideDate}
+                  hideAmount={hideAmount}
+                />
+              ))
             ) : (
               <TableRow>
                 <TableCell colSpan={4} align="center">

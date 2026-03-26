@@ -12,6 +12,7 @@ import SearchBarFilters from "@components/transactions/SearchBarFilters";
 const TransactionsContent = () => {
   const theme = useTheme();
   const [transactions, setTransactions] = useState([]);
+  const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [page, setPage] = useState(0);
@@ -36,9 +37,11 @@ const TransactionsContent = () => {
           rowsPerPage,
           search,
           category,
-          sort
+          sort,
+          true
         );
-        setTransactions(data);
+        setTransactions(data.transactions || []);
+        setTotalCount(data.totalCount || 0);
       } catch (err) {
         setError(err);
       } finally {
@@ -50,6 +53,7 @@ const TransactionsContent = () => {
   }, [page, rowsPerPage, search, category, sort]);
 
   const handleSearchSubmit = () => {
+    setPage(0);
     setSearch(searchInput);
   };
 
@@ -71,6 +75,16 @@ const TransactionsContent = () => {
 
   const handleCategoryClick = (event) => {
     setCategoryAnchor(event.currentTarget);
+  };
+
+  const handleSortChange = (value) => {
+    setPage(0);
+    setSort(value);
+  };
+
+  const handleCategoryChange = (value) => {
+    setPage(0);
+    setCategory(value);
   };
 
   if (loading) {
@@ -114,9 +128,9 @@ const TransactionsContent = () => {
           handleSearchSubmit={handleSearchSubmit}
           handleKeyPress={handleKeyPress}
           sort={sort}
-          setSort={setSort}
+          setSort={handleSortChange}
           category={category}
-          setCategory={setCategory}
+          setCategory={handleCategoryChange}
           sortOptions={sortOptions}
           categoryOptions={categoryOptions}
           handleSortClick={handleSortClick}
@@ -132,8 +146,10 @@ const TransactionsContent = () => {
         <TransactionTable
           hideTransactionDueDate={true}
           transactions={transactions}
+          totalCount={totalCount}
           page={page}
           rowsPerPage={rowsPerPage}
+          useServerPagination={true}
           handleChangePage={handleChangePage}
           handleChangeRowsPerPage={handleChangeRowsPerPage}
         />

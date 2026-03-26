@@ -10,14 +10,17 @@ import SearchBarFilters from "@components/transactions/SearchBarFilters";
 import TransactionsTableContainer from "@components/transactions/TransactionsTableContainer";
 import BillsSummary from "@components/bills/BillsSummary";
 import { calculateBillsSummary } from "@components/bills/apiBills";
+import CustomPagination from "@components/transactions/CustomPagination";
 
 const RecurringBillsContent = () => {
   const theme = useTheme();
   const [transactions, setTransactions] = useState([]);
+  const [summaryTransactions, setSummaryTransactions] = useState([]);
+  const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(8);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All Transactions");
   const [sort, setSort] = useState("latest");
@@ -33,14 +36,14 @@ const RecurringBillsContent = () => {
     const getTransactions = async () => {
       try {
         setLoading(true);
-        const data = await fetchTransactions(
-          page,
-          rowsPerPage,
-          search,
-          category,
-          sort
-        );
-        setTransactions(data);
+        setError(null);
+        const [tableData, summaryData] = await Promise.all([
+          fetchTransactions(page, rowsPerPage, search, category, sort, true),
+          fetchTransactions(0, rowsPerPage, search, category, sort),
+        ]);
+        setTransactions(tableData.transactions || []);
+        setTotalCount(tableData.totalCount || 0);
+        setSummaryTransactions(summaryData || []);
       } catch (err) {
         setError(err);
       } finally {
@@ -52,6 +55,7 @@ const RecurringBillsContent = () => {
   }, [page, rowsPerPage, search, category, sort]);
 
   const handleSearchSubmit = () => {
+    setPage(0);
     setSearch(searchInput);
   };
 
@@ -73,6 +77,16 @@ const RecurringBillsContent = () => {
 
   const handleCategoryClick = (event) => {
     setCategoryAnchor(event.currentTarget);
+  };
+
+  const handleSortChange = (value) => {
+    setPage(0);
+    setSort(value);
+  };
+
+  const handleCategoryChange = (value) => {
+    setPage(0);
+    setCategory(value);
   };
 
   if (loading) {
@@ -107,7 +121,9 @@ const RecurringBillsContent = () => {
     upcomingAmount,
     dueSoonCount,
     dueSoonAmount,
-  } = calculateBillsSummary(transactions);
+  } = calculateBillsSummary(summaryTransactions);
+
+  const totalPages = Math.ceil(totalCount / rowsPerPage);
 
   return (
     <>
@@ -203,9 +219,9 @@ const RecurringBillsContent = () => {
             handleSearchSubmit={handleSearchSubmit}
             handleKeyPress={handleKeyPress}
             sort={sort}
-            setSort={setSort}
+            setSort={handleSortChange}
             category={category}
-            setCategory={setCategory}
+            setCategory={handleCategoryChange}
             sortOptions={sortOptions}
             categoryOptions={categoryOptions}
             handleSortClick={handleSortClick}
@@ -226,6 +242,7 @@ const RecurringBillsContent = () => {
             transactions={transactions}
             page={page}
             rowsPerPage={rowsPerPage}
+            useServerPagination={true}
             handleChangePage={handleChangePage}
             handleChangeRowsPerPage={handleChangeRowsPerPage}
             // hideRecipient={false}
@@ -233,6 +250,11 @@ const RecurringBillsContent = () => {
             hideTransactionDate={true}
             hideDate={true}
             // hideAmount={false}
+          />
+          <CustomPagination
+            page={page}
+            totalPages={totalPages}
+            handleChangePage={handleChangePage}
           />
         </Box>
       </Box>

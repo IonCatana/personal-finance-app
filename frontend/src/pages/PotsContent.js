@@ -64,6 +64,7 @@ const PotsContent = ({ token }) => {
 
   useEffect(() => {
     const fetchPots = async () => {
+      setLoading(true);
       try {
         const [potsData, balanceData] = await Promise.all([
           getPots(token),

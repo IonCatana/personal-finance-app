@@ -18,6 +18,7 @@ const PotsOverview = () => {
 
   useEffect(() => {
     const fetchPots = async () => {
+      setLoading(true);
       try {
         const data = await getPots(token);
         setPots(data);

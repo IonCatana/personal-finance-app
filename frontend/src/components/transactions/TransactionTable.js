@@ -4,12 +4,15 @@ import TransactionsTableContainer from "@components/transactions/TransactionsTab
 
 const TransactionTable = ({
   transactions,
+  totalCount,
   page,
   rowsPerPage,
+  useServerPagination = false,
   handleChangePage,
   handleChangeRowsPerPage,
 }) => {
-  const totalPages = Math.ceil(transactions.length / rowsPerPage);
+  const totalItems = useServerPagination ? totalCount : transactions.length;
+  const totalPages = Math.ceil(totalItems / rowsPerPage);
 
   return (
     <>
@@ -19,6 +22,7 @@ const TransactionTable = ({
         transactions={transactions}
         page={page}
         rowsPerPage={rowsPerPage}
+        useServerPagination={useServerPagination}
         handleChangePage={handleChangePage}
         handleChangeRowsPerPage={handleChangeRowsPerPage}
         hideRecipient={false}

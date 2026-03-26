@@ -17,11 +17,14 @@ const CustomPagination = ({ page, totalPages, handleChangePage }) => {
   const theme = useTheme();
 
   const smallScreen = useMediaQuery(theme.breakpoints.down("md"));
+  const hasPages = totalPages > 0;
 
   let pagesToRender;
   const lastPage = totalPages - 1;
 
-  if (!smallScreen || totalPages <= 3) {
+  if (!hasPages) {
+    pagesToRender = [];
+  } else if (!smallScreen || totalPages <= 3) {
     pagesToRender = Array.from({ length: totalPages }, (_, index) => index);
   } else {
     if (page <= 1) {
@@ -47,7 +50,7 @@ const CustomPagination = ({ page, totalPages, handleChangePage }) => {
       {/* Pulsante "Prev" */}
       <Button
         onClick={() => handleChangePage(null, page - 1)}
-        disabled={page === 0}
+        disabled={!hasPages || page === 0}
         sx={{
           textTransform: "none",
           height: pxToRem(40),
@@ -149,7 +152,7 @@ const CustomPagination = ({ page, totalPages, handleChangePage }) => {
       {/* Pulsante "Next" */}
       <Button
         onClick={() => handleChangePage(null, page + 1)}
-        disabled={page === totalPages - 1}
+        disabled={!hasPages || page >= totalPages - 1}
         sx={{
           textTransform: "none",
           height: pxToRem(40),

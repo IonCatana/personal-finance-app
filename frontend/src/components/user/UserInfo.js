@@ -50,7 +50,9 @@ const UserInfo = ({ token }) => {
 
   useEffect(() => {
     const getUserData = async () => {
+      setLoading(true);
       try {
+        setError(null);
         const data = await fetchUserInfo(token);
         setUpdates({ username: data.username, email: data.email });
         setOriginalData({ username: data.username, email: data.email });

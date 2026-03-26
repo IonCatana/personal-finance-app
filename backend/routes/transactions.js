@@ -8,7 +8,7 @@ router.use(authMiddleware);
 
 // GET: Recuperare tutte le transactions con ricerca, filtri e ordinamento
 router.get("/", async (req, res) => {
-  const { search, category, sort } = req.query;
+  const { search, category, sort, page, rowsPerPage, paginated } = req.query;
 
   try {
     const userId = req.user.id; // ID dell'utente autenticato
@@ -51,10 +51,31 @@ router.get("/", async (req, res) => {
         sortOption = { date: -1 }; // Default: data decrescente
     }
 
-    // Recupera le transactions con i filtri applicati
-    const transactions = await Transaction.find(query).sort(sortOption);
+    const shouldPaginate = String(paginated).toLowerCase() === "true";
 
-    res.status(200).json(transactions);
+    if (!shouldPaginate) {
+      const transactions = await Transaction.find(query).sort(sortOption);
+      return res.status(200).json(transactions);
+    }
+
+    const parsedPage = Math.max(parseInt(page, 10) || 0, 0);
+    const parsedRowsPerPage = Math.max(parseInt(rowsPerPage, 10) || 10, 1);
+
+    const [transactions, totalCount] = await Promise.all([
+      Transaction.find(query)
+        .sort(sortOption)
+        .skip(parsedPage * parsedRowsPerPage)
+        .limit(parsedRowsPerPage),
+      Transaction.countDocuments(query),
+    ]);
+
+    res.status(200).json({
+      transactions,
+      totalCount,
+      page: parsedPage,
+      rowsPerPage: parsedRowsPerPage,
+      totalPages: Math.ceil(totalCount / parsedRowsPerPage),
+    });
   } catch (error) {
     console.error("Errore nel recupero delle transactions:", error);
     res.status(500).json({ error: "Errore nel recupero delle transactions." });

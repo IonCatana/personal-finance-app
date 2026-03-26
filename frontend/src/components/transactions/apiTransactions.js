@@ -80,11 +80,12 @@ export const fetchTransactions = async (
   rowsPerPage = 10,
   search = "",
   category = "All Transactions",
-  sort = "latest"
+  sort = "latest",
+  paginated = false
 ) => {
   try {
     const response = await apiClient.get("/transactions", {
-      params: { page, rowsPerPage, search, category, sort },
+      params: { page, rowsPerPage, search, category, sort, paginated },
     });
     return response.data;
   } catch (error) {
