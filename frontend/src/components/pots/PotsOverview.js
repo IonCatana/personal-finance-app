@@ -9,14 +9,21 @@ import { useMenu } from "@context/MenuContext";
 import { getPots } from "@components/pots/apiPots";
 import { useToken } from "@context/TokenContext";
 
-const PotsOverview = () => {
+const PotsOverview = ({ potsData }) => {
   const theme = useTheme();
   const { setActiveMenu } = useMenu();
   const [pots, setPots] = useState([]);
   const { token } = useToken();
   const [loading, setLoading] = useState(true);
+  const hasProvidedPots = Array.isArray(potsData);
 
   useEffect(() => {
+    if (hasProvidedPots) {
+      setPots(potsData);
+      setLoading(false);
+      return;
+    }
+
     const fetchPots = async () => {
       setLoading(true);
       try {
@@ -30,7 +37,7 @@ const PotsOverview = () => {
     };
 
     fetchPots();
-  }, [token]);
+  }, [hasProvidedPots, potsData, token]);
 
   if (loading) {
     return (

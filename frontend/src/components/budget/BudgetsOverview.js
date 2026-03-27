@@ -10,18 +10,27 @@ import { useMenu } from "@context/MenuContext";
 import { getBudgets } from "@components/budget/apiBudgets";
 import { fetchTransactions } from "@components/transactions/apiTransactions";
 
-const BudgetsOverview = () => {
+const BudgetsOverview = ({ budgetsData, transactionsData }) => {
   const theme = useTheme();
   const { setActiveMenu } = useMenu();
   const [budgets, setBudgets] = useState([]);
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const hasProvidedData =
+    Array.isArray(budgetsData) && Array.isArray(transactionsData);
   const { chartData, totalSpent, totalLimit } = useBudgetsData(
-    budgets,
-    transactions
+    hasProvidedData ? budgetsData : budgets,
+    hasProvidedData ? transactionsData : transactions
   );
 
   useEffect(() => {
+    if (hasProvidedData) {
+      setBudgets(budgetsData);
+      setTransactions(transactionsData);
+      setLoading(false);
+      return;
+    }
+
     const fetchData = async () => {
       setLoading(true);
       try {
@@ -40,7 +49,9 @@ const BudgetsOverview = () => {
     };
 
     fetchData();
-  }, []);
+  }, [hasProvidedData, budgetsData, transactionsData]);
+
+  const visibleBudgets = hasProvidedData ? budgetsData : budgets;
 
   if (loading) {
     return (
@@ -108,7 +119,7 @@ const BudgetsOverview = () => {
             maxWidth: { xs: "100%", sm: pxToRem(100) },
             width: "100%",
           }}>
-          {budgets.slice(0, 4).map((budget) => (
+          {visibleBudgets.slice(0, 4).map((budget) => (
             <PotsInfoCard
               key={budget._id}
               name={budget.category}

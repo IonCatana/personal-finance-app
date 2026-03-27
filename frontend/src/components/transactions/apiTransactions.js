@@ -84,8 +84,26 @@ export const fetchTransactions = async (
   paginated = false
 ) => {
   try {
+    const params = {
+      sort,
+    };
+
+    if (search) {
+      params.search = search;
+    }
+
+    if (category && category !== "All Transactions") {
+      params.category = category;
+    }
+
+    if (paginated) {
+      params.page = page;
+      params.rowsPerPage = rowsPerPage;
+      params.paginated = "true";
+    }
+
     const response = await apiClient.get("/transactions", {
-      params: { page, rowsPerPage, search, category, sort, paginated },
+      params,
     });
     return response.data;
   } catch (error) {

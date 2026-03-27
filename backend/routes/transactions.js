@@ -51,7 +51,8 @@ router.get("/", async (req, res) => {
         sortOption = { date: -1 }; // Default: data decrescente
     }
 
-    const shouldPaginate = String(paginated).toLowerCase() === "true";
+    const shouldPaginate =
+      paginated === true || String(paginated).toLowerCase() === "true";
 
     if (!shouldPaginate) {
       const transactions = await Transaction.find(query).sort(sortOption);

@@ -8,20 +8,20 @@ import BudgetsOverview from "@components/budget/BudgetsOverview";
 import SectionHeaderContent from "@components/headers/SectionHeaderContent";
 import BudgetDetails from "@components/budget/BudgetDetails";
 import { getBudgets } from "@components/budget/apiBudgets";
-import {
-  fetchTransactions,
-  fetchTransactionsByCategory,
-} from "@components/transactions/apiTransactions";
+import { fetchTransactions } from "@components/transactions/apiTransactions";
 import { calculateBillsSummary } from "@components/bills/apiBills";
 import BillsOverview from "@components/bills/BillsOverview";
 import { getBalance } from "@components/balance/apiBalance";
+import { getPots } from "@components/pots/apiPots";
 
 const OverviewContent = () => {
   const theme = useTheme();
 
   // Stati
   const [budget, setBudget] = useState(null);
-  const [transactions, setTransactions] = useState([]);
+  const [budgets, setBudgets] = useState([]);
+  const [pots, setPots] = useState([]);
+  const [allTransactions, setAllTransactions] = useState([]);
   const [billsSummary, setBillsSummary] = useState(null);
   const [balance, setBalance] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -31,28 +31,14 @@ const OverviewContent = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-
-        // Recupera il bilancio
-        const balanceData = await getBalance();
+        const [balanceData, budgetsData, potsData, transactionsData] =
+          await Promise.all([getBalance(), getBudgets(), getPots(), fetchTransactions()]);
         setBalance(balanceData);
-
-        // Recupera i Budget
-        const budgets = await getBudgets();
-        if (budgets.length > 0) {
-          const selectedBudget = budgets[0];
-          setBudget(selectedBudget);
-
-          // Recupera le transazioni per la categoria selezionata
-          const categoryTransactions = await fetchTransactionsByCategory(
-            selectedBudget.category
-          );
-          setTransactions(categoryTransactions);
-        }
-
-        // Recupera tutte le transazioni per le Bills
-        const allTransactions = await fetchTransactions();
-        const summary = calculateBillsSummary(allTransactions);
-        setBillsSummary(summary);
+        setBudgets(budgetsData || []);
+        setPots(potsData || []);
+        setAllTransactions(transactionsData || []);
+        setBudget(budgetsData?.[0] || null);
+        setBillsSummary(calculateBillsSummary(transactionsData || []));
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -62,6 +48,10 @@ const OverviewContent = () => {
 
     fetchData();
   }, []);
+
+  const selectedBudgetTransactions = budget
+    ? allTransactions.filter((transaction) => transaction.category === budget.category)
+    : [];
 
   if (loading) {
     return (
@@ -139,7 +129,7 @@ const OverviewContent = () => {
             flexDirection: "column",
             gap: pxToRem(24),
           }}>
-          <PotsOverview />
+          <PotsOverview potsData={pots} />
           {budget && (
             <BudgetDetails
               sx={{
@@ -149,7 +139,7 @@ const OverviewContent = () => {
                 },
               }}
               showSpentSection={false}
-              transactions={transactions}
+              transactions={selectedBudgetTransactions}
               color={budget.color || theme.palette.grey[300]}
               backgroundColor={theme.palette.otherColors.white}
               maxTransactionsToShow={5}
@@ -167,7 +157,10 @@ const OverviewContent = () => {
             flexDirection: "column",
             gap: pxToRem(24),
           }}>
-          <BudgetsOverview />
+          <BudgetsOverview
+            budgetsData={budgets}
+            transactionsData={allTransactions}
+          />
           {billsSummary && (
             <BillsOverview
               paidAmount={billsSummary.paidAmount}
