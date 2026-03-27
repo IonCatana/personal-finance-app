@@ -1,64 +1,15 @@
-import React, { useState, useEffect } from "react";
-import { Box, Typography, CircularProgress } from "@mui/material";
+import React from "react";
+import { Box, Typography } from "@mui/material";
 import { pxToRem } from "@utils/pxToRem";
 import { useTheme } from "@mui/material/styles";
 import PotsInfoCard from "@components/pots/PotsInfoCard";
 import SectionHeaderCard from "@components/card/SectionHeaderCard";
 import { ReactComponent as PotIcon } from "@assets/images/icon-pot.svg";
 import { useMenu } from "@context/MenuContext";
-import { getPots } from "@components/pots/apiPots";
-import { useToken } from "@context/TokenContext";
 
-const PotsOverview = ({ potsData }) => {
+const PotsOverview = ({ items = [], totalSaved = 0 }) => {
   const theme = useTheme();
   const { setActiveMenu } = useMenu();
-  const [pots, setPots] = useState([]);
-  const { token } = useToken();
-  const [loading, setLoading] = useState(true);
-  const hasProvidedPots = Array.isArray(potsData);
-
-  useEffect(() => {
-    if (hasProvidedPots) {
-      setPots(potsData);
-      setLoading(false);
-      return;
-    }
-
-    const fetchPots = async () => {
-      setLoading(true);
-      try {
-        const data = await getPots(token);
-        setPots(data);
-      } catch (error) {
-        console.error("Errore nel caricamento dei pots:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPots();
-  }, [hasProvidedPots, potsData, token]);
-
-  if (loading) {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100%",
-        }}>
-        <CircularProgress
-          style={{
-            color: theme.palette.secondaryColors.green,
-          }}
-        />
-      </Box>
-    );
-  }
-
-  // Calcolo dinamico del totale risparmiato
-  const totalSaved = pots.reduce((acc, pot) => acc + pot.total, 0);
 
   return (
     <Box
@@ -139,7 +90,7 @@ const PotsOverview = ({ potsData }) => {
             gridTemplateColumns: { xs: "1fr 1fr", sm: "1fr 1fr" },
             gap: pxToRem(16),
           }}>
-          {pots.slice(0, 4).map((pot, index) => (
+          {items.map((pot, index) => (
             <PotsInfoCard
               key={index}
               name={pot.name}

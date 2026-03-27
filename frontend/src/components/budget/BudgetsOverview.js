@@ -1,75 +1,20 @@
-import React, { useState, useEffect } from "react";
-import { Box, CircularProgress } from "@mui/material";
+import React from "react";
+import { Box } from "@mui/material";
 import { pxToRem } from "@utils/pxToRem";
 import { useTheme } from "@mui/material/styles";
 import SectionHeaderCard from "@components/card/SectionHeaderCard";
 import PotsInfoCard from "@components/pots/PotsInfoCard";
 import ChartBudget from "@components/budget/ChartBudget";
-import { useBudgetsData } from "@hooks/useBudgetsData";
 import { useMenu } from "@context/MenuContext";
-import { getBudgets } from "@components/budget/apiBudgets";
-import { fetchTransactions } from "@components/transactions/apiTransactions";
 
-const BudgetsOverview = ({ budgetsData, transactionsData }) => {
+const BudgetsOverview = ({
+  items = [],
+  chartData = { labels: [], datasets: [{ data: [], backgroundColor: [] }] },
+  totalSpent = 0,
+  totalLimit = 0,
+}) => {
   const theme = useTheme();
   const { setActiveMenu } = useMenu();
-  const [budgets, setBudgets] = useState([]);
-  const [transactions, setTransactions] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const hasProvidedData =
-    Array.isArray(budgetsData) && Array.isArray(transactionsData);
-  const { chartData, totalSpent, totalLimit } = useBudgetsData(
-    hasProvidedData ? budgetsData : budgets,
-    hasProvidedData ? transactionsData : transactions
-  );
-
-  useEffect(() => {
-    if (hasProvidedData) {
-      setBudgets(budgetsData);
-      setTransactions(transactionsData);
-      setLoading(false);
-      return;
-    }
-
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        // Ottieni budgets e transazioni in parallelo
-        const [budgetsData, transactionsData] = await Promise.all([
-          getBudgets(),
-          fetchTransactions(),
-        ]);
-        setBudgets(budgetsData || []);
-        setTransactions(transactionsData || []);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [hasProvidedData, budgetsData, transactionsData]);
-
-  const visibleBudgets = hasProvidedData ? budgetsData : budgets;
-
-  if (loading) {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100%",
-        }}>
-        <CircularProgress
-          style={{
-            color: theme.palette.secondaryColors.green,
-          }}
-        />
-      </Box>
-    );
-  }
   return (
     <Box
       sx={{
@@ -119,7 +64,7 @@ const BudgetsOverview = ({ budgetsData, transactionsData }) => {
             maxWidth: { xs: "100%", sm: pxToRem(100) },
             width: "100%",
           }}>
-          {visibleBudgets.slice(0, 4).map((budget) => (
+          {items.map((budget) => (
             <PotsInfoCard
               key={budget._id}
               name={budget.category}

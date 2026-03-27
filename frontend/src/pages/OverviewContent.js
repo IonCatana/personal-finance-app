@@ -7,23 +7,14 @@ import PotsOverview from "@components/pots/PotsOverview";
 import BudgetsOverview from "@components/budget/BudgetsOverview";
 import SectionHeaderContent from "@components/headers/SectionHeaderContent";
 import BudgetDetails from "@components/budget/BudgetDetails";
-import { getBudgets } from "@components/budget/apiBudgets";
-import { fetchTransactions } from "@components/transactions/apiTransactions";
-import { calculateBillsSummary } from "@components/bills/apiBills";
 import BillsOverview from "@components/bills/BillsOverview";
-import { getBalance } from "@components/balance/apiBalance";
-import { getPots } from "@components/pots/apiPots";
+import { getOverview } from "@components/overview/apiOverview";
 
 const OverviewContent = () => {
   const theme = useTheme();
 
   // Stati
-  const [budget, setBudget] = useState(null);
-  const [budgets, setBudgets] = useState([]);
-  const [pots, setPots] = useState([]);
-  const [allTransactions, setAllTransactions] = useState([]);
-  const [billsSummary, setBillsSummary] = useState(null);
-  const [balance, setBalance] = useState(null);
+  const [overviewData, setOverviewData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   // Effetto per fetching dei dati
@@ -31,14 +22,8 @@ const OverviewContent = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const [balanceData, budgetsData, potsData, transactionsData] =
-          await Promise.all([getBalance(), getBudgets(), getPots(), fetchTransactions()]);
-        setBalance(balanceData);
-        setBudgets(budgetsData || []);
-        setPots(potsData || []);
-        setAllTransactions(transactionsData || []);
-        setBudget(budgetsData?.[0] || null);
-        setBillsSummary(calculateBillsSummary(transactionsData || []));
+        const data = await getOverview();
+        setOverviewData(data);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -48,10 +33,6 @@ const OverviewContent = () => {
 
     fetchData();
   }, []);
-
-  const selectedBudgetTransactions = budget
-    ? allTransactions.filter((transaction) => transaction.category === budget.category)
-    : [];
 
   if (loading) {
     return (
@@ -84,33 +65,33 @@ const OverviewContent = () => {
           color={theme.palette.otherColors.white}
           title="Current Balance"
           value={`$${
-            balance?.current
+            overviewData?.balance?.current
               ? new Intl.NumberFormat("en-US", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
-                }).format(balance.current)
+                }).format(overviewData.balance.current)
               : "0.00"
           }`}
         />
         <StatCard
           title="Income"
           value={`$${
-            balance?.income
+            overviewData?.balance?.income
               ? new Intl.NumberFormat("en-US", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
-                }).format(balance.income)
+                }).format(overviewData.balance.income)
               : "0.00"
           }`}
         />
         <StatCard
           title="Expenses"
           value={`$${
-            balance?.expenses
+            overviewData?.balance?.expenses
               ? new Intl.NumberFormat("en-US", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
-                }).format(balance.expenses)
+                }).format(overviewData.balance.expenses)
               : "0.00"
           }`}
         />
@@ -129,8 +110,11 @@ const OverviewContent = () => {
             flexDirection: "column",
             gap: pxToRem(24),
           }}>
-          <PotsOverview potsData={pots} />
-          {budget && (
+          <PotsOverview
+            items={overviewData?.potsOverview?.items || []}
+            totalSaved={overviewData?.potsOverview?.totalSaved || 0}
+          />
+          {overviewData?.transactionsOverview?.category && (
             <BudgetDetails
               sx={{
                 padding: {
@@ -139,8 +123,11 @@ const OverviewContent = () => {
                 },
               }}
               showSpentSection={false}
-              transactions={selectedBudgetTransactions}
-              color={budget.color || theme.palette.grey[300]}
+              transactions={overviewData.transactionsOverview.items || []}
+              color={
+                overviewData.transactionsOverview.color ||
+                theme.palette.grey[300]
+              }
               backgroundColor={theme.palette.otherColors.white}
               maxTransactionsToShow={5}
               headerTitle="Transactions"
@@ -158,14 +145,16 @@ const OverviewContent = () => {
             gap: pxToRem(24),
           }}>
           <BudgetsOverview
-            budgetsData={budgets}
-            transactionsData={allTransactions}
+            items={overviewData?.budgetsOverview?.items || []}
+            chartData={overviewData?.budgetsOverview?.chartData}
+            totalSpent={overviewData?.budgetsOverview?.totalSpent || 0}
+            totalLimit={overviewData?.budgetsOverview?.totalLimit || 0}
           />
-          {billsSummary && (
+          {overviewData?.billsOverview && (
             <BillsOverview
-              paidAmount={billsSummary.paidAmount}
-              upcomingAmount={billsSummary.upcomingAmount}
-              dueSoonAmount={billsSummary.dueSoonAmount}
+              paidAmount={overviewData.billsOverview.paidAmount}
+              upcomingAmount={overviewData.billsOverview.upcomingAmount}
+              dueSoonAmount={overviewData.billsOverview.dueSoonAmount}
             />
           )}
         </Box>

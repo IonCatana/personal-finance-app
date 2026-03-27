@@ -6,7 +6,6 @@ import SectionHeaderContent from "@components/headers/SectionHeaderContent";
 import PotsCard from "@components/pots/PotsCard";
 import { getPots, createPot } from "@components/pots/apiPots";
 import { useTheme } from "@mui/material/styles";
-import { getBalance } from "@components/balance/apiBalance";
 
 /**
  * **Componente PotsContent**
@@ -56,22 +55,13 @@ const PotsContent = ({ token }) => {
   const [balanceSummary, setBalanceSummary] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const refreshBalance = async () => {
-    const balanceData = await getBalance();
-    setBalanceSummary(balanceData);
-    return balanceData;
-  };
-
   useEffect(() => {
     const fetchPots = async () => {
       setLoading(true);
       try {
-        const [potsData, balanceData] = await Promise.all([
-          getPots(token),
-          getBalance(),
-        ]);
-        setPots(potsData);
-        setBalanceSummary(balanceData);
+        const potsResponse = await getPots({ includeBalanceSummary: true });
+        setPots(potsResponse.pots || []);
+        setBalanceSummary(potsResponse.balanceSummary || null);
       } catch (error) {
         console.error("Errore nel caricamento dei pots:", error);
       } finally {
@@ -83,38 +73,29 @@ const PotsContent = ({ token }) => {
   }, [token]);
 
   const handleAddPot = async (newPotData) => {
-    const newPot = await createPot(newPotData);
-    setPots((prevPots) => [...prevPots, newPot]);
-
-    try {
-      await refreshBalance();
-    } catch (error) {
-      console.error("Errore nell'aggiornamento del balance:", error);
-    }
-
-    return newPot;
+    const response = await createPot(newPotData);
+    setPots((prevPots) => [...prevPots, response.pot]);
+    setBalanceSummary(response.balanceSummary || null);
+    return response.pot;
   };
 
-  const handleUpdatePot = async (updatedPot) => {
+  const handleUpdatePot = async ({ pot, balanceSummary: nextBalanceSummary }) => {
     setPots((prevPots) =>
-      prevPots.map((pot) => (pot._id === updatedPot._id ? updatedPot : pot))
+      prevPots.map((currentPot) =>
+        currentPot._id === pot._id ? pot : currentPot
+      )
     );
-
-    try {
-      await refreshBalance();
-    } catch (error) {
-      console.error("Errore nell'aggiornamento del balance:", error);
-    }
+    setBalanceSummary(nextBalanceSummary || null);
   };
 
-  const handleDeletePot = async (deletedPotId) => {
-    setPots((prevPots) => prevPots.filter((pot) => pot._id !== deletedPotId));
-
-    try {
-      await refreshBalance();
-    } catch (error) {
-      console.error("Errore nell'aggiornamento del balance:", error);
-    }
+  const handleDeletePot = async ({
+    deletedPotId,
+    balanceSummary: nextBalanceSummary,
+  }) => {
+    setPots((prevPots) =>
+      prevPots.filter((pot) => pot._id !== deletedPotId)
+    );
+    setBalanceSummary(nextBalanceSummary || null);
   };
 
   if (loading) {
@@ -167,7 +148,6 @@ const PotsContent = ({ token }) => {
               percentage={parseFloat(percentage)}
               color={pot.color}
               balanceSummary={balanceSummary}
-              token={token}
               onAddMoney={() => console.log(`Add money to ${pot.name}`)}
               onWithdraw={() => console.log(`Withdraw money from ${pot.name}`)}
               onUpdatePot={handleUpdatePot}

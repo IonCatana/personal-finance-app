@@ -17,7 +17,6 @@ const PotsCard = ({
   percentage,
   color,
   balanceSummary,
-  token,
   onAddMoney,
   onWithdraw,
   onUpdatePot,
@@ -212,20 +211,20 @@ const PotsCard = ({
         balanceSummary={balanceSummary}
         onSubmit={async (updatedData) => {
           if (modalType === "edit") {
-            const updatedPot = await updatePot(modalData._id, updatedData, token);
-            await onUpdatePot(updatedPot);
+            const response = await updatePot(modalData._id, updatedData);
+            await onUpdatePot(response);
             handleCloseModal();
           } else if (modalType === "delete") {
-            await deletePot(modalData._id, token);
-            await onDeletePot(modalData._id);
+            const response = await deletePot(modalData._id);
+            await onDeletePot(response);
             handleCloseModal();
           } else if (modalType === "addMoney") {
-            const updatedPot = await updatePot(modalData._id, updatedData, token);
-            await onUpdatePot(updatedPot);
+            const response = await updatePot(modalData._id, updatedData);
+            await onUpdatePot(response);
             handleCloseModal();
           } else if (modalType === "withdraw") {
-            const updatedPot = await updatePot(modalData._id, updatedData, token);
-            await onUpdatePot(updatedPot);
+            const response = await updatePot(modalData._id, updatedData);
+            await onUpdatePot(response);
             handleCloseModal();
           }
         }}
@@ -241,7 +240,6 @@ PotsCard.propTypes = {
   percentage: PropTypes.number.isRequired,
   color: PropTypes.string.isRequired,
   balanceSummary: PropTypes.object,
-  token: PropTypes.string.isRequired,
   onUpdatePot: PropTypes.func.isRequired,
   onDeletePot: PropTypes.func.isRequired,
   onAddMoney: PropTypes.func.isRequired,

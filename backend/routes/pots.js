@@ -2,6 +2,7 @@ const express = require("express");
 const Pot = require("@models/Pot");
 const {
   getBalanceSummary,
+  buildBalanceResponse,
   roundCurrency,
   getNumber,
   createValidationError,
@@ -35,11 +36,39 @@ const validateTotal = (total) => {
   return roundCurrency(normalizedTotal);
 };
 
+const buildPotMutationResponse = async ({ pot, userId, deletedPotId, message }) => {
+  const balanceSummary = await getBalanceSummary(userId);
+
+  return {
+    ...(pot ? { pot } : {}),
+    ...(deletedPotId ? { deletedPotId } : {}),
+    ...(message ? { message } : {}),
+    balanceSummary: balanceSummary.balance
+      ? buildBalanceResponse(balanceSummary)
+      : null,
+  };
+};
+
 // Recupera tutti i pots dell'utente autenticato
 router.get("/", async (req, res) => {
   try {
+    const shouldIncludeBalanceSummary =
+      req.query.includeBalanceSummary === true ||
+      String(req.query.includeBalanceSummary).toLowerCase() === "true";
     const pots = await Pot.find({ userId: req.user.id });
-    res.status(200).json(pots);
+
+    if (!shouldIncludeBalanceSummary) {
+      return res.status(200).json(pots);
+    }
+
+    const balanceSummary = await getBalanceSummary(req.user.id);
+
+    return res.status(200).json({
+      pots,
+      balanceSummary: balanceSummary.balance
+        ? buildBalanceResponse(balanceSummary)
+        : null,
+    });
   } catch (error) {
     res.status(500).json({ error: "Errore nel recupero dei pots" });
   }
@@ -94,7 +123,12 @@ router.post("/", async (req, res) => {
       color,
     });
 
-    res.status(201).json(newPot);
+    res.status(201).json(
+      await buildPotMutationResponse({
+        pot: newPot,
+        userId: req.user.id,
+      })
+    );
   } catch (error) {
     if (error.statusCode) {
       return res.status(error.statusCode).json({ error: error.message });
@@ -158,7 +192,12 @@ router.put("/:id", async (req, res) => {
       { new: true, runValidators: true }
     );
 
-    res.status(200).json(updatedPot);
+    res.status(200).json(
+      await buildPotMutationResponse({
+        pot: updatedPot,
+        userId: req.user.id,
+      })
+    );
   } catch (error) {
     if (error.statusCode) {
       return res.status(error.statusCode).json({ error: error.message });
@@ -180,7 +219,13 @@ router.delete("/:id", async (req, res) => {
       return res.status(404).json({ error: "Pot non trovato" });
     }
 
-    res.status(200).json({ message: "Pot eliminato con successo" });
+    res.status(200).json(
+      await buildPotMutationResponse({
+        userId: req.user.id,
+        deletedPotId: req.params.id,
+        message: "Pot eliminato con successo",
+      })
+    );
   } catch (error) {
     res.status(500).json({ error: "Errore nella cancellazione del pot" });
   }

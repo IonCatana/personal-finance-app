@@ -1,9 +1,15 @@
 import apiClient from "@utils/apiClient";
 
 // Recupera tutti i pots
-export const getPots = async () => {
+export const getPots = async (options = {}) => {
+  const includeBalanceSummary =
+    typeof options === "object" && options !== null
+      ? options.includeBalanceSummary
+      : false;
   // console.log("Fetching all pots...");
-  const response = await apiClient.get("/pots");
+  const response = await apiClient.get("/pots", {
+    params: includeBalanceSummary ? { includeBalanceSummary: "true" } : {},
+  });
   // console.log("Response received:", response.data);
   return response.data;
 };

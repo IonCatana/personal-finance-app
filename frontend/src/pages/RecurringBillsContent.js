@@ -9,13 +9,22 @@ import SectionHeaderContent from "@components/headers/SectionHeaderContent";
 import SearchBarFilters from "@components/transactions/SearchBarFilters";
 import TransactionsTableContainer from "@components/transactions/TransactionsTableContainer";
 import BillsSummary from "@components/bills/BillsSummary";
-import { calculateBillsSummary } from "@components/bills/apiBills";
 import CustomPagination from "@components/transactions/CustomPagination";
+
+const EMPTY_BILLS_SUMMARY = {
+  totalBillsAmount: 0,
+  paidCount: 0,
+  paidAmount: 0,
+  upcomingCount: 0,
+  upcomingAmount: 0,
+  dueSoonCount: 0,
+  dueSoonAmount: 0,
+};
 
 const RecurringBillsContent = () => {
   const theme = useTheme();
   const [transactions, setTransactions] = useState([]);
-  const [summaryTransactions, setSummaryTransactions] = useState([]);
+  const [billsSummary, setBillsSummary] = useState(EMPTY_BILLS_SUMMARY);
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -37,13 +46,18 @@ const RecurringBillsContent = () => {
       try {
         setLoading(true);
         setError(null);
-        const [tableData, summaryData] = await Promise.all([
-          fetchTransactions(page, rowsPerPage, search, category, sort, true),
-          fetchTransactions(0, rowsPerPage, search, category, sort),
-        ]);
+        const tableData = await fetchTransactions(
+          page,
+          rowsPerPage,
+          search,
+          category,
+          sort,
+          true,
+          true
+        );
         setTransactions(tableData.transactions || []);
         setTotalCount(tableData.totalCount || 0);
-        setSummaryTransactions(summaryData || []);
+        setBillsSummary(tableData.billsSummary || EMPTY_BILLS_SUMMARY);
       } catch (err) {
         setError(err);
       } finally {
@@ -121,7 +135,7 @@ const RecurringBillsContent = () => {
     upcomingAmount,
     dueSoonCount,
     dueSoonAmount,
-  } = calculateBillsSummary(summaryTransactions);
+  } = billsSummary;
 
   const totalPages = Math.ceil(totalCount / rowsPerPage);
 

@@ -12,6 +12,7 @@ const authSignIn = require("@routes/authSignIn");
 const potRoutes = require("@routes/pots");
 const budgetRoutes = require("@routes/budget");
 const transactionRoutes = require("@routes/transactions");
+const overviewRoutes = require("@routes/overview");
 const balanceRoutes = require("@routes/balance");
 const userInfoRoutes = require("@routes/userInfo");
 
@@ -58,6 +59,7 @@ app.use("/api/auth/signup", authSignUp);
 
 // Rotte protette (gestione dei pots)
 app.use("/api/balance", authMiddleware, balanceRoutes);
+app.use("/api/overview", authMiddleware, overviewRoutes);
 app.use("/api/budgets", authMiddleware, budgetRoutes);
 app.use("/api/pots", authMiddleware, potRoutes);
 app.use("/api/transactions", authMiddleware, transactionRoutes);

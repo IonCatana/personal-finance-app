@@ -1,6 +1,7 @@
 const express = require("express");
 const Transaction = require("@models/Transaction");
 const authMiddleware = require("@middleWare/authMiddleware");
+const { calculateBillsSummary } = require("../utils/billsSummary");
 const router = express.Router();
 
 // Protegge tutte le rotte con il middleware authMiddleware
@@ -8,7 +9,15 @@ router.use(authMiddleware);
 
 // GET: Recuperare tutte le transactions con ricerca, filtri e ordinamento
 router.get("/", async (req, res) => {
-  const { search, category, sort, page, rowsPerPage, paginated } = req.query;
+  const {
+    search,
+    category,
+    sort,
+    page,
+    rowsPerPage,
+    paginated,
+    includeBillsSummary,
+  } = req.query;
 
   try {
     const userId = req.user.id; // ID dell'utente autenticato
@@ -53,6 +62,9 @@ router.get("/", async (req, res) => {
 
     const shouldPaginate =
       paginated === true || String(paginated).toLowerCase() === "true";
+    const shouldIncludeBillsSummary =
+      includeBillsSummary === true ||
+      String(includeBillsSummary).toLowerCase() === "true";
 
     if (!shouldPaginate) {
       const transactions = await Transaction.find(query).sort(sortOption);
@@ -62,21 +74,32 @@ router.get("/", async (req, res) => {
     const parsedPage = Math.max(parseInt(page, 10) || 0, 0);
     const parsedRowsPerPage = Math.max(parseInt(rowsPerPage, 10) || 10, 1);
 
-    const [transactions, totalCount] = await Promise.all([
+    const [transactions, totalCount, summaryTransactions] = await Promise.all([
       Transaction.find(query)
         .sort(sortOption)
         .skip(parsedPage * parsedRowsPerPage)
         .limit(parsedRowsPerPage),
       Transaction.countDocuments(query),
+      shouldIncludeBillsSummary
+        ? Transaction.find(query)
+            .select("name category amount recurring date")
+            .lean()
+        : Promise.resolve(null),
     ]);
 
-    res.status(200).json({
+    const responsePayload = {
       transactions,
       totalCount,
       page: parsedPage,
       rowsPerPage: parsedRowsPerPage,
       totalPages: Math.ceil(totalCount / parsedRowsPerPage),
-    });
+    };
+
+    if (shouldIncludeBillsSummary) {
+      responsePayload.billsSummary = calculateBillsSummary(summaryTransactions);
+    }
+
+    res.status(200).json(responsePayload);
   } catch (error) {
     console.error("Errore nel recupero delle transactions:", error);
     res.status(500).json({ error: "Errore nel recupero delle transactions." });

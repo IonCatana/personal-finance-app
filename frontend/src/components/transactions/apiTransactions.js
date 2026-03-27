@@ -81,7 +81,8 @@ export const fetchTransactions = async (
   search = "",
   category = "All Transactions",
   sort = "latest",
-  paginated = false
+  paginated = false,
+  includeBillsSummary = false
 ) => {
   try {
     const params = {
@@ -100,6 +101,10 @@ export const fetchTransactions = async (
       params.page = page;
       params.rowsPerPage = rowsPerPage;
       params.paginated = "true";
+    }
+
+    if (includeBillsSummary) {
+      params.includeBillsSummary = "true";
     }
 
     const response = await apiClient.get("/transactions", {
